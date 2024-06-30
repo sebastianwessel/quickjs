@@ -1,11 +1,13 @@
 import { swaggerUI } from '@hono/swagger-ui'
 import { OpenAPIHono } from '@hono/zod-openapi'
+import type { StatusCode } from 'hono/utils/http-status'
 import { DynamicThreadPool, PoolEvents, availableParallelism } from 'poolifier-web-worker'
-import type { MyData, MyResponse } from './worker'
+import { executeRoute } from './openapi.js'
+import type { InputData, MyResponse } from './worker.js'
 
 const workerFileURL = new URL('./worker.ts', import.meta.url)
 
-const dynamicPool = new DynamicThreadPool<MyData, MyResponse>(0, availableParallelism(), workerFileURL, {
+const dynamicPool = new DynamicThreadPool<InputData, MyResponse>(0, availableParallelism(), workerFileURL, {
 	errorEventHandler: (e: ErrorEvent) => {
 		console.error(e)
 	},
@@ -21,52 +23,34 @@ let count = 0
 
 const app = new OpenAPIHono()
 
-Bun.serve({
-	async fetch(_req) {
-		const id = `id_${count++}`
+app.openapi(executeRoute, async c => {
+	const content = await c.req.text()
+	const id = `id_${count++}`
 
-		try {
-			const res = await dynamicPool.execute({
-				id,
-				content: `
-        import * as path from 'path'
+	try {
+		const res = await dynamicPool.execute({
+			id,
+			content,
+		})
 
-        const fn = async ()=>{
-        console.log(path.join('src','dist'))
-
-          const url = new URL('https://example.com')
-
-          const f = await fetch(url)
-
-          return f.text()
-          }
-          
-        export const quickJSResult = await fn()
-      `,
-			})
-
-			let status = 200
-			if (res?.result.ok === false) {
-				if (res.result.isSyntaxError) {
-					status = 400
-				}
+		let status: StatusCode = 200
+		if (res?.result.ok === false) {
+			if (res.result.isSyntaxError) {
+				status = 400
 			}
-
-			return new Response(JSON.stringify(res?.result, null, 2), {
-				headers: [['content-type', 'application/json']],
-				status,
-			})
-		} catch (error) {
-			const err = error as Error
-			if (err.message.includes('stack size exceeded')) {
-				console.error('POOL_ERROR', 'Too Many Requests')
-				return new Response('Too Many Requests', { status: 429 })
-			}
-
-			console.error('POOL_ERROR', err)
-			return new Response(err.message, { status: 500 })
 		}
-	},
+
+		return c.json(res?.result, status)
+	} catch (error) {
+		const err = error as Error
+		if (err.message.includes('stack size exceeded')) {
+			console.error('POOL_ERROR', 'Too Many Requests')
+			return c.text(err.message, 429)
+		}
+
+		console.error('POOL_ERROR', err)
+		return c.text(err.message, 500)
+	}
 })
 
 app.get('/', swaggerUI({ url: '/doc' }))

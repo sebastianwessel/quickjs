@@ -23,13 +23,13 @@ npm install @sebastianwessel/quickjs
 or
 
 ```sh
-yarn add @sebastianwessel/quickjs
+bun add @sebastianwessel/quickjs
 ```
 
 or
 
 ```sh
-bun add @sebastianwessel/quickjs
+yarn add @sebastianwessel/quickjs
 ```
 
 ## Usage
@@ -37,16 +37,40 @@ bun add @sebastianwessel/quickjs
 Here's a simple example of how to use the package:
 
 ```typescript
-import { QuickJSSandbox } from '@sebastianwessel/quickjs';
+import { quickJS } from '@sebastianwessel/quickjs'
 
-const sandbox = new QuickJSSandbox();
+// General setup like loading and init of the QuickJS wasm
+// It is a ressource intensive job and should be done only once if possible 
+const { initRuntime } = await quickJS()
 
-const result = sandbox.execute(`
-  const add = (a, b) => a + b;
-  add(2, 3);
-`);
+// Create a runtime instance each time a js code should be executed
+const { evalCode } = await this.initRuntime({
+  allowHttp: true, // inject fetch and allow the code to fetch data
+  env: {
+    MY_ENV_VAR: 'env var value'
+  },
+})
 
-console.log(result); // Outputs: 5
+
+const result = await evalCode(`
+import { join } as path from 'path'
+
+const fn = async ()=>{
+  console.log(join('src','dist')) // logs "src/dist" on host system
+
+  console.log(env.MY_ENV_VAR) // logs "env var value" on host system
+
+  const url = new URL('https://example.com')
+
+  const f = await fetch(url)
+
+  return f.text()
+}
+  
+export default await fn()
+`)
+
+console.log(result) // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
 ```
 
 ## License
