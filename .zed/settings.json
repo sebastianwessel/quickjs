@@ -1,0 +1,16 @@
+{
+	"format_on_save": "on",
+	"code_actions_on_format": {
+		"source.fixAll": true,
+		"source.organizeImports.biome": true
+	},
+	"formatter": "auto",
+	"languages": {
+		"TypeScript": {
+			"code_actions_on_format": {
+				"source.fixAll": true,
+				"source.organizeImports.biome": true
+			}
+		}
+	}
+}
