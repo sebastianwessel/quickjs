@@ -1,5 +1,5 @@
+import { expect, mock, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
-import { expect, test, vi } from 'vitest'
 
 import { newDeferred } from '../util'
 import VMMap from '../vmmap'
@@ -205,7 +205,7 @@ test('date', async () => {
 })
 
 test('marshalable', async () => {
-	const isMarshalable = vi.fn((a: any) => a !== globalThis)
+	const isMarshalable = mock((a: any) => a !== globalThis)
 	const { ctx, marshal, dispose } = await setup({
 		isMarshalable,
 	})
@@ -220,7 +220,7 @@ test('marshalable', async () => {
 })
 
 test('marshalable json', async () => {
-	const isMarshalable = vi.fn(() => 'json' as const)
+	const isMarshalable = mock(() => 'json' as const)
 	const { ctx, marshal, dispose } = await setup({
 		isMarshalable,
 	})

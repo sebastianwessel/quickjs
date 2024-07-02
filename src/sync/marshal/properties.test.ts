@@ -1,6 +1,6 @@
+import { expect, mock, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
 import type { QuickJSHandle } from 'quickjs-emscripten-core'
-import { expect, test, vi } from 'vitest'
 
 import { json } from '../vmutil'
 
@@ -24,7 +24,7 @@ test('works', async () => {
 	)
 
 	const disposables: QuickJSHandle[] = []
-	const marshal = vi.fn(t => {
+	const marshal = mock(t => {
 		if (typeof t !== 'function') return json(ctx, t)
 		const fn = ctx.newFunction('', () => {})
 		disposables.push(fn)
@@ -71,7 +71,7 @@ test('works', async () => {
 
 test('empty', async () => {
 	const ctx = (await getQuickJS()).newContext()
-	const marshal = vi.fn()
+	const marshal = mock()
 	const handle = ctx.newObject()
 	const obj = {}
 

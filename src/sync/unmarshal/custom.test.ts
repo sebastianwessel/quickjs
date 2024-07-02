@@ -1,12 +1,12 @@
+import { expect, mock, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
 import type { QuickJSHandle } from 'quickjs-emscripten-core'
-import { expect, test, vi } from 'vitest'
 
 import unmarshalCustom, { defaultCustom } from './custom.js'
 
 test('symbol', async () => {
 	const ctx = (await getQuickJS()).newContext()
-	const pre = vi.fn()
+	const pre = mock()
 	const obj = ctx.newObject()
 	const handle = ctx.unwrapResult(ctx.evalCode(`Symbol("foobar")`))
 
@@ -18,7 +18,7 @@ test('symbol', async () => {
 	const sym = unmarshal(handle)
 	expect(typeof sym).toBe('symbol')
 	expect((sym as any).description).toBe('foobar')
-	expect(pre).toReturnTimes(1)
+	expect(pre).toHaveReturnedTimes(1)
 	expect(pre.mock.calls[0][0]).toBe(sym)
 	expect(pre.mock.calls[0][1] === handle).toBe(true)
 
@@ -29,7 +29,7 @@ test('symbol', async () => {
 
 test('date', async () => {
 	const ctx = (await getQuickJS()).newContext()
-	const pre = vi.fn()
+	const pre = mock()
 	const obj = ctx.newObject()
 	const handle = ctx.unwrapResult(ctx.evalCode('new Date(2022, 7, 26)'))
 
@@ -41,7 +41,7 @@ test('date', async () => {
 	const date = unmarshal(handle)
 	expect(date).toBeInstanceOf(Date)
 	expect(date.getTime()).toBe(new Date(2022, 7, 26).getTime())
-	expect(pre).toReturnTimes(1)
+	expect(pre).toHaveReturnedTimes(1)
 	expect(pre.mock.calls[0][0]).toBe(date)
 	expect(pre.mock.calls[0][1] === handle).toBe(true)
 

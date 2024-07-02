@@ -1,63 +1,86 @@
 {
-  "name": "@sebastianwessel/quickjs",
-  "version": "1.0.0",
-  "description": "A typescript package to execute javascript code in a webassembly quickjs sandbox",
-  "type": "module",
-  "keywords": [
-    "typescript",
-    "quickjs",
-    "runtime",
-    "wasm",
-    "webassembly",
-    "bun",
-    "hono",
-    "example",
-    "worker",
-    "pool",
-    "package",
-    "library"
-  ],
-  "files": ["dist"],
-  "tshy": {
-    "exclude": ["src/**/*.test.ts"],
-    "dialects": ["esm", "commonjs"]
-  },
-  "scripts": {
-    "start": "bun run --watch example/server/server.ts",
-    "build": "tshy",
-    "test": "vitest",
-    "lint": "bunx @biomejs/biome check",
-    "lint:fix": "bunx @biomejs/biome check --write"
-  },
-  "author": {
-    "name": "Sebastian Wessel",
-    "url": "https://sebastianwessel.de"
-  },
-  "homepage": "https://github.com/sebastianwessel/quickjs#readme",
-  "bugs": {
-    "url": "https://github.com/sebastianwessel/quickjs/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/sebastianwessel/quickjs.git"
-  },
-  "license": "ISC",
-  "devDependencies": {
-    "@biomejs/biome": "^1.8.3",
-    "@types/bun": "^1.1.6",
-    "@types/node": "^20.14.9",
-    "quickjs-emscripten": "^0.29.2",
-    "tshy": "^1.16.2",
-    "typescript": "^5.5.2",
-    "vite-plugin-dts": "^3.9.1",
-    "vitest": "^1.6.0"
-  },
-  "dependencies": {
-    "@hono/swagger-ui": "^0.3.0",
-    "@hono/zod-openapi": "^0.14.5",
-    "@jitl/quickjs-ng-wasmfile-release-sync": "^0.29.2",
-    "hono": "^4.4.10",
-    "poolifier-web-worker": "^0.4.12",
-    "quickjs-emscripten-core": "^0.29.2"
-  }
+	"name": "@sebastianwessel/quickjs",
+	"version": "1.0.0",
+	"description": "A typescript package to execute javascript code in a webassembly quickjs sandbox",
+	"type": "module",
+	"keywords": [
+		"typescript",
+		"quickjs",
+		"runtime",
+		"wasm",
+		"webassembly",
+		"bun",
+		"hono",
+		"example",
+		"worker",
+		"pool",
+		"package",
+		"library"
+	],
+	"files": ["dist"],
+	"tshy": {
+		"exclude": ["src/**/*.test.ts"],
+		"dialects": ["esm", "commonjs"],
+		"exports": {
+			"./package.json": "./package.json",
+			".": "./src/index.ts"
+		}
+	},
+	"scripts": {
+		"start": "bun run --watch example/server/server.ts",
+		"build": "tshy",
+		"test": "bun test",
+		"test:dev": "bun test --watch",
+		"lint": "bunx @biomejs/biome check",
+		"lint:fix": "bunx @biomejs/biome check --write"
+	},
+	"author": {
+		"name": "Sebastian Wessel",
+		"url": "https://sebastianwessel.de"
+	},
+	"homepage": "https://github.com/sebastianwessel/quickjs#readme",
+	"bugs": {
+		"url": "https://github.com/sebastianwessel/quickjs/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/sebastianwessel/quickjs.git"
+	},
+	"license": "ISC",
+	"devDependencies": {
+		"@biomejs/biome": "^1.8.3",
+		"@types/autocannon": "^7.12.5",
+		"@types/bun": "^1.1.6",
+		"@types/node": "^20.14.9",
+		"autocannon": "^7.15.0",
+		"quickjs-emscripten": "^0.29.2",
+		"tshy": "^1.16.2",
+		"typescript": "^5.5.3",
+		"poolifier-web-worker": "^0.4.12",
+		"hono": "^4.4.10",
+		"@hono/swagger-ui": "^0.3.0",
+		"@hono/zod-openapi": "^0.14.7"
+	},
+	"dependencies": {
+		"@jitl/quickjs-ng-wasmfile-release-sync": "^0.29.2",
+		"memfs": "^4.9.3",
+		"quickjs-emscripten-core": "^0.29.2"
+	},
+	"exports": {
+		"./package.json": "./package.json",
+		".": {
+			"import": {
+				"source": "./src/index.ts",
+				"types": "./dist/esm/index.d.ts",
+				"default": "./dist/esm/index.js"
+			},
+			"require": {
+				"source": "./src/index.ts",
+				"types": "./dist/commonjs/index.d.ts",
+				"default": "./dist/commonjs/index.js"
+			}
+		}
+	},
+	"main": "./dist/commonjs/index.js",
+	"types": "./dist/commonjs/index.d.ts"
 }

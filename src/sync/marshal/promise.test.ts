@@ -1,6 +1,6 @@
+import { expect, mock, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
 import type { Disposable, QuickJSDeferredPromise, QuickJSHandle } from 'quickjs-emscripten-core'
-import { expect, test, vi } from 'vitest'
 
 import { newDeferred } from '../util'
 import { fn, json } from '../vmutil'
@@ -11,17 +11,17 @@ const testPromise = (reject: boolean) => async () => {
 	const ctx = (await getQuickJS()).newContext()
 
 	const disposables: Disposable[] = []
-	const marshal = vi.fn(v => {
+	const marshal = mock(v => {
 		const handle = json(ctx, v)
 		disposables.push(handle)
 		return handle
 	})
-	const preMarshal = vi.fn((_: any, a: QuickJSDeferredPromise): QuickJSHandle => {
+	const preMarshal = mock((_: any, a: QuickJSDeferredPromise): QuickJSHandle => {
 		disposables.push(a)
 		return a.handle
 	})
 
-	const mockNotify = vi.fn()
+	const mockNotify = mock()
 	const notify = ctx.newFunction('notify', (handle1, handle2) => {
 		const arg1 = ctx.dump(handle1)
 		const arg2 = ctx.dump(handle2)

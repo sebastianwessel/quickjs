@@ -1,6 +1,6 @@
+import { expect, mock, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
 import type { QuickJSHandle } from 'quickjs-emscripten-core'
-import { expect, test, vi } from 'vitest'
 
 import { call, eq, json } from './vmutil.js'
 import { type SyncMode, isHandleWrapped, isWrapped, unwrap, unwrapHandle, wrap, wrapHandle } from './wrapper.js'
@@ -11,8 +11,8 @@ test('wrap, unwrap, isWrapped', async () => {
 	const handle = ctx.unwrapResult(ctx.evalCode('({ a: 1 })'))
 	const proxyKeySymbol = Symbol()
 	const proxyKeySymbolHandle = ctx.unwrapResult(ctx.evalCode('Symbol()'))
-	const marshal = vi.fn()
-	const syncMode = vi.fn()
+	const marshal = mock()
+	const syncMode = mock()
 
 	expect(isWrapped(target, proxyKeySymbol)).toBe(false)
 	expect(unwrap(target, proxyKeySymbol)).toBe(target)
@@ -40,8 +40,8 @@ test('wrap without sync', async () => {
 	const handle = ctx.unwrapResult(ctx.evalCode('({ a: 1 })'))
 	const proxyKeySymbol = Symbol()
 	const proxyKeySymbolHandle = ctx.unwrapResult(ctx.evalCode('Symbol()'))
-	const marshal = vi.fn()
-	const syncMode = vi.fn()
+	const marshal = mock()
+	const syncMode = mock()
 
 	const wrapped = wrap(ctx, target, proxyKeySymbol, proxyKeySymbolHandle, marshal, syncMode)
 	if (!wrapped) throw new Error('wrapped is undefined')
@@ -71,8 +71,8 @@ test('wrap with both sync', async () => {
 	const handle = ctx.unwrapResult(ctx.evalCode('({ a: 1 })'))
 	const proxyKeySymbol = Symbol()
 	const proxyKeySymbolHandle = ctx.unwrapResult(ctx.evalCode('Symbol()'))
-	const marshal = vi.fn((t: any): [QuickJSHandle, boolean] => [t === wrapped ? handle : json(ctx, t), false])
-	const syncMode = vi.fn((): SyncMode => 'both')
+	const marshal = mock((t: any): [QuickJSHandle, boolean] => [t === wrapped ? handle : json(ctx, t), false])
+	const syncMode = mock((): SyncMode => 'both')
 
 	const wrapped = wrap(ctx, target, proxyKeySymbol, proxyKeySymbolHandle, marshal, syncMode)
 	if (!wrapped) throw new Error('wrapped is undefined')
@@ -108,8 +108,8 @@ test('wrap with vm sync', async () => {
 	const handle = ctx.unwrapResult(ctx.evalCode('({ a: 1 })'))
 	const proxyKeySymbol = Symbol()
 	const proxyKeySymbolHandle = ctx.unwrapResult(ctx.evalCode('Symbol()'))
-	const marshal = vi.fn((t: any): [QuickJSHandle, boolean] => [t === wrapped ? handle : json(ctx, t), false])
-	const syncMode = vi.fn((): SyncMode => 'vm')
+	const marshal = mock((t: any): [QuickJSHandle, boolean] => [t === wrapped ? handle : json(ctx, t), false])
+	const syncMode = mock((): SyncMode => 'vm')
 
 	const wrapped = wrap(ctx, target, proxyKeySymbol, proxyKeySymbolHandle, marshal, syncMode)
 	if (!wrapped) throw new Error('wrapped is undefined')
@@ -145,8 +145,8 @@ test('wrapHandle, unwrapHandle, isHandleWrapped', async () => {
 	const handle = ctx.unwrapResult(ctx.evalCode('({ a: 1 })'))
 	const proxyKeySymbol = Symbol()
 	const proxyKeySymbolHandle = ctx.unwrapResult(ctx.evalCode('Symbol()'))
-	const unmarshal = vi.fn()
-	const syncMode = vi.fn()
+	const unmarshal = mock()
+	const syncMode = mock()
 
 	expect(isHandleWrapped(ctx, handle, proxyKeySymbolHandle)).toBe(false)
 	expect(unwrapHandle(ctx, handle, proxyKeySymbolHandle)).toEqual([handle, false])
@@ -184,8 +184,8 @@ test('wrapHandle without sync', async () => {
 	const handle = ctx.unwrapResult(ctx.evalCode('({ a: 1 })'))
 	const proxyKeySymbol = Symbol()
 	const proxyKeySymbolHandle = ctx.unwrapResult(ctx.evalCode('Symbol()'))
-	const unmarshal = vi.fn((h: QuickJSHandle) => (wrapped && eq(ctx, h, wrapped) ? target : ctx.dump(h)))
-	const syncMode = vi.fn()
+	const unmarshal = mock((h: QuickJSHandle) => (wrapped && eq(ctx, h, wrapped) ? target : ctx.dump(h)))
+	const syncMode = mock()
 
 	const [wrapped, w] = wrapHandle(ctx, handle, proxyKeySymbol, proxyKeySymbolHandle, unmarshal, syncMode)
 	if (!wrapped || !w) throw new Error('wrapped is undefined')
@@ -214,10 +214,10 @@ test('wrapHandle with both sync', async () => {
 	const handle = ctx.unwrapResult(ctx.evalCode('({ a: 1 })'))
 	const proxyKeySymbol = Symbol()
 	const proxyKeySymbolHandle = ctx.unwrapResult(ctx.evalCode('Symbol()'))
-	const unmarshal = vi.fn((h: QuickJSHandle) => {
+	const unmarshal = mock((h: QuickJSHandle) => {
 		return wrapped && eq(ctx, h, wrapped) ? target : ctx.dump(h)
 	})
-	const syncMode = vi.fn((): SyncMode => 'both')
+	const syncMode = mock((): SyncMode => 'both')
 
 	const [wrapped, w] = wrapHandle(ctx, handle, proxyKeySymbol, proxyKeySymbolHandle, unmarshal, syncMode)
 	if (!wrapped || !w) throw new Error('wrapped is undefined')
@@ -257,8 +257,8 @@ test('wrapHandle with host sync', async () => {
 	const handle = ctx.unwrapResult(ctx.evalCode('({ a: 1 })'))
 	const proxyKeySymbol = Symbol()
 	const proxyKeySymbolHandle = ctx.unwrapResult(ctx.evalCode('Symbol()'))
-	const unmarshal = vi.fn((handle: QuickJSHandle) => (wrapped && eq(ctx, handle, wrapped) ? target : ctx.dump(handle)))
-	const syncMode = vi.fn((): SyncMode => 'host')
+	const unmarshal = mock((handle: QuickJSHandle) => (wrapped && eq(ctx, handle, wrapped) ? target : ctx.dump(handle)))
+	const syncMode = mock((): SyncMode => 'host')
 
 	const [wrapped, w] = wrapHandle(ctx, handle, proxyKeySymbol, proxyKeySymbolHandle, unmarshal, syncMode)
 	if (!wrapped || !w) throw new Error('wrapped is undefined')
@@ -293,14 +293,14 @@ test('wrap and wrapHandle', async () => {
 	const handle = ctx.unwrapResult(ctx.evalCode('({ a: 1 })'))
 	const proxyKeySymbol = Symbol()
 	const proxyKeySymbolHandle = ctx.unwrapResult(ctx.evalCode('Symbol()'))
-	const marshal = vi.fn((t: any): [QuickJSHandle, boolean] => [
+	const marshal = mock((t: any): [QuickJSHandle, boolean] => [
 		wrappedHandle && t === wrapped ? wrappedHandle : json(ctx, t),
 		false,
 	])
-	const unmarshal = vi.fn((handle: QuickJSHandle) =>
+	const unmarshal = mock((handle: QuickJSHandle) =>
 		wrappedHandle && eq(ctx, handle, wrappedHandle) ? wrapped : ctx.dump(handle),
 	)
-	const syncMode = vi.fn((): SyncMode => 'both')
+	const syncMode = mock((): SyncMode => 'both')
 
 	const wrapped = wrap(ctx, target, proxyKeySymbol, proxyKeySymbolHandle, marshal, syncMode)
 	if (!wrapped) throw new Error('wrapped is undefined')
@@ -343,9 +343,9 @@ test('non object', async () => {
 	const proxyKeySymbol = Symbol()
 	const proxyKeySymbolHandle = ctx.unwrapResult(ctx.evalCode('Symbol()'))
 
-	expect(wrap(ctx, target, proxyKeySymbol, proxyKeySymbolHandle, vi.fn(), vi.fn())).toBe(undefined)
+	expect(wrap(ctx, target, proxyKeySymbol, proxyKeySymbolHandle, mock(), mock())).toBe(undefined)
 
-	expect(wrapHandle(ctx, handle, proxyKeySymbol, proxyKeySymbolHandle, vi.fn(), vi.fn())).toEqual([undefined, false])
+	expect(wrapHandle(ctx, handle, proxyKeySymbol, proxyKeySymbolHandle, mock(), mock())).toEqual([undefined, false])
 
 	proxyKeySymbolHandle.dispose()
 	ctx.dispose()

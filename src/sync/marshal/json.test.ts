@@ -1,5 +1,5 @@
+import { expect, mock, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
-import { expect, test, vi } from 'vitest'
 
 import marshalJSON from './json'
 
@@ -8,7 +8,7 @@ test('empty object', async () => {
 	const prototypeCheck = ctx.unwrapResult(ctx.evalCode('o => Object.getPrototypeOf(o) === Object.prototype'))
 
 	const obj = {}
-	const preMarshal = vi.fn((_, a) => a)
+	const preMarshal = mock((_, a) => a)
 
 	const handle = marshalJSON(ctx, obj, preMarshal)
 	if (!handle) throw new Error('handle is undefined')
@@ -30,7 +30,7 @@ test('normal object', async () => {
 	const entries = ctx.unwrapResult(ctx.evalCode('Object.entries'))
 
 	const obj = { a: 100, b: 'hoge' }
-	const preMarshal = vi.fn((_, a) => a)
+	const preMarshal = mock((_, a) => a)
 
 	const handle = marshalJSON(ctx, obj, preMarshal)
 	if (!handle) throw new Error('handle is undefined')
@@ -60,7 +60,7 @@ test('array', async () => {
 	const isArray = ctx.unwrapResult(ctx.evalCode('Array.isArray'))
 
 	const array = [1, 'aa']
-	const preMarshal = vi.fn((_, a) => a)
+	const preMarshal = mock((_, a) => a)
 
 	const handle = marshalJSON(ctx, array, preMarshal)
 	if (!handle) throw new Error('handle is undefined')

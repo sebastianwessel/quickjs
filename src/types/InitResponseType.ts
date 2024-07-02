@@ -1,3 +1,4 @@
+import type { IFs } from 'memfs'
 import type { ContextEvalOptions } from 'quickjs-emscripten-core'
 import type { Arena } from '../sync/index.js'
 import type { ErrorResponse } from './ErrorResponse.js'
@@ -11,4 +12,5 @@ export type InitResponseType = {
 		filename?: string,
 		options?: number | ContextEvalOptions,
 	) => Promise<OkResponse | ErrorResponse>
+	mountedFs?: IFs
 }

@@ -1,5 +1,5 @@
+import { describe, expect, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
-import { describe, expect, test } from 'vitest'
 
 import { Arena } from '.'
 

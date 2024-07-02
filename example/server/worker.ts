@@ -23,6 +23,7 @@ class MyThreadWorker extends ThreadWorker<InputData, ResponseData> {
 		}
 
 		const { evalCode } = await this.initRuntime({
+			allowFs: true,
 			allowHttp: true,
 			env: {},
 		})

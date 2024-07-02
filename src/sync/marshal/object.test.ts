@@ -1,5 +1,5 @@
+import { expect, mock, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
-import { expect, test, vi } from 'vitest'
 
 import { call } from '../vmutil'
 
@@ -10,8 +10,8 @@ test('empty object', async () => {
 	const prototypeCheck = ctx.unwrapResult(ctx.evalCode('o => Object.getPrototypeOf(o) === Object.prototype'))
 
 	const obj = {}
-	const marshal = vi.fn()
-	const preMarshal = vi.fn((_, a) => a)
+	const marshal = mock()
+	const preMarshal = mock((_, a) => a)
 
 	const handle = marshalObject(ctx, obj, marshal, preMarshal)
 	if (!handle) throw new Error('handle is undefined')
@@ -34,10 +34,10 @@ test('normal object', async () => {
 	const entries = ctx.unwrapResult(ctx.evalCode('Object.entries'))
 
 	const obj = { a: 100, b: 'hoge' }
-	const marshal = vi.fn(v =>
+	const marshal = mock(v =>
 		typeof v === 'number' ? ctx.newNumber(v) : typeof v === 'string' ? ctx.newString(v) : ctx.null,
 	)
-	const preMarshal = vi.fn((_, a) => a)
+	const preMarshal = mock((_, a) => a)
 
 	const handle = marshalObject(ctx, obj, marshal, preMarshal)
 	if (!handle) throw new Error('handle is undefined')
@@ -68,10 +68,10 @@ test('array', async () => {
 	const isArray = ctx.unwrapResult(ctx.evalCode('Array.isArray'))
 
 	const array = [1, 'aa']
-	const marshal = vi.fn(v =>
+	const marshal = mock(v =>
 		typeof v === 'number' ? ctx.newNumber(v) : typeof v === 'string' ? ctx.newString(v) : ctx.null,
 	)
-	const preMarshal = vi.fn((_, a) => a)
+	const preMarshal = mock((_, a) => a)
 
 	const handle = marshalObject(ctx, array, marshal, preMarshal)
 	if (!handle) throw new Error('handle is undefined')
@@ -97,7 +97,7 @@ test('prototype', async () => {
 	const proto = { a: 100 }
 	const protoHandle = ctx.newObject()
 	ctx.setProp(protoHandle, 'a', ctx.newNumber(100))
-	const preMarshal = vi.fn((_, a) => a)
+	const preMarshal = mock((_, a) => a)
 
 	const obj = Object.create(proto)
 	obj.b = 'hoge'

@@ -1,4 +1,4 @@
-import { expect, test, vi } from 'vitest'
+import { expect, mock, test } from 'bun:test'
 
 import { complexity, isES2015Class, isObject, newDeferred, walkObject } from './util.js'
 
@@ -27,7 +27,7 @@ test('isObject', () => {
 })
 
 test('walkObject', () => {
-	const cb = vi.fn()
+	const cb = mock()
 	const obj = { a: { b: 1, c: () => {} } }
 	const set = new Set<any>([obj, obj.a, obj.a.c])
 	expect(walkObject(obj, cb)).toEqual(set)

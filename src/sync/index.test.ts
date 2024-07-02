@@ -1,5 +1,5 @@
+import { describe, expect, mock, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
-import { describe, expect, test, vi } from 'vitest'
 
 import { isWrapped } from './wrapper.js'
 
@@ -49,7 +49,7 @@ describe('readme', () => {
 		const arena = new Arena(ctx, { isMarshalable: true })
 
 		// expose objects as global objects in QuickJS VM
-		const log = vi.fn()
+		const log = mock()
 		arena.expose({
 			console: { log },
 		})
@@ -207,7 +207,7 @@ describe('evalCode', () => {
 		const promise = new Promise(resolve => {
 			deferred.resolve = resolve
 		})
-		const res = vi.fn()
+		const res = mock()
 		arena.evalCode(`(p, r) => { p.then(d => { r(d + "!"); }); }`)(promise, res)
 		deferred.resolve?.('hoge')
 		await promise
@@ -222,7 +222,7 @@ describe('evalCode', () => {
 		const ctx = (await getQuickJS()).newContext()
 		const arena = new Arena(ctx, { isMarshalable: true })
 
-		const consolelog = vi.fn()
+		const consolelog = mock()
 		arena.expose({
 			console: {
 				log: consolelog,

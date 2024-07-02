@@ -1,6 +1,6 @@
+import { expect, mock, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
 import type { QuickJSHandle } from 'quickjs-emscripten-core'
-import { expect, test, vi } from 'vitest'
 
 import VMMap from '../vmmap.js'
 import { json } from '../vmutil.js'
@@ -150,7 +150,7 @@ const setup = async () => {
 	const ctx = (await getQuickJS()).newContext()
 	const map = new VMMap(ctx)
 	const disposables: QuickJSHandle[] = []
-	const marshal = vi.fn((target: unknown): [QuickJSHandle, boolean] => {
+	const marshal = mock((target: unknown): [QuickJSHandle, boolean] => {
 		const handle = map.get(target)
 		if (handle) return [handle, false]
 

@@ -1,19 +1,19 @@
+import { expect, mock, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
 import type { QuickJSHandle } from 'quickjs-emscripten-core'
-import { expect, test, vi } from 'vitest'
 
 import unmarshalObject from './object.js'
 
 test('normal object', async () => {
 	const ctx = (await getQuickJS()).newContext()
-	const unmarshal = vi.fn((v: QuickJSHandle): [unknown, boolean] => [ctx.dump(v), false])
-	const preUnmarshal = vi.fn(a => a)
+	const unmarshal = mock((v: QuickJSHandle): [unknown, boolean] => [ctx.dump(v), false])
+	const preUnmarshal = mock(a => a)
 
 	const handle = ctx.unwrapResult(ctx.evalCode('({ a: 1, b: true })'))
 	const obj = unmarshalObject(ctx, handle, unmarshal, preUnmarshal)
 	if (!obj) throw new Error('obj is undefined')
 	expect(obj).toEqual({ a: 1, b: true })
-	expect(unmarshal).toReturnTimes(4)
+	expect(unmarshal).toHaveReturnedTimes(4)
 	expect(unmarshal).toReturnWith(['a', false])
 	expect(unmarshal).toReturnWith([1, false])
 	expect(unmarshal).toReturnWith(['b', false])
@@ -28,11 +28,11 @@ test('normal object', async () => {
 test('properties', async () => {
 	const ctx = (await getQuickJS()).newContext()
 	const disposables: QuickJSHandle[] = []
-	const unmarshal = vi.fn((v: QuickJSHandle): [unknown, boolean] => {
+	const unmarshal = mock((v: QuickJSHandle): [unknown, boolean] => {
 		disposables.push(v)
 		return [ctx.typeof(v) === 'function' ? () => {} : ctx.dump(v), false]
 	})
-	const preUnmarshal = vi.fn(a => a)
+	const preUnmarshal = mock(a => a)
 
 	const handle = ctx.unwrapResult(
 		ctx.evalCode(`{
@@ -77,8 +77,8 @@ test('properties', async () => {
 
 test('array', async () => {
 	const ctx = (await getQuickJS()).newContext()
-	const unmarshal = vi.fn((v: QuickJSHandle): [unknown, boolean] => [ctx.dump(v), false])
-	const preUnmarshal = vi.fn(a => a)
+	const unmarshal = mock((v: QuickJSHandle): [unknown, boolean] => [ctx.dump(v), false])
+	const preUnmarshal = mock(a => a)
 
 	const handle = ctx.unwrapResult(ctx.evalCode(`[1, true, "a"]`))
 	const array = unmarshalObject(ctx, handle, unmarshal, preUnmarshal)
@@ -100,11 +100,11 @@ test('array', async () => {
 
 test('prototype', async () => {
 	const ctx = (await getQuickJS()).newContext()
-	const unmarshal = vi.fn((v: QuickJSHandle): [unknown, boolean] => [
+	const unmarshal = mock((v: QuickJSHandle): [unknown, boolean] => [
 		ctx.typeof(v) === 'object' ? { a: () => 1 } : ctx.dump(v),
 		false,
 	])
-	const preUnmarshal = vi.fn(a => a)
+	const preUnmarshal = mock(a => a)
 
 	const handle = ctx.unwrapResult(ctx.evalCode('Object.create({ a: () => 1 })'))
 	const obj = unmarshalObject(ctx, handle, unmarshal, preUnmarshal) as any
@@ -122,7 +122,7 @@ test('prototype', async () => {
 
 test('undefined', async () => {
 	const ctx = (await getQuickJS()).newContext()
-	const f = vi.fn()
+	const f = mock()
 
 	expect(unmarshalObject(ctx, ctx.undefined, f, f)).toEqual(undefined)
 	expect(unmarshalObject(ctx, ctx.true, f, f)).toEqual(undefined)

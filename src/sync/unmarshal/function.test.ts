@@ -1,6 +1,6 @@
+import { expect, mock, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
 import type { QuickJSHandle } from 'quickjs-emscripten-core'
-import { expect, test, vi } from 'vitest'
 
 import { json } from '../vmutil.js'
 
@@ -8,9 +8,9 @@ import unmarshalFunction from './function.js'
 
 test('arrow function', async () => {
 	const ctx = (await getQuickJS()).newContext()
-	const marshal = vi.fn((v): [QuickJSHandle, boolean] => [json(ctx, v), false])
-	const unmarshal = vi.fn((v: QuickJSHandle): [unknown, boolean] => [ctx.dump(v), false])
-	const preUnmarshal = vi.fn(a => a)
+	const marshal = mock((v): [QuickJSHandle, boolean] => [json(ctx, v), false])
+	const unmarshal = mock((v: QuickJSHandle): [unknown, boolean] => [ctx.dump(v), false])
+	const preUnmarshal = mock(a => a)
 
 	const handle = ctx.unwrapResult(ctx.evalCode('(a, b) => a + b'))
 	const func = unmarshalFunction(ctx, handle, marshal, unmarshal, preUnmarshal)
@@ -21,7 +21,7 @@ test('arrow function', async () => {
 	expect(marshal).toBeCalledWith(undefined)
 	expect(marshal).toBeCalledWith(1)
 	expect(marshal).toBeCalledWith(2)
-	expect(unmarshal).toReturnTimes(5)
+	expect(unmarshal).toHaveReturnedTimes(5)
 	expect(unmarshal).toReturnWith([3, false]) // a + b
 	expect(unmarshal).toReturnWith(['name', false])
 	expect(unmarshal).toReturnWith([func.name, false])
@@ -40,14 +40,14 @@ test('function', async () => {
 	const ctx = (await getQuickJS()).newContext()
 	const that = { a: 1 }
 	const thatHandle = ctx.unwrapResult(ctx.evalCode('({ a: 1 })'))
-	const marshal = vi.fn((v): [QuickJSHandle, boolean] => [v === that ? thatHandle : json(ctx, v), false])
+	const marshal = mock((v): [QuickJSHandle, boolean] => [v === that ? thatHandle : json(ctx, v), false])
 	const disposables: QuickJSHandle[] = []
-	const unmarshal = vi.fn((v: QuickJSHandle): [unknown, boolean] => {
+	const unmarshal = mock((v: QuickJSHandle): [unknown, boolean] => {
 		const ty = ctx.typeof(v)
 		if (ty === 'object' || ty === 'function') disposables.push(v)
 		return [ctx.dump(v), false]
 	})
-	const preUnmarshal = vi.fn(a => a)
+	const preUnmarshal = mock(a => a)
 
 	const handle = ctx.unwrapResult(ctx.evalCode('(function (a) { return this.a + a; })'))
 
@@ -58,7 +58,7 @@ test('function', async () => {
 	expect(marshal).toBeCalledTimes(2) // this, 2
 	expect(marshal).toBeCalledWith(that)
 	expect(marshal).toBeCalledWith(2)
-	expect(unmarshal).toReturnTimes(7) // this.a + b, func.prototype, func.name, func.length
+	expect(unmarshal).toHaveReturnedTimes(7) // this.a + b, func.prototype, func.name, func.length
 	expect(unmarshal).toReturnWith([3, false]) // this.a + b
 	expect(unmarshal).toReturnWith(['prototype', false])
 	expect(unmarshal).toReturnWith([func.prototype, false])
@@ -78,13 +78,13 @@ test('function', async () => {
 test('constructor', async () => {
 	const ctx = (await getQuickJS()).newContext()
 	const disposables: QuickJSHandle[] = []
-	const marshal = vi.fn((v): [QuickJSHandle, boolean] => [typeof v === 'object' ? ctx.undefined : json(ctx, v), false])
-	const unmarshal = vi.fn((v: QuickJSHandle): [unknown, boolean] => {
+	const marshal = mock((v): [QuickJSHandle, boolean] => [typeof v === 'object' ? ctx.undefined : json(ctx, v), false])
+	const unmarshal = mock((v: QuickJSHandle): [unknown, boolean] => {
 		const ty = ctx.typeof(v)
 		if (ty === 'object' || ty === 'function') disposables.push(v)
 		return [ctx.dump(v), false]
 	})
-	const preUnmarshal = vi.fn(a => a)
+	const preUnmarshal = mock(a => a)
 
 	const handle = ctx.unwrapResult(ctx.evalCode('(function (b) { this.a = b + 2; })'))
 
@@ -97,7 +97,7 @@ test('constructor', async () => {
 	expect(marshal).toBeCalledTimes(2)
 	expect(marshal).toBeCalledWith(instance)
 	expect(marshal).toBeCalledWith(100)
-	expect(unmarshal).toReturnTimes(7)
+	expect(unmarshal).toHaveReturnedTimes(7)
 	expect(unmarshal).toReturnWith([instance, false])
 	expect(unmarshal).toReturnWith(['prototype', false])
 	expect(unmarshal).toReturnWith([Cls.prototype, false])
@@ -115,14 +115,14 @@ test('constructor', async () => {
 
 test('class', async () => {
 	const ctx = (await getQuickJS()).newContext()
-	const marshal = vi.fn((v): [QuickJSHandle, boolean] => [typeof v === 'object' ? ctx.undefined : json(ctx, v), false])
+	const marshal = mock((v): [QuickJSHandle, boolean] => [typeof v === 'object' ? ctx.undefined : json(ctx, v), false])
 	const disposables: QuickJSHandle[] = []
-	const unmarshal = vi.fn((v: QuickJSHandle): [unknown, boolean] => {
+	const unmarshal = mock((v: QuickJSHandle): [unknown, boolean] => {
 		const ty = ctx.typeof(v)
 		if (ty === 'object' || ty === 'function') disposables.push(v)
 		return [ctx.dump(v), false]
 	})
-	const preUnmarshal = vi.fn(a => a)
+	const preUnmarshal = mock(a => a)
 
 	const handle = ctx.unwrapResult(ctx.evalCode('(class A { constructor(a) { this.a = a + 1; } })'))
 
@@ -135,7 +135,7 @@ test('class', async () => {
 	expect(marshal).toBeCalledTimes(2)
 	expect(marshal).toBeCalledWith(instance)
 	expect(marshal).toBeCalledWith(2)
-	expect(unmarshal).toReturnTimes(7)
+	expect(unmarshal).toHaveReturnedTimes(7)
 	expect(unmarshal).toReturnWith([instance, false])
 	expect(unmarshal).toReturnWith(['prototype', false])
 	expect(unmarshal).toReturnWith([Cls.prototype, false])
@@ -153,7 +153,7 @@ test('class', async () => {
 
 test('undefined', async () => {
 	const ctx = (await getQuickJS()).newContext()
-	const f = vi.fn()
+	const f = mock()
 
 	expect(unmarshalFunction(ctx, ctx.undefined, f, f, f)).toEqual(undefined)
 	expect(unmarshalFunction(ctx, ctx.true, f, f, f)).toEqual(undefined)

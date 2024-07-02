@@ -1,6 +1,6 @@
+import { expect, mock, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
 import type { QuickJSHandle } from 'quickjs-emscripten-core'
-import { expect, test, vi } from 'vitest'
 
 import { call, eq, json } from '../vmutil'
 
@@ -9,10 +9,10 @@ import marshalFunction from './function'
 test('normal func', async () => {
 	const ctx = (await getQuickJS()).newContext()
 
-	const marshal = vi.fn(v => json(ctx, v))
-	const unmarshal = vi.fn(v => (eq(ctx, v, ctx.global) ? undefined : ctx.dump(v)))
-	const preMarshal = vi.fn((_, a) => a)
-	const innerfn = vi.fn((..._args: any[]) => 'hoge')
+	const marshal = mock(v => json(ctx, v))
+	const unmarshal = mock(v => (eq(ctx, v, ctx.global) ? undefined : ctx.dump(v)))
+	const preMarshal = mock((_, a) => a)
+	const innerfn = mock((..._args: any[]) => 'hoge')
 	const fn = (...args: any[]) => innerfn(...args)
 
 	const handle = marshalFunction(ctx, fn, marshal, unmarshal, preMarshal)
@@ -40,7 +40,7 @@ test('normal func', async () => {
 
 test('func which has properties', async () => {
 	const ctx = (await getQuickJS()).newContext()
-	const marshal = vi.fn(v => json(ctx, v))
+	const marshal = mock(v => json(ctx, v))
 
 	const fn = () => {}
 	fn.hoge = 'foo'
@@ -113,7 +113,7 @@ test('preApply', async () => {
 		return ctx.null
 	}
 	const unmarshal = (v: QuickJSHandle) => (ctx.typeof(v) === 'object' ? that : ctx.dump(v))
-	const preApply = vi.fn((a: Function, b: any, c: any[]) => `${a.apply(b, c)}!`)
+	const preApply = mock((a: Function, b: any, c: any[]) => `${a.apply(b, c)}!`)
 	const that = {}
 	const thatHandle = ctx.newObject()
 
@@ -136,7 +136,7 @@ test('preApply', async () => {
 
 test('undefined', async () => {
 	const ctx = (await getQuickJS()).newContext()
-	const f = vi.fn()
+	const f = mock()
 
 	expect(marshalFunction(ctx, undefined, f, f, f)).toBe(undefined)
 	expect(marshalFunction(ctx, null, f, f, f)).toBe(undefined)

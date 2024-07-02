@@ -8,20 +8,19 @@ export const executeRoute = createRoute({
 			content: {
 				'text/plain': {
 					schema: z.string(),
-					example: `
-        import * as path from 'path'
+					example: `import * as path from 'path'
 
-        const fn = async ()=>{
-        console.log(path.join('src','dist'))
+const fn = async ()=>{
+console.log(path.join('src','dist'))
 
-          const url = new URL('https://example.com')
+  const url = new URL('https://example.com')
 
-          const f = await fetch(url)
+  const f = await fetch(url)
 
-          return f.text()
-          }
-          
-        export default await fn()
+  return f.text()
+  }
+  
+export default await fn()
       `,
 				},
 			},

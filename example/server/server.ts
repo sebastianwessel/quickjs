@@ -3,11 +3,11 @@ import { OpenAPIHono } from '@hono/zod-openapi'
 import type { StatusCode } from 'hono/utils/http-status'
 import { DynamicThreadPool, PoolEvents, availableParallelism } from 'poolifier-web-worker'
 import { executeRoute } from './openapi.js'
-import type { InputData, MyResponse } from './worker.js'
+import type { InputData, ResponseData } from './types.js'
 
 const workerFileURL = new URL('./worker.ts', import.meta.url)
 
-const dynamicPool = new DynamicThreadPool<InputData, MyResponse>(0, availableParallelism(), workerFileURL, {
+const dynamicPool = new DynamicThreadPool<InputData, ResponseData>(0, availableParallelism(), workerFileURL, {
 	errorEventHandler: (e: ErrorEvent) => {
 		console.error(e)
 	},

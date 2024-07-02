@@ -1,5 +1,5 @@
+import { expect, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
-import { expect, test } from 'vitest'
 
 import unmarshalPrimitive from './primitive.js'
 

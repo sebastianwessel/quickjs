@@ -1,5 +1,5 @@
+import { expect, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
-import { expect, test, vi } from 'vitest'
 
 import { ContextEx, wrapContext } from './contextex.js'
 

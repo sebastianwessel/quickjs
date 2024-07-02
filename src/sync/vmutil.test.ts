@@ -1,6 +1,6 @@
+import { expect, mock, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
 import type { QuickJSHandle } from 'quickjs-emscripten-core'
-import { expect, test, vi } from 'vitest'
 
 import {
 	call,
@@ -120,7 +120,7 @@ test('consumeAll', async () => {
 	expect(
 		consumeAll(
 			handles,
-			vi.fn(() => o),
+			mock(() => o),
 		),
 	).toBe(o)
 	expect(handles.every(h => !h.alive)).toBe(true)
@@ -145,7 +145,7 @@ test('mayConsume', async () => {
 	expect(
 		mayConsume(
 			[handle, false],
-			vi.fn(() => o),
+			mock(() => o),
 		),
 	).toBe(o)
 	expect(handle.alive).toBe(true)
@@ -176,7 +176,7 @@ test('mayConsumeAll', async () => {
 	expect(
 		mayConsumeAll(
 			handles,
-			vi.fn((..._: any[]) => o),
+			mock((..._: any[]) => o),
 		),
 	).toBe(o)
 	expect(handles[0][0].alive).toBe(true)

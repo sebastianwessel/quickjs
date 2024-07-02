@@ -1,46 +1,27 @@
-import { readFile, writeFile } from 'node:fs'
-import { join } from 'node:path'
-import type { QuickJSContext } from 'quickjs-emscripten-core'
+import { memfs } from 'memfs'
+import type { Arena } from './sync/index.js'
 import type { RuntimeOptions } from './types/RuntimeOptions.js'
 
-export const mount = (vm: QuickJSContext, options: RuntimeOptions) => {
-	const mountPath = options.mountPath
-	if (!mountPath) {
+export const mount = (vm: Arena, options: RuntimeOptions) => {
+	if (!options.allowFs) {
 		return
 	}
-	const readFileHandle = vm.newFunction('readFile', pathHandle => {
-		const path = vm.getString(pathHandle)
-		const promise = vm.newPromise()
-		const filename = join(mountPath, path)
-		readFile(filename, (err, data) => {
-			if (err) {
-				promise.reject(vm.newError(err))
-			} else {
-				promise.resolve(vm.newArrayBuffer(data as unknown as ArrayBufferLike))
-			}
-		})
-		promise.settled.then(vm.runtime.executePendingJobs)
-		return promise.handle
-	})
-	readFileHandle.consume(handle => vm.setProp(vm.global, 'readFile', handle))
 
-	if (!options.allowFileWrite) {
-		return
-	}
-	const writeFileHandle = vm.newFunction('writeFile', (pathHandle, dataHandle) => {
-		const path = vm.getString(pathHandle)
-		const data = vm.getString(dataHandle)
-		const promise = vm.newPromise()
-		const filename = join(mountPath, path)
-		writeFile(filename, data, err => {
-			if (err) {
-				promise.reject(vm.newError(err))
-			} else {
-				promise.resolve()
-			}
-		})
-		promise.settled.then(vm.runtime.executePendingJobs)
-		return promise.handle
+	const { vol } = memfs(options.mountFs ?? { src: {} }, '/')
+
+	vm.expose({
+		__fs: {
+			access: (...params: Parameters<typeof vol.access>) => vol.access(...params),
+			accessSync: (...params: Parameters<typeof vol.accessSync>) => vol.accessSync(...params),
+			appendFile: (...params: Parameters<typeof vol.appendFile>) => vol.appendFile(...params),
+			appendFileSync: (...params: Parameters<typeof vol.appendFileSync>) => vol.appendFileSync(...params),
+			chmod: (...params: Parameters<typeof vol.chmod>) => vol.chmod(...params),
+			chmodSync: (...params: Parameters<typeof vol.chmodSync>) => vol.chmodSync(...params),
+			readFileSync: (...params: Parameters<typeof vol.readFileSync>) => vol.readFileSync(...params).toString(),
+			writeFileSync: (...params: Parameters<typeof vol.writeFileSync>) => {
+				vol.writeFileSync(...params)
+			},
+			existsSync: (...params: Parameters<typeof vol.existsSync>) => vol.existsSync(...params),
+		},
 	})
-	writeFileHandle.consume(handle => vm.setProp(vm.global, 'writeFile', handle))
 }

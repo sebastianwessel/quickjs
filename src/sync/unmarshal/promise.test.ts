@@ -1,20 +1,20 @@
+import { expect, mock, test } from 'bun:test'
 import { getQuickJS } from 'quickjs-emscripten'
 import type { Disposable, QuickJSHandle } from 'quickjs-emscripten-core'
-import { expect, test, vi } from 'vitest'
 
 import unmarshalPromise from './promise.js'
 
 const testPromise = (reject: boolean) => async () => {
 	const ctx = (await getQuickJS()).newContext()
 	const disposables: Disposable[] = []
-	const marshal = vi.fn((v): [QuickJSHandle, boolean] => {
+	const marshal = mock((v): [QuickJSHandle, boolean] => {
 		const f = ctx.newFunction(v.name, h => {
 			v(ctx.dump(h))
 		})
 		disposables.push(f)
 		return [f, false]
 	})
-	const preUnmarshal = vi.fn(a => a)
+	const preUnmarshal = mock(a => a)
 
 	const deferred = ctx.newPromise()
 	disposables.push(deferred)
