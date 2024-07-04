@@ -248,14 +248,14 @@ Thanks to [memfs](https://github.com/streamich/memfs), this lib provides basic s
 
 | Method          | Supported |
 |-----------------|-----------|
-| fail            |           |
-| ok              |           |
-| equal           |           |
-| notEqual        |           |
-| deepEqual       |           |
-| notDeepEqual    |           |
-| strictEqual     |           |
-| notStrictEqual  |           |
+| fail            | ✅         |
+| ok              | ✅         |
+| equal           | ✅         |
+| notEqual        | ✅        |
+| deepEqual       | ✅        |
+| notDeepEqual    | ✅        |
+| strictEqual     | ✅        |
+| notStrictEqual  | ✅        |
 
 ### node:path
 
