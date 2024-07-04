@@ -14,15 +14,6 @@ This TypeScript package allows you to safely execute JavaScript code within a We
 - **Custom Node Modules**: Custom node modules are mountable
 - **Fetch Client**: Can provide a fetch client to make http(s) calls
 
-## Node compatibility
-
-| Node| support |
-|---|---|
-| node:path | yes |
-| node:fs | partially |
-| fetch | yes |
-| ENV vars | yes |
-
 ## Installation
 
 Install the package using npm, yarn, or bun:
@@ -137,6 +128,203 @@ type RuntimeOptions = {
   env?: Record<string, unknown>
 }
 ```
+
+## Core js compatibility
+
+- ✅ mostly [ES2023](https://test262.fyi/#%7Cqjs,qjs_ng)
+- ✅ ESM import support (custom modules supported)
+- ✅ top-level await
+
+| Method                 | Supported |
+|------------------------|-----------|
+| process.env            | ✅ (customizeable)       |
+| console.log            | ✅        |
+| console.error          | ✅        |
+| console.warn           | ✅        |
+| console.info           | ✅        |
+| console.debug          | ✅        |
+| console.trace          | ✅        |
+| console.assert         | ✅        |
+| console.count          | ✅        |
+| console.countReset     | ✅        |
+| console.dir            | ✅        |
+| console.dirxml         | ✅        |
+| console.group          | ✅        |
+| console.groupCollapsed | ✅        |
+| console.groupEnd       | ✅        |
+| console.table          | ✅        |
+| console.time           | ✅        |
+| console.timeEnd        | ✅        |
+| console.timeLog        | ✅        |
+| console.clear          | ✅        |
+| setTimeout             | ✅        |
+| clearTimeout           | ✅        |
+| setInterval            | ✅        |
+| clearInterval          | ✅        |
+| fetch                  | ✅ (set allowHttp=true)       |
+
+## Node compatibility
+
+### node:fs
+
+Thanks to [memfs](https://github.com/streamich/memfs), this lib provides basic support of `node:fs` and `node:fs/promises` module.
+
+| Method            | Supported |
+|-------------------|-----------|
+| access            |           |
+| accessSync        |           |
+| appendFile        | ✅        |
+| appendFileSync    | ✅        |
+| chmod             | ❌        |
+| chmodSync         | ❌        |
+| chown             | ❌        |
+| chownSync         | ❌        |
+| close             |           |
+| closeSync         |           |
+| copyFile          |           |
+| copyFileSync      |           |
+| createReadStream  |           |
+| createWriteStream |           |
+| exists            | ✅        |
+| existsSync        | ✅        |
+| fchmod            | ❌        |
+| fchmodSync        | ❌         |
+| fchown            | ❌         |
+| fchownSync        | ❌         |
+| fdatasync         |           |
+| fdatasyncSync     |           |
+| fstat             |           |
+| fstatSync         |           |
+| fsync             |           |
+| fsyncSync         |           |
+| ftruncate         |           |
+| ftruncateSync     |           |
+| futimes           |           |
+| futimesSync       |           |
+| lchmod            | ❌         |
+| lchmodSync        | ❌        |
+| lchown            | ❌         |
+| lchownSync        |  ❌        |
+| link              |           |
+| linkSync          |           |
+| lstat             |           |
+| lstatSync         |           |
+| mkdir             | ✅         |
+| mkdirSync         | ✅         |
+| mkdtemp           | ✅         |
+| mkdtempSync       | ✅         |
+| open              |           |
+| openSync          |           |
+| readdir           | ✅         |
+| readdirSync       | ✅        |
+| read              |           |
+| readSync          |           |
+| readFile          | ✅        |
+| readFileSync      | ✅        |
+| readlink          |           |
+| readlinkSync      |           |
+| realpath          |           |
+| realpathSync      |           |
+| rename            | ✅         |
+| renameSync        | ✅         |
+| rmdir             | ✅         |
+| rmdirSync         | ✅         |
+| stat              |           |
+| statSync          |           |
+| symlink           |           |
+| symlinkSync       |           |
+| truncate          |           |
+| truncateSync      |           |
+| unlink            |           |
+| unlinkSync        |           |
+| utimes            |           |
+| utimesSync        |           |
+| write             |           |
+| writeSync         |           |
+| writeFile         | ✅         |
+| writeFileSync     | ✅         |
+
+### node:assert
+
+| Method          | Supported |
+|-----------------|-----------|
+| fail            |           |
+| ok              |           |
+| equal           |           |
+| notEqual        |           |
+| deepEqual       |           |
+| notDeepEqual    |           |
+| strictEqual     |           |
+| notStrictEqual  |           |
+
+### node:path
+
+| Method               | Supported |
+|----------------------|-----------|
+| parse                | ✅         |
+| format               | ✅        |
+| extname              | ✅         |
+| basename             | ✅         |
+| dirname              | ✅         |
+| _makeLong            | ✅         |
+| relative             | ✅         |
+| join                 | ✅         |
+| isAbsolute           | ✅         |
+| normalize            | ✅         |
+| resolve              | ✅         |
+| _format              | ✅         |
+| normalizeStringPosix | ✅         |
+| assertPath           | ✅         |
+
+### node:util
+
+| Method     | Supported |
+|------------|-----------|
+| promisify  | ✅         |
+| callbackify| ✅        |
+| inherits   | ✅         |
+| deprecate  | ✅         |
+
+Here are the supported `util.types` methods:
+
+| Method                 | Supported |
+|------------------------|-----------|
+| isAnyArrayBuffer       | ✅        |
+| isArrayBufferView      | ✅        |
+| isArgumentsObject      | ✅        |
+| isArrayBuffer          | ✅        |
+| isAsyncFunction        | ✅        |
+| isBigInt64Array        | ✅        |
+| isBigUint64Array       | ✅        |
+| isBooleanObject        | ✅        |
+| isBoxedPrimitive       | ✅        |
+| isDataView             | ✅        |
+| isDate                 | ✅        |
+| isFloat32Array         | ✅        |
+| isFloat64Array         | ✅        |
+| isGeneratorFunction    | ✅        |
+| isGeneratorObject      | ✅        |
+| isInt8Array            | ✅        |
+| isInt16Array           | ✅        |
+| isInt32Array           | ✅        |
+| isMap                  | ✅        |
+| isMapIterator          | ✅        |
+| isNativeError          | ✅        |
+| isNumberObject         | ✅        |
+| isPromise              | ✅        |
+| isRegExp               | ✅        |
+| isSet                  | ✅        |
+| isSetIterator          | ✅        |
+| isSharedArrayBuffer    | ✅        |
+| isStringObject         | ✅        |
+| isSymbolObject         | ✅        |
+| isTypedArray           | ✅        |
+| isUint8Array           | ✅        |
+| isUint8ClampedArray    | ✅        |
+| isUint16Array          | ✅        |
+| isUint32Array          | ✅        |
+| isWeakMap              | ✅        |
+| isWeakSet              | ✅        |
 
 ## Credits
 

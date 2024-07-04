@@ -54,10 +54,10 @@
 		"@types/node": "^20.14.9",
 		"autocannon": "^7.15.0",
 		"quickjs-emscripten": "^0.29.2",
-		"tshy": "^1.16.2",
+		"tshy": "^1.17.0",
 		"typescript": "^5.5.3",
 		"poolifier-web-worker": "^0.4.12",
-		"hono": "^4.4.10",
+		"hono": "^4.4.11",
 		"@hono/swagger-ui": "^0.3.0",
 		"@hono/zod-openapi": "^0.14.7"
 	},

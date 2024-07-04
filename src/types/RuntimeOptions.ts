@@ -26,9 +26,25 @@ export type RuntimeOptions = {
 	 * Here, you can customize the handling and provide your own logging methods.
 	 */
 	console?: {
-		log: (message?: unknown, ...optionalParams: unknown[]) => void
-		error: (message?: unknown, ...optionalParams: unknown[]) => void
-		warn: (message?: unknown, ...optionalParams: unknown[]) => void
+		log?: (message?: unknown, ...optionalParams: unknown[]) => void
+		error?: (message?: unknown, ...optionalParams: unknown[]) => void
+		warn?: (message?: unknown, ...optionalParams: unknown[]) => void
+		info?: (message?: unknown, ...optionalParams: unknown[]) => void
+		debug?: (message?: unknown, ...optionalParams: unknown[]) => void
+		trace?: (message?: unknown, ...optionalParams: unknown[]) => void
+		assert?: (condition?: boolean, ...data: unknown[]) => void
+		count?: (label?: string) => void
+		countReset?: (label?: string) => void
+		dir?: (item?: unknown, options?: object) => void
+		dirxml?: (...data: unknown[]) => void
+		group?: (...label: unknown[]) => void
+		groupCollapsed?: (...label: unknown[]) => void
+		groupEnd?: () => void
+		table?: (tabularData?: unknown, properties?: string[]) => void
+		time?: (label?: string) => void
+		timeEnd?: (label?: string) => void
+		timeLog?: (label?: string, ...data: unknown[]) => void
+		clear?: () => void
 	}
 	/**
 	 * Key-value list of ENV vars, which should be available in QuickJS

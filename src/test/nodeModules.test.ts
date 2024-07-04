@@ -73,8 +73,6 @@ describe('node_modules', () => {
 
 		const result = (await evalCode(code)) as OkResponse
 
-		console.log(result)
-
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('text content')
 	})

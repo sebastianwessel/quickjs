@@ -6,9 +6,9 @@ import {
 } from 'quickjs-emscripten-core'
 import { Arena } from './sync/index.js'
 
-import { mount } from './mount.js'
 import { provideConsole } from './provideConsole.js'
 import { provideEnv } from './provideEnv.js'
+import { provideFs } from './provideFs.js'
 import { provideHttp } from './provideHttp.js'
 import type { RuntimeOptions } from './types/RuntimeOptions.js'
 
@@ -19,8 +19,11 @@ import type { OkResponse } from './types/OkResponse.js'
 import { join, resolve } from 'node:path'
 import { Volume } from 'memfs'
 
+import assertModule from './modules/assert.js'
+import fsPromisesModule from './modules/fs-promises.js'
 import fsModule from './modules/fs.js'
 import pathModule from './modules/path.js'
+import utilModule from './modules/util.js'
 
 const getModuleLoader = (options: RuntimeOptions) => {
 	const customVol = options?.nodeModules ? Volume.fromNestedJSON(options?.nodeModules) : {}
@@ -32,11 +35,17 @@ const getModuleLoader = (options: RuntimeOptions) => {
 				path: {
 					'index.js': pathModule,
 				},
+				util: {
+					'index.js': utilModule,
+				},
+				assert: {
+					'index.js': assertModule,
+				},
 			},
 		},
 	}
 	if (options.allowFs) {
-		modules['/'].node_modules.fs = { 'index.js': fsModule }
+		modules['/'].node_modules.fs = { 'index.js': fsModule, promises: { 'index.js': fsPromisesModule } }
 	}
 
 	const vol = Volume.fromNestedJSON(modules)
@@ -71,8 +80,8 @@ const moduleNormalizer: JSModuleNormalizer = (baseName: string, requestedName: s
 	return join('/node_modules', moduleName, 'index.js')
 }
 
-export const quickJS = async () => {
-	const module = await newQuickJSWASMModuleFromVariant(import('@jitl/quickjs-ng-wasmfile-release-sync'))
+export const quickJS = async (wasmVariant = '@jitl/quickjs-ng-wasmfile-release-sync') => {
+	const module = await newQuickJSWASMModuleFromVariant(import(wasmVariant))
 
 	const initRuntime = async (options: RuntimeOptions = {}): Promise<InitResponseType> => {
 		const vm = module.newContext()
@@ -81,7 +90,7 @@ export const quickJS = async () => {
 
 		const arena = new Arena(vm, { isMarshalable: true })
 
-		mount(arena, options)
+		provideFs(arena, options)
 		provideConsole(arena, options)
 		provideEnv(arena, options)
 		provideHttp(arena, options)
@@ -103,6 +112,7 @@ export const quickJS = async () => {
 		 * ```
 		 */
 		const evalCode = async (code: string, filename = '/src/index.js', options?: number | ContextEvalOptions) => {
+			const interval = setInterval(() => vm.runtime.executePendingJobs(), 1)
 			try {
 				const result = await arena.evalCode(code, filename, options ?? { type: 'module' })
 				return { ok: true, data: result.default } as OkResponse
@@ -122,6 +132,7 @@ export const quickJS = async () => {
 				return errorReturn
 			} finally {
 				try {
+					clearInterval(interval)
 					dispose()
 				} catch (error) {
 					console.error('Failed to dispose', error)
