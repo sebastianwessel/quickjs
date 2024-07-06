@@ -41,12 +41,12 @@ test('works', async () => {
 		},
 	})
 	expect(unmarshal).toBeCalledTimes(7) // a.value, b.value, c.get, c.set
-	expect(unmarshal).toReturnWith(['a', false])
-	expect(unmarshal).toReturnWith([1, false])
-	expect(unmarshal).toReturnWith(['b', false])
-	expect(unmarshal).toReturnWith([2, false])
-	expect(unmarshal).toReturnWith(['c', false])
-	expect(unmarshal).toReturnWith([expect.any(Function), false]) // get, set
+	expect(unmarshal).toHaveReturnedWith(['a', false])
+	expect(unmarshal).toHaveReturnedWith([1, false])
+	expect(unmarshal).toHaveReturnedWith(['b', false])
+	expect(unmarshal).toHaveReturnedWith([2, false])
+	expect(unmarshal).toHaveReturnedWith(['c', false])
+	expect(unmarshal).toHaveReturnedWith([expect.any(Function), false]) // get, set
 
 	disposables.forEach(d => d.dispose())
 	handle.dispose()

@@ -2,6 +2,11 @@ import type { DirectoryJSON } from 'memfs'
 
 export type RuntimeOptions = {
 	/**
+	 * The maximum time in seconds a script can run.
+	 * Unset or set to 0 for unlimited execution time.
+	 */
+	executionTimeout?: number
+	/**
 	 * Mount a virtual file system
 	 * @link https://github.com/streamich/memfs
 	 */
@@ -20,7 +25,7 @@ export type RuntimeOptions = {
 	 * Allow code to make http(s) calls.
 	 * When enabled, the global fetch will be available
 	 */
-	allowHttp?: boolean
+	allowFetch?: boolean
 	/**
 	 * Per default, the console log inside of QuickJS is passed to the host console log.
 	 * Here, you can customize the handling and provide your own logging methods.

@@ -1,9 +1,4 @@
-import {
-	type ContextEvalOptions,
-	type JSModuleLoader,
-	type JSModuleNormalizer,
-	newQuickJSWASMModuleFromVariant,
-} from 'quickjs-emscripten-core'
+import { type JSModuleLoader, type JSModuleNormalizer, newQuickJSWASMModuleFromVariant } from 'quickjs-emscripten-core'
 import { Arena } from './sync/index.js'
 
 import { provideConsole } from './provideConsole.js'
@@ -66,7 +61,7 @@ const getModuleLoader = (options: RuntimeOptions) => {
 	return moduleLoader
 }
 
-const moduleNormalizer: JSModuleNormalizer = (baseName: string, requestedName: string) => {
+const modulePathNormalizer: JSModuleNormalizer = (baseName: string, requestedName: string) => {
 	// relative import
 	if (requestedName.startsWith('.')) {
 		const parts = baseName.split('/')
@@ -80,24 +75,59 @@ const moduleNormalizer: JSModuleNormalizer = (baseName: string, requestedName: s
 	return join('/node_modules', moduleName, 'index.js')
 }
 
-export const quickJS = async (wasmVariant = '@jitl/quickjs-ng-wasmfile-release-sync') => {
-	const module = await newQuickJSWASMModuleFromVariant(import(wasmVariant))
+/**
+ * Utilizes the standard setInterval to work properly with javascript `using` statement.
+ * Because of this, the interval gets automatically cleared on dispose.
+ */
+const createTimeInterval = (...params: Parameters<typeof setInterval>) => {
+	const id = setInterval(...params)
+	return {
+		id,
+		[Symbol.dispose]: () => {
+			clearInterval(id)
+		},
+	}
+}
 
-	const initRuntime = async (options: RuntimeOptions = {}): Promise<InitResponseType> => {
+/**
+ * Loads and creates a QuickJS instance
+ * @param wasmVariantName name of the variant
+ * @returns
+ */
+export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-release-sync') => {
+	const module = await newQuickJSWASMModuleFromVariant(import(wasmVariantName))
+
+	const createRuntime = async (runtimeOptions: RuntimeOptions = {}): Promise<InitResponseType> => {
 		const vm = module.newContext()
 
-		vm.runtime.setModuleLoader(getModuleLoader(options), moduleNormalizer)
+		vm.runtime.setModuleLoader(getModuleLoader(runtimeOptions), modulePathNormalizer)
 
 		const arena = new Arena(vm, { isMarshalable: true })
 
-		provideFs(arena, options)
-		provideConsole(arena, options)
-		provideEnv(arena, options)
-		provideHttp(arena, options)
+		provideFs(arena, runtimeOptions)
+		provideConsole(arena, runtimeOptions)
+		provideEnv(arena, runtimeOptions)
+		provideHttp(arena, runtimeOptions)
 
 		const dispose = () => {
-			arena.dispose()
-			vm.dispose()
+			let err: unknown | undefined
+			try {
+				arena.dispose()
+			} catch (error) {
+				err = error
+				console.error('Failed to dispose arena')
+			}
+
+			try {
+				vm.dispose()
+			} catch (error) {
+				err = error
+				console.error('Failed to dispose context')
+			}
+
+			if (err) {
+				throw err
+			}
 		}
 
 		/**
@@ -111,10 +141,43 @@ export const quickJS = async (wasmVariant = '@jitl/quickjs-ng-wasmfile-release-s
 		 * const result = await evalCode('export default await asyncFunction()')
 		 * ```
 		 */
-		const evalCode = async (code: string, filename = '/src/index.js', options?: number | ContextEvalOptions) => {
-			const interval = setInterval(() => vm.runtime.executePendingJobs(), 1)
+		const evalCode: InitResponseType['evalCode'] = async (code, filename = '/src/index.js', evalOptions?) => {
 			try {
-				const result = await arena.evalCode(code, filename, options ?? { type: 'module' })
+				let maxTimeout: number | undefined
+				if (runtimeOptions.executionTimeout || evalOptions?.executionTimeout) {
+					if (runtimeOptions.executionTimeout) {
+						maxTimeout = runtimeOptions.executionTimeout
+					}
+					if (evalOptions?.executionTimeout) {
+						if (maxTimeout && maxTimeout > evalOptions.executionTimeout) {
+							maxTimeout = evalOptions.executionTimeout
+						}
+					}
+				}
+
+				using _eventLoopinterval = createTimeInterval(() => {
+					vm.runtime.executePendingJobs()
+				}, 0)
+
+				vm.runtime.setInterruptHandler(runtime => {
+					if (!maxTimeout) {
+						return false
+					}
+					const abort = maxTimeout * 1_000 <= Date.now()
+
+					if (abort && runtime.context?.alive) {
+						runtime.context?.throw(new Error('timeout'))
+					}
+					return abort
+				})
+
+				const result = await arena.evalCode(code, filename, {
+					strict: true,
+					strip: true,
+					backtraceBarrier: true,
+					...evalOptions,
+					type: 'module',
+				})
 				return { ok: true, data: result.default } as OkResponse
 			} catch (err) {
 				const e = err as Error
@@ -132,7 +195,6 @@ export const quickJS = async (wasmVariant = '@jitl/quickjs-ng-wasmfile-release-s
 				return errorReturn
 			} finally {
 				try {
-					clearInterval(interval)
 					dispose()
 				} catch (error) {
 					console.error('Failed to dispose', error)
@@ -145,5 +207,5 @@ export const quickJS = async (wasmVariant = '@jitl/quickjs-ng-wasmfile-release-s
 		return { vm: arena, dispose, evalCode }
 	}
 
-	return { initRuntime }
+	return { createRuntime }
 }

@@ -5,8 +5,8 @@ import type { OkResponse } from '../types/OkResponse.js'
 describe('core - console', () => {
 	it('console.log works correctly', async () => {
 		const logSpy = mock()
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ console: { log: logSpy } })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ console: { log: logSpy } })
 
 		const code = `
       console.log('Test log')
@@ -21,8 +21,8 @@ describe('core - console', () => {
 
 	it('console.error works correctly', async () => {
 		const errorSpy = mock()
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ console: { error: errorSpy } })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ console: { error: errorSpy } })
 
 		const code = `
       console.error('Test error')
@@ -37,8 +37,8 @@ describe('core - console', () => {
 
 	it('console.warn works correctly', async () => {
 		const warnSpy = mock()
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ console: { warn: warnSpy } })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ console: { warn: warnSpy } })
 
 		const code = `
       console.warn('Test warn')
@@ -53,8 +53,8 @@ describe('core - console', () => {
 
 	it('console.info works correctly', async () => {
 		const infoSpy = mock()
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ console: { info: infoSpy } })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ console: { info: infoSpy } })
 
 		const code = `
       console.info('Test info')
@@ -69,8 +69,8 @@ describe('core - console', () => {
 
 	it('console.debug works correctly', async () => {
 		const debugSpy = mock()
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ console: { debug: debugSpy } })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ console: { debug: debugSpy } })
 
 		const code = `
       console.debug('Test debug')
@@ -85,8 +85,8 @@ describe('core - console', () => {
 
 	it('console.trace works correctly', async () => {
 		const traceSpy = mock()
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ console: { trace: traceSpy } })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ console: { trace: traceSpy } })
 
 		const code = `
       console.trace('Test trace')
@@ -101,8 +101,8 @@ describe('core - console', () => {
 
 	it('console.assert works correctly', async () => {
 		const assertSpy = mock()
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ console: { assert: assertSpy } })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ console: { assert: assertSpy } })
 
 		const code = `
       console.assert(false, 'Test assert')
@@ -117,8 +117,8 @@ describe('core - console', () => {
 
 	it('console.count works correctly', async () => {
 		const countSpy = mock()
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ console: { count: countSpy } })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ console: { count: countSpy } })
 
 		const code = `
       console.count('Test count')
@@ -134,8 +134,8 @@ describe('core - console', () => {
 
 	it('console.dir works correctly', async () => {
 		const dirSpy = mock()
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ console: { dir: dirSpy } })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ console: { dir: dirSpy } })
 
 		const code = `
       console.dir({ key: 'value' })
@@ -151,8 +151,8 @@ describe('core - console', () => {
 	it('console.group works correctly', async () => {
 		const groupSpy = mock()
 		const groupEndSpy = mock()
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ console: { group: groupSpy, groupEnd: groupEndSpy } })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ console: { group: groupSpy, groupEnd: groupEndSpy } })
 
 		const code = `
       console.group('Test group')
@@ -170,8 +170,8 @@ describe('core - console', () => {
 
 	it('console.table works correctly', async () => {
 		const tableSpy = mock()
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ console: { table: tableSpy } })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ console: { table: tableSpy } })
 
 		const code = `
       console.table([{ a: 1, b: 'Y' }, { a: 'Z', b: 2 }])
@@ -191,8 +191,8 @@ describe('core - console', () => {
 	it('console.time and console.timeEnd work correctly', async () => {
 		const timeSpy = mock()
 		const timeEndSpy = mock()
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ console: { time: timeSpy, timeEnd: timeEndSpy } })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ console: { time: timeSpy, timeEnd: timeEndSpy } })
 
 		const code = `
       console.time('Test timer')
@@ -209,8 +209,8 @@ describe('core - console', () => {
 
 	it('console.clear works correctly', async () => {
 		const clearSpy = mock()
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ console: { clear: clearSpy } })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ console: { clear: clearSpy } })
 
 		const code = `
       console.clear()

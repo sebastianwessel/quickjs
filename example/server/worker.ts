@@ -5,7 +5,7 @@ import type { RuntimeOptions } from '../../src/types/RuntimeOptions.js'
 import type { InputData, ResponseData } from './types.js'
 
 class MyThreadWorker extends ThreadWorker<InputData, ResponseData> {
-	initRuntime?: (options?: RuntimeOptions) => Promise<InitResponseType>
+	runtime?: (options?: RuntimeOptions) => Promise<InitResponseType>
 
 	constructor() {
 		super(async (data?: InputData) => await this.process(data), {
@@ -17,14 +17,14 @@ class MyThreadWorker extends ThreadWorker<InputData, ResponseData> {
 		if (!data?.content) {
 			return { id: '', result: { ok: true, data: { ok: true } } }
 		}
-		if (!this.initRuntime) {
-			const { initRuntime } = await quickJS()
-			this.initRuntime = initRuntime
+		if (!this.runtime) {
+			const { createRuntime } = await quickJS()
+			this.runtime = createRuntime
 		}
 
-		const { evalCode } = await this.initRuntime({
+		const { evalCode } = await this.runtime({
 			allowFs: true,
-			allowHttp: true,
+			allowFetch: true,
 			env: {},
 		})
 

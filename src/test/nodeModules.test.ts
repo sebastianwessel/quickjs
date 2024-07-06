@@ -5,9 +5,9 @@ import type { OkResponse } from '../types/OkResponse.js'
 
 describe('node_modules', () => {
 	it('can use node:path module', async () => {
-		const { initRuntime } = await quickJS()
+		const { createRuntime } = await quickJS()
 
-		const { evalCode } = await initRuntime()
+		const { evalCode } = await createRuntime()
 
 		const code = `
     import { join } from 'node:path'
@@ -21,9 +21,9 @@ describe('node_modules', () => {
 	})
 
 	it('can use node:path module', async () => {
-		const { initRuntime } = await quickJS()
+		const { createRuntime } = await quickJS()
 
-		const { evalCode } = await initRuntime()
+		const { evalCode } = await createRuntime()
 
 		const code = `
     import { resolve } from 'node:path'
@@ -37,9 +37,9 @@ describe('node_modules', () => {
 	})
 
 	it('can not use node:fs module per default', async () => {
-		const { initRuntime } = await quickJS()
+		const { createRuntime } = await quickJS()
 
-		const { evalCode } = await initRuntime()
+		const { evalCode } = await createRuntime()
 
 		const code = `
     import { readFileSync } from 'node:fs'
@@ -57,9 +57,9 @@ describe('node_modules', () => {
 	})
 
 	it('can use node:fs module when allowFs is set to true', async () => {
-		const { initRuntime } = await quickJS()
+		const { createRuntime } = await quickJS()
 
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
     import { readFileSync, writeFileSync } from 'node:fs'

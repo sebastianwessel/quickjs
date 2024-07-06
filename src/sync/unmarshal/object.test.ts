@@ -14,10 +14,10 @@ test('normal object', async () => {
 	if (!obj) throw new Error('obj is undefined')
 	expect(obj).toEqual({ a: 1, b: true })
 	expect(unmarshal).toHaveReturnedTimes(4)
-	expect(unmarshal).toReturnWith(['a', false])
-	expect(unmarshal).toReturnWith([1, false])
-	expect(unmarshal).toReturnWith(['b', false])
-	expect(unmarshal).toReturnWith([true, false])
+	expect(unmarshal).toHaveReturnedWith(['a', false])
+	expect(unmarshal).toHaveReturnedWith([1, false])
+	expect(unmarshal).toHaveReturnedWith(['b', false])
+	expect(unmarshal).toHaveReturnedWith([true, false])
 	expect(preUnmarshal).toBeCalledTimes(1)
 	expect(preUnmarshal).toBeCalledWith(obj, handle)
 
@@ -61,12 +61,12 @@ test('properties', async () => {
 		},
 	})
 	expect(unmarshal).toBeCalledTimes(7) // a.value, b.value, c.get, c.set
-	expect(unmarshal).toReturnWith(['a', false])
-	expect(unmarshal).toReturnWith([1, false])
-	expect(unmarshal).toReturnWith(['b', false])
-	expect(unmarshal).toReturnWith([2, false])
-	expect(unmarshal).toReturnWith(['c', false])
-	expect(unmarshal).toReturnWith([expect.any(Function), false]) // get, set
+	expect(unmarshal).toHaveReturnedWith(['a', false])
+	expect(unmarshal).toHaveReturnedWith([1, false])
+	expect(unmarshal).toHaveReturnedWith(['b', false])
+	expect(unmarshal).toHaveReturnedWith([2, false])
+	expect(unmarshal).toHaveReturnedWith(['c', false])
+	expect(unmarshal).toHaveReturnedWith([expect.any(Function), false]) // get, set
 	expect(preUnmarshal).toBeCalledTimes(1)
 	expect(preUnmarshal).toBeCalledWith(obj, handle)
 
@@ -112,7 +112,7 @@ test('prototype', async () => {
 	expect(Object.getPrototypeOf(obj)).toEqual({ a: expect.any(Function) })
 	expect(obj.a()).toBe(1)
 	expect(unmarshal.mock.calls.length).toBe(1)
-	expect(unmarshal).toReturnWith([Object.getPrototypeOf(obj), false])
+	expect(unmarshal).toHaveReturnedWith([Object.getPrototypeOf(obj), false])
 	expect(preUnmarshal).toBeCalledTimes(1)
 	expect(preUnmarshal).toBeCalledWith(obj, handle)
 

@@ -4,8 +4,8 @@ import type { OkResponse } from '../types/OkResponse.js'
 
 describe('node:util - base', () => {
 	it('promisify works correctly', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime()
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
 
 		const code = `
 			function callbackFunction(arg, callback) {
@@ -42,14 +42,13 @@ describe('node:util - base', () => {
 		`
 
 		const result = (await evalCode(code)) as OkResponse
-		console.log(result)
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('Test passed')
 	})
 
 	it('callbackify works correctly', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime()
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
 
 		const code = `
 			async function asyncFunction(arg) {

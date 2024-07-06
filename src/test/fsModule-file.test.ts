@@ -7,8 +7,8 @@ describe('node:fs - file', () => {
 	const testFileContent = 'example content'
 
 	it('can write and read a file synchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFileSync, readFileSync } from 'node:fs'
@@ -25,8 +25,8 @@ describe('node:fs - file', () => {
 	})
 
 	it('can append to a file', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 		const appendedContent = ' - appended text'
 
 		const code = `
@@ -45,8 +45,8 @@ describe('node:fs - file', () => {
 	})
 
 	it('can check file existence', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFileSync, existsSync } from 'node:fs'
@@ -63,8 +63,8 @@ describe('node:fs - file', () => {
 	})
 
 	it('can read and write file asynchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFile, readFile } from 'node:fs/promises'
@@ -81,8 +81,8 @@ describe('node:fs - file', () => {
 	})
 
 	it('can rename a file', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 		const newFilePath = '/renamed.txt'
 
 		const code = `
@@ -101,8 +101,8 @@ describe('node:fs - file', () => {
 	})
 
 	it('can delete a file', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFileSync, unlinkSync, existsSync } from 'node:fs'

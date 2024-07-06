@@ -10,7 +10,7 @@ export type InitResponseType = {
 	evalCode: (
 		code: string,
 		filename?: string,
-		options?: number | ContextEvalOptions,
+		options?: Omit<ContextEvalOptions, 'type'> & { executionTimeout?: number },
 	) => Promise<OkResponse | ErrorResponse>
 	mountedFs?: IFs
 }

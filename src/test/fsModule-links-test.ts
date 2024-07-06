@@ -9,8 +9,8 @@ describe('node:fs - links', () => {
 	const hardLinkPath = '/testHardLink.txt'
 
 	it('can create a symbolic link synchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFileSync, symlinkSync, readlinkSync } from 'node:fs'
@@ -28,8 +28,8 @@ describe('node:fs - links', () => {
 	})
 
 	it('can create a symbolic link asynchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFile, symlink, readlink } from 'node:fs/promises'
@@ -47,8 +47,8 @@ describe('node:fs - links', () => {
 	})
 
 	it('can create a hard link synchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFileSync, linkSync, statSync } from 'node:fs'
@@ -67,8 +67,8 @@ describe('node:fs - links', () => {
 	})
 
 	it('can create a hard link asynchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFile, link, stat } from 'node:fs/promises'
@@ -87,8 +87,8 @@ describe('node:fs - links', () => {
 	})
 
 	it('can resolve a symbolic link path synchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFileSync, symlinkSync, realpathSync } from 'node:fs'
@@ -106,8 +106,8 @@ describe('node:fs - links', () => {
 	})
 
 	it('can resolve a symbolic link path asynchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFile, symlink, realpath } from 'node:fs/promises'
@@ -125,8 +125,8 @@ describe('node:fs - links', () => {
 	})
 
 	it('can unlink a symbolic link synchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFileSync, symlinkSync, unlinkSync, existsSync } from 'node:fs'
@@ -145,8 +145,8 @@ describe('node:fs - links', () => {
 	})
 
 	it('can unlink a symbolic link asynchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFile, symlink, unlink, access } from 'node:fs/promises'

@@ -6,8 +6,8 @@ type AssetCheck = { success: boolean; error: Error | string }
 
 describe('node:assert', () => {
 	it('assert.ok should pass for truthy values', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime()
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
 
 		const code = `
 			import assert from 'node:assert'
@@ -28,8 +28,8 @@ describe('node:assert', () => {
 	})
 
 	it('assert.ok should fail for falsy values', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime()
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
 
 		const code = `
 			import assert from 'node:assert'
@@ -51,8 +51,8 @@ describe('node:assert', () => {
 	})
 
 	it('assert.equal should pass for equal values', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime()
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
 
 		const code = `
 			import assert from 'node:assert'
@@ -73,8 +73,8 @@ describe('node:assert', () => {
 	})
 
 	it('assert.equal should fail for non-equal values', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime()
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
 
 		const code = `
 			import assert from 'node:assert'
@@ -96,8 +96,8 @@ describe('node:assert', () => {
 	})
 
 	it('assert.deepEqual should pass for deeply equal objects', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime()
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
 
 		const code = `
 			import assert from 'node:assert'
@@ -118,8 +118,8 @@ describe('node:assert', () => {
 	})
 
 	it('assert.deepEqual should fail for non-deeply equal objects', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime()
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
 
 		const code = `
 			import assert from 'node:assert'
@@ -141,8 +141,8 @@ describe('node:assert', () => {
 	})
 
 	it('assert.strictEqual should pass for strictly equal values', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime()
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
 
 		const code = `
 			import assert from 'node:assert'
@@ -163,8 +163,8 @@ describe('node:assert', () => {
 	})
 
 	it('assert.strictEqual should fail for non-strictly equal values', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime()
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
 
 		const code = `
 			import assert from 'node:assert'

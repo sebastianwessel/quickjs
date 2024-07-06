@@ -214,7 +214,7 @@ test('marshalable', async () => {
 
 	expect(ctx.dump(handle)).toEqual({ a: undefined, b: 1 })
 	expect(isMarshalable).toBeCalledWith(globalThis)
-	expect(isMarshalable).toReturnWith(false)
+	expect(isMarshalable).toHaveReturnedWith(false)
 
 	dispose()
 })
@@ -238,7 +238,7 @@ test('marshalable json', async () => {
 	})
 	expect(isMarshalable).toBeCalledTimes(1)
 	expect(isMarshalable).toBeCalledWith(target)
-	expect(isMarshalable).toReturnWith('json')
+	expect(isMarshalable).toHaveReturnedWith('json')
 
 	dispose()
 })

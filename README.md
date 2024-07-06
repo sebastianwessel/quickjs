@@ -43,11 +43,11 @@ import { quickJS } from '@sebastianwessel/quickjs'
 
 // General setup like loading and init of the QuickJS wasm
 // It is a ressource intensive job and should be done only once if possible 
-const { initRuntime } = await quickJS()
+const { createRuntime } = await quickJS()
 
 // Create a runtime instance each time a js code should be executed
-const { evalCode } = await this.initRuntime({
-  allowHttp: true, // inject fetch and allow the code to fetch data
+const { evalCode } = await this.createRuntime({
+  allowFetch: true, // inject fetch and allow the code to fetch data
   allowFs: true, // mount a virtual file system and provide node:fs module
   env: {
     MY_ENV_VAR: 'env var value'
@@ -99,7 +99,7 @@ type RuntimeOptions = {
    * Allow code to make http(s) calls.
    * When enabled, the global fetch will be available
    */
-  allowHttp?: boolean
+  allowFetch?: boolean
   /**
    * Per default, the console log inside of QuickJS is passed to the host console log.
    * Here, you can customize the handling and provide your own logging methods.
@@ -161,7 +161,7 @@ type RuntimeOptions = {
 | clearTimeout           | ✅        |
 | setInterval            | ✅        |
 | clearInterval          | ✅        |
-| fetch                  | ✅ (set allowHttp=true)       |
+| fetch                  | ✅ (set allowFetch=true)       |
 
 ## Node compatibility
 
@@ -204,7 +204,7 @@ Thanks to [memfs](https://github.com/streamich/memfs), this lib provides basic s
 | lchmod            | ❌         |
 | lchmodSync        | ❌        |
 | lchown            | ❌         |
-| lchownSync        |  ❌        |
+| lchownSync        | ❌        |
 | link              |           |
 | linkSync          |           |
 | lstat             |           |

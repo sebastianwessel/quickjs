@@ -4,8 +4,8 @@ import type { OkResponse } from '../types/OkResponse.js'
 
 describe('core - timers', () => {
 	it('setTimeout works correctly', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime()
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
 
 		const code = `
       export default await new Promise((resolve) => {
@@ -20,8 +20,8 @@ describe('core - timers', () => {
 	})
 
 	it('clearTimeout works correctly', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime()
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
 
 		const code = `
       export default await new Promise((resolve) => {
@@ -39,8 +39,8 @@ describe('core - timers', () => {
 	})
 
 	it('setInterval works correctly', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime()
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
 
 		const code = `
       export default await new Promise((resolve) => {
@@ -61,8 +61,8 @@ describe('core - timers', () => {
 	})
 
 	it('clearInterval works correctly', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime()
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
 
 		const code = `
       export default await new Promise((resolve) => {

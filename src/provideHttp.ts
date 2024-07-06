@@ -3,11 +3,30 @@ import type { Arena } from './sync/index.js'
 import type { RuntimeOptions } from './types/RuntimeOptions.js'
 
 /**
- * Provide console.log, console.warn and console.error
+ * Provide http related functions
  */
 export const provideHttp = (arena: Arena, options: RuntimeOptions) => {
-	if (!options.allowHttp) {
-		return
+	const injectUnsupported = (name: string) => () => {
+		throw new Error(`Not supported: ${name} has been disabled for security reasons or is not supported by the runtime`)
+	}
+
+	const injectFetch = async (...params: Parameters<typeof fetch>) => {
+		const res = await fetch(...params)
+
+		return {
+			status: res.status,
+			ok: res.ok,
+			statusText: res.statusText,
+			json: async () => res.json(),
+			text: async () => res.text(),
+			formData: async () => res.formData,
+			headers: res.headers,
+			type: res.type,
+			url: res.url,
+			blob: async () => res.blob,
+			bodyUsed: res.bodyUsed,
+			redirected: res.redirected,
+		}
 	}
 
 	arena.expose({
@@ -34,24 +53,7 @@ export const provideHttp = (arena: Arena, options: RuntimeOptions) => {
 				search: url.search,
 			}
 		},
-		fetch: async (...params: Parameters<typeof fetch>) => {
-			const res = await fetch(...params)
-
-			return {
-				status: res.status,
-				ok: res.ok,
-				statusText: res.statusText,
-				json: async () => res.json(),
-				text: async () => res.text(),
-				formData: async () => res.formData,
-				headers: res.headers,
-				type: res.type,
-				url: res.url,
-				blob: async () => res.blob,
-				bodyUsed: res.bodyUsed,
-				redirected: res.redirected,
-			}
-		},
+		fetch: options.allowFetch ? injectFetch : injectUnsupported('fetch'),
 		Response,
 		Request,
 	})

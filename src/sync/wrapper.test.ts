@@ -198,7 +198,7 @@ test('wrapHandle without sync', async () => {
 	expect(ctx.dump(ctx.getProp(handle, 'a'))).toBe(2)
 	expect(target.a).toBe(1) // not synced
 	expect(unmarshal).toBeCalledTimes(1)
-	expect(unmarshal).toReturnWith(target)
+	expect(unmarshal).toHaveReturnedWith(target)
 	expect(syncMode).toBeCalledTimes(1)
 	expect(syncMode).toBeCalledWith(target)
 
@@ -230,9 +230,9 @@ test('wrapHandle with both sync', async () => {
 	expect(ctx.dump(ctx.getProp(handle, 'a'))).toBe(2)
 	expect(target.a).toBe(2) // synced
 	expect(unmarshal).toBeCalledTimes(4)
-	expect(unmarshal).toReturnWith(target) // twice
-	expect(unmarshal).toReturnWith('a')
-	expect(unmarshal).toReturnWith(2)
+	expect(unmarshal).toHaveReturnedWith(target) // twice
+	expect(unmarshal).toHaveReturnedWith('a')
+	expect(unmarshal).toHaveReturnedWith(2)
 	expect(syncMode).toBeCalledTimes(1)
 	expect(syncMode).toBeCalledWith(target)
 
@@ -271,9 +271,9 @@ test('wrapHandle with host sync', async () => {
 	expect(ctx.dump(ctx.getProp(handle, 'a'))).toBe(1) // not set
 	expect(target.a).toBe(2) // synced
 	expect(unmarshal).toBeCalledTimes(4)
-	expect(unmarshal).toReturnWith(target) // twice
-	expect(unmarshal).toReturnWith('a')
-	expect(unmarshal).toReturnWith(2)
+	expect(unmarshal).toHaveReturnedWith(target) // twice
+	expect(unmarshal).toHaveReturnedWith('a')
+	expect(unmarshal).toHaveReturnedWith(2)
 	expect(syncMode).toBeCalledTimes(1)
 	expect(syncMode).toBeCalledWith(target)
 
@@ -313,9 +313,9 @@ test('wrap and wrapHandle', async () => {
 	expect(target.a).toBe(2)
 	expect(marshal).toBeCalledTimes(0)
 	expect(unmarshal).toBeCalledTimes(4)
-	expect(unmarshal).toReturnWith(wrapped) // twice
-	expect(unmarshal).toReturnWith('a')
-	expect(unmarshal).toReturnWith(2)
+	expect(unmarshal).toHaveReturnedWith(wrapped) // twice
+	expect(unmarshal).toHaveReturnedWith('a')
+	expect(unmarshal).toHaveReturnedWith(2)
 
 	marshal.mockClear()
 	unmarshal.mockClear()

@@ -1,11 +1,15 @@
 import autocannon from 'autocannon'
 
-autocannon(
-	{
-		url: 'http://127.0.0.1:3000/execute',
-		duration: 60,
-		method: 'POST',
-		body: `import * as path from 'node:path'
+const promiseTestBody = `const fn = async ()=> {
+  const x = await new Promise((resolve,reject)=>{
+   resolve('resolve')
+  })
+  return x
+}
+
+export default await fn()`
+
+const fetchTestBody = `import * as path from 'node:path'
 import { writeFileSync, readFileSync } from 'node:fs'
 
 const fn = async ()=>{
@@ -25,7 +29,14 @@ const fn = async ()=>{
   return result
   }
   
-export default await fn()`,
+export default await fn()`
+
+autocannon(
+	{
+		url: 'http://127.0.0.1:3000/execute',
+		duration: 60,
+		method: 'POST',
+		body: promiseTestBody,
 	},
 	(_err, result) => {
 		for (const [key, value] of Object.entries(result)) {

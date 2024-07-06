@@ -8,9 +8,7 @@ import type { InputData, ResponseData } from './types.js'
 const workerFileURL = new URL('./worker.ts', import.meta.url)
 
 const dynamicPool = new DynamicThreadPool<InputData, ResponseData>(0, availableParallelism(), workerFileURL, {
-	errorEventHandler: (e: ErrorEvent) => {
-		console.error(e)
-	},
+	errorEventHandler: console.error,
 	enableTasksQueue: false,
 	workerOptions: { type: 'module', smol: true },
 })
@@ -18,6 +16,7 @@ const dynamicPool = new DynamicThreadPool<InputData, ResponseData>(0, availableP
 dynamicPool.eventTarget?.addEventListener(PoolEvents.full, () => console.warn('Pool is full'))
 dynamicPool.eventTarget?.addEventListener(PoolEvents.ready, () => console.info('Pool is ready'))
 dynamicPool.eventTarget?.addEventListener(PoolEvents.busy, () => console.warn('Pool is busy'))
+dynamicPool.eventTarget?.addEventListener(PoolEvents.error, () => console.error('Pool error'))
 
 let count = 0
 
@@ -27,6 +26,9 @@ app.openapi(executeRoute, async c => {
 	const content = await c.req.text()
 	const id = `id_${count++}`
 
+	if (dynamicPool.info.executingTasks + 1 >= dynamicPool.info.maxSize) {
+		return c.text('Too Many Requests', 429)
+	}
 	try {
 		const res = await dynamicPool.execute({
 			id,

@@ -8,8 +8,8 @@ describe.skip('node:fs - permissions', () => {
 	const testDirPath = '/testDir'
 
 	it('can change file permissions synchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFileSync, chmodSync, statSync } from 'node:fs'
@@ -27,8 +27,8 @@ describe.skip('node:fs - permissions', () => {
 	})
 
 	it('can change file ownership synchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFileSync, chownSync, statSync } from 'node:fs'
@@ -46,8 +46,8 @@ describe.skip('node:fs - permissions', () => {
 	})
 
 	it('can change file permissions asynchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFile, chmod, stat } from 'node:fs/promises'
@@ -65,8 +65,8 @@ describe.skip('node:fs - permissions', () => {
 	})
 
 	it('can change file ownership asynchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { writeFile, chown, stat } from 'node:fs/promises'
@@ -84,8 +84,8 @@ describe.skip('node:fs - permissions', () => {
 	})
 
 	it('can change directory permissions synchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { mkdirSync, chmodSync, statSync } from 'node:fs'
@@ -103,8 +103,8 @@ describe.skip('node:fs - permissions', () => {
 	})
 
 	it('can change directory ownership synchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { mkdirSync, chownSync, statSync } from 'node:fs'
@@ -122,8 +122,8 @@ describe.skip('node:fs - permissions', () => {
 	})
 
 	it('can change directory permissions asynchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { mkdir, chmod, stat } from 'node:fs/promises'
@@ -141,8 +141,8 @@ describe.skip('node:fs - permissions', () => {
 	})
 
 	it('can change directory ownership asynchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { mkdir, chown, stat } from 'node:fs/promises'

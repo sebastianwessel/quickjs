@@ -7,8 +7,8 @@ describe('node:fs - directory', () => {
 	const tempDirPrefix = '/tmpDir'
 
 	it('can create and read a directory synchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { mkdirSync, readdirSync } from 'node:fs'
@@ -25,8 +25,8 @@ describe('node:fs - directory', () => {
 	})
 
 	it('can create and remove a directory synchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { mkdirSync, rmdirSync, readdirSync } from 'node:fs'
@@ -44,8 +44,8 @@ describe('node:fs - directory', () => {
 	})
 
 	it('can create a temporary directory synchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { mkdtempSync } from 'node:fs'
@@ -62,8 +62,8 @@ describe('node:fs - directory', () => {
 	})
 
 	it('can create and read a directory asynchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { mkdir, readdir } from 'node:fs/promises'
@@ -80,8 +80,8 @@ describe('node:fs - directory', () => {
 	})
 
 	it('can create and remove a directory asynchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { mkdir, rmdir, readdir } from 'node:fs/promises'
@@ -99,8 +99,8 @@ describe('node:fs - directory', () => {
 	})
 
 	it('can create a temporary directory asynchronously', async () => {
-		const { initRuntime } = await quickJS()
-		const { evalCode } = await initRuntime({ allowFs: true })
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime({ allowFs: true })
 
 		const code = `
 			import { mkdtemp } from 'node:fs/promises'

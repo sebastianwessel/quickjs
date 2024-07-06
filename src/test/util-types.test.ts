@@ -45,8 +45,8 @@ describe('node:util - types', () => {
 
 	for (const { method, value, expected } of typesToTest) {
 		it(`${method} works correctly`, async () => {
-			const { initRuntime } = await quickJS()
-			const { evalCode } = await initRuntime()
+			const { createRuntime } = await quickJS()
+			const { evalCode } = await createRuntime()
 
 			const code = `
         import { types } from 'node:util'
