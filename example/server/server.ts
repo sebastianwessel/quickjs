@@ -5,7 +5,7 @@ import { DynamicThreadPool, PoolEvents, availableParallelism } from 'poolifier-w
 import { executeRoute } from './openapi.js'
 import type { InputData, ResponseData } from './types.js'
 
-const workerFileURL = new URL('./worker.ts', import.meta.url)
+const workerFileURL = new URL('./worker.ts', import.meta.url) as any
 
 const dynamicPool = new DynamicThreadPool<InputData, ResponseData>(0, availableParallelism(), workerFileURL, {
 	errorEventHandler: console.error,
@@ -26,7 +26,7 @@ app.openapi(executeRoute, async c => {
 	const content = await c.req.text()
 	const id = `id_${count++}`
 
-	if (dynamicPool.info.executingTasks + 1 >= dynamicPool.info.maxSize) {
+	if (dynamicPool.info.executingTasks + 1 > dynamicPool.info.maxSize) {
 		return c.text('Too Many Requests', 429)
 	}
 	try {
@@ -39,6 +39,9 @@ app.openapi(executeRoute, async c => {
 		if (res?.result.ok === false) {
 			if (res.result.isSyntaxError) {
 				status = 400
+			}
+			if (res.result.error.name === 'ExecutionTimeout') {
+				status = 408
 			}
 		}
 
@@ -58,7 +61,7 @@ app.openapi(executeRoute, async c => {
 app.get('/', swaggerUI({ url: '/doc' }))
 app.doc('/doc', {
 	info: {
-		title: 'Simple RAG FAQ',
+		title: 'QuickJS playground',
 		version: 'v1',
 	},
 	openapi: '3.1.0',

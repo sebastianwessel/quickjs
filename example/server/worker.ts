@@ -23,12 +23,18 @@ class MyThreadWorker extends ThreadWorker<InputData, ResponseData> {
 		}
 
 		const { evalCode } = await this.runtime({
+			executionTimeout: 10,
 			allowFs: true,
 			allowFetch: true,
 			env: {},
 		})
 
 		const result = await evalCode(data.content)
+
+		if (!result.ok && result.error.name === 'ExecutionTimeout') {
+			this.runtime = undefined
+		}
+
 		return { id: data.id, result }
 	}
 }

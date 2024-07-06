@@ -15,4 +15,17 @@ describe('core - timeout', () => {
 		expect(result.ok).toBeFalse()
 		expect(result.data).toBeUndefined()
 	})
+
+	it('terminates execution when evalCode timeout is reached', async () => {
+		const { createRuntime } = await quickJS()
+		const { evalCode } = await createRuntime()
+
+		const code = `
+      export default await new Promise((resolve)=> setTimeout(()=>resolve('DONE'), 4_000))
+    `
+
+		const result = (await evalCode(code, undefined, { executionTimeout: 1 })) as OkResponse
+		expect(result.ok).toBeFalse()
+		expect(result.data).toBeUndefined()
+	})
 })

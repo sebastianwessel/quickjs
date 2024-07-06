@@ -70,6 +70,27 @@ export default await fn()
 			},
 			description: 'Returns how many FAQ pairs are inserted',
 		},
+		408: {
+			content: {
+				'application/json': {
+					schema: z.object({
+						ok: z.boolean(),
+						isSyntaxError: z.boolean().optional(),
+						error: z.any().optional(),
+						data: z.any().optional(),
+					}),
+					example: {
+						ok: false,
+						error: {
+							name: 'ExecutionTimeout',
+							message: 'The script execution has exceeded the maximum allowed time limit.',
+						},
+						isSyntaxError: true,
+					},
+				},
+			},
+			description: 'The execution exceeded the maximum time limit',
+		},
 		429: {
 			content: {
 				'text/plain': {
