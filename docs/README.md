@@ -73,6 +73,7 @@ This lib is based on:
 - [quickjs-emscripten](https://github.com/justjake/quickjs-emscripten)
 - [quickjs-emscripten-sync](https://github.com/reearth/quickjs-emscripten-sync)
 - [memfs](https://github.com/streamich/memfs)
+- [Chai](https://www.chaijs.com)
 
 Tools used:
 
