@@ -14,3 +14,4 @@ biome*
 !dist
 !package.json
 !README.md
+.github

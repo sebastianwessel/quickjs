@@ -7,7 +7,7 @@ export const provideFs = (vm: Arena, options: RuntimeOptions) => {
 		return
 	}
 
-	const { vol } = memfs(options.mountFs ?? { src: {} }, '/')
+	const { vol, fs } = memfs(options.mountFs ?? { src: {} }, '/')
 
 	vm.expose({
 		__fs: {
@@ -87,4 +87,6 @@ export const provideFs = (vm: Arena, options: RuntimeOptions) => {
 			},
 		},
 	})
+
+	return { fs }
 }

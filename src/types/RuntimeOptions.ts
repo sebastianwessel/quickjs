@@ -27,6 +27,10 @@ export type RuntimeOptions = {
 	 */
 	allowFetch?: boolean
 	/**
+	 * The custom fetch adapter provided as host function in the QuickJS runtime
+	 */
+	fetchAdapter?: typeof fetch
+	/**
 	 * Includes test framework
 	 * If enabled, the packages chai and mocha become available
 	 * They are registered global

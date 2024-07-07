@@ -30,10 +30,10 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 
 		const arena = new Arena(vm, { isMarshalable: true })
 
-		provideFs(arena, runtimeOptions)
+		const fs = provideFs(arena, runtimeOptions)
 		provideConsole(arena, runtimeOptions)
 		provideEnv(arena, runtimeOptions)
-		provideHttp(arena, runtimeOptions)
+		provideHttp(arena, runtimeOptions, { fs: runtimeOptions.allowFs ? fs?.fs : undefined })
 
 		const dispose = () => {
 			let err: unknown | undefined
