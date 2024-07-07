@@ -87,11 +87,20 @@ function afterEach(fn: HookFunction) {
  * @param timeout - The timeout in milliseconds.
  * @returns A promise that resolves if the function completes in time, or rejects if it times out.
  */
-function runWithTimeout(fn: Function, timeout: number): Promise<void> {
-	return Promise.race([
+async function runWithTimeout(fn: Function, timeout: number): Promise<void> {
+	let timeoutHandle: ReturnType<typeof setTimeout> | undefined
+	const res = await Promise.race([
 		fn(),
-		new Promise((_, reject) => setTimeout(() => reject(new Error(`Timeout of ${timeout}ms exceeded`)), timeout)),
+		new Promise((_, reject) => {
+			timeoutHandle = setTimeout(() => reject(new Error(`Timeout of ${timeout}ms exceeded`)), timeout)
+		}),
 	])
+
+	if (timeoutHandle) {
+		clearTimeout(timeoutHandle)
+		timeoutHandle = undefined
+	}
+	return res
 }
 
 /**
