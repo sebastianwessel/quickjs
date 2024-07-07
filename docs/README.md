@@ -11,6 +11,7 @@ This TypeScript package allows you to safely execute JavaScript code within a We
 - [Runtime options](./runtime-options.md)
 - [Run Tests in QuickJS](./running-tests.md)
 - [Credits](./credits.md)
+- [Find examples in the repository](https://github.com/sebastianwessel/quickjs/tree/main/example)
 
 ## Features
 
@@ -22,10 +23,6 @@ This TypeScript package allows you to safely execute JavaScript code within a We
 - **Performance**: Benefit from the lightweight and efficient QuickJS engine.
 - **Versatility**: Easily integrate with existing TypeScript projects.
 - **Simplicity**: User-friendly API for executing and managing JavaScript code in the sandbox.
-
-**[View the full documentation](https://sebastianwessel.github.io/quickjs/)**
-
-**[Find examples in the repository](https://github.com/sebastianwessel/quickjs/tree/main/example)**
 
 ## Basic Usage
 
