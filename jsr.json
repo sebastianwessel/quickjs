@@ -1,0 +1,22 @@
+{
+	"$schema": "https://jsr.io/schema/config-file.v1.json",
+	"name": "@sebastianwessel/quickjs",
+	"version": "1.0.0",
+	"description": "A typescript package to execute javascript code in a webassembly quickjs sandbox",
+	"exports": "./dist/esm/index.js",
+	"publish": {
+		"include": ["dist/**/*.js", "dist/**/*.d.ts", "README.md", "package.json"],
+		"exclude": [
+			"src",
+			".github",
+			".vscode",
+			".zed",
+			"!dist",
+			"!dist/**/*.js",
+			"!dist/**/*.d.ts",
+			".tshy",
+			"vendor",
+			"docs"
+		]
+	}
+}
