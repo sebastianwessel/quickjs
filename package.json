@@ -19,7 +19,7 @@
 	],
 	"files": ["dist"],
 	"tshy": {
-		"exclude": ["src/**/*.test.ts"],
+		"exclude": ["src/**/*.test.ts", "vendor"],
 		"dialects": ["esm", "commonjs"],
 		"exports": {
 			"./package.json": "./package.json",
