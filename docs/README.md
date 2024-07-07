@@ -1,6 +1,8 @@
-# QuickJS - Execute JavaScript in a WebAssembly QuickJS Sandbox
+# Package @sebastianwessel/quickjs
 
 This TypeScript package allows you to safely execute JavaScript code within a WebAssembly sandbox using the QuickJS engine. Perfect for isolating and running untrusted code securely, it leverages the lightweight and fast QuickJS engine compiled to WebAssembly, providing a robust environment for code execution.
+
+## Documentation
 
 - [Installation](./intallation.md)
 - Compatibility:
