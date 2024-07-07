@@ -16,7 +16,7 @@ const rootSuite: Suite = {
 }
 
 let currentSuite = rootSuite
-const DEFAULT_TIMEOUT = 5000
+const DEFAULT_TESTRUN_TIMEOUT = 5000
 
 /**
  * Defines a test suite with a given title.
@@ -87,6 +87,8 @@ function afterEach(fn: HookFunction) {
  * @param timeout - The timeout in milliseconds.
  * @returns A promise that resolves if the function completes in time, or rejects if it times out.
  */
+
+// biome-ignore lint/complexity/noBannedTypes: <explanation>
 async function runWithTimeout(fn: Function, timeout: number): Promise<void> {
 	let timeoutHandle: ReturnType<typeof setTimeout> | undefined
 	const res = await Promise.race([
@@ -217,7 +219,7 @@ async function runSuite(suite: Suite, timeout: number): Promise<SuiteResult> {
  * @param timeout - The timeout in milliseconds for hooks and tests. Defaults to 5000ms.
  * @returns A promise that resolves to the results of the root suite.
  */
-async function runTests(timeout: number = DEFAULT_TIMEOUT): Promise<SuiteResult> {
+async function runTests(timeout: number = DEFAULT_TESTRUN_TIMEOUT): Promise<SuiteResult> {
 	const result = await runSuite(rootSuite, timeout)
 	return result
 }
