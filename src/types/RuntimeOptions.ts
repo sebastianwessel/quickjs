@@ -27,6 +27,12 @@ export type RuntimeOptions = {
 	 */
 	allowFetch?: boolean
 	/**
+	 * Includes test framework
+	 * If enabled, the packages chai and mocha become available
+	 * They are registered global
+	 */
+	enableTestUtils?: boolean
+	/**
 	 * Per default, the console log inside of QuickJS is passed to the host console log.
 	 * Here, you can customize the handling and provide your own logging methods.
 	 */

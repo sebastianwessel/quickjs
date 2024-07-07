@@ -26,6 +26,7 @@ class MyThreadWorker extends ThreadWorker<InputData, ResponseData> {
 			executionTimeout: 10,
 			allowFs: true,
 			allowFetch: true,
+			enableTestUtils: true,
 			env: {},
 		})
 

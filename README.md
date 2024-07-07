@@ -13,6 +13,7 @@ This TypeScript package allows you to safely execute JavaScript code within a We
 - **File System**: Can mount a virtual file system
 - **Custom Node Modules**: Custom node modules are mountable
 - **Fetch Client**: Can provide a fetch client to make http(s) calls
+- **Test-Runner**: Includes a test runner and chai based `expect`
 
 ## Installation
 

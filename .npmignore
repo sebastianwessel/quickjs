@@ -1,0 +1,16 @@
+.tshy
+.vscode
+.env
+node_modules
+docs
+examples
+src
+vendor
+bun*
+biome*
+*.ts
+**/*.test.*
+
+!dist
+!package.json
+!README.md

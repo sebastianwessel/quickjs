@@ -103,7 +103,12 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 				})
 
 				const result = await Promise.race([
-					evalResult,
+					(async () => {
+						console.log('result')
+						const res = await evalResult
+						console.log('result', res)
+						return JSON.parse(JSON.stringify(res))
+					})(),
 					new Promise((_resolve, reject) => {
 						const maxTimeout = getMaxTimeout()
 						if (maxTimeout) {

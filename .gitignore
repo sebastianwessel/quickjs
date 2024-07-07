@@ -130,3 +130,5 @@ dist
 .pnp.*
 
 .tshy
+
+src/modules/build

@@ -28,7 +28,9 @@
 	},
 	"scripts": {
 		"start": "bun run --watch example/server/server.ts",
-		"build": "tshy",
+		"build": "bun run build:vendor && tshy && bun run build:copy",
+		"build:vendor": "bun vendor.ts",
+		"build:copy": "cp -r ./src/modules/build/ ./dist/esm/modules/build && cp -r ./src/modules/build/ ./dist/commonjs/modules/build",
 		"test": "bun test",
 		"test:dev": "bun test --watch",
 		"lint": "bunx @biomejs/biome check",
@@ -49,17 +51,19 @@
 	"license": "ISC",
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
+		"@hono/swagger-ui": "^0.3.0",
+		"@hono/zod-openapi": "^0.14.7",
 		"@types/autocannon": "^7.12.5",
 		"@types/bun": "^1.1.6",
 		"@types/node": "^20.14.10",
 		"autocannon": "^7.15.0",
-		"quickjs-emscripten": "^0.29.2",
-		"tshy": "^1.17.0",
-		"typescript": "^5.5.3",
-		"poolifier-web-worker": "^0.4.13",
+		"chai": "^5.1.1",
 		"hono": "^4.4.12",
-		"@hono/swagger-ui": "^0.3.0",
-		"@hono/zod-openapi": "^0.14.7"
+		"poolifier-web-worker": "^0.4.13",
+		"quickjs-emscripten": "^0.29.2",
+		"sinon": "^18.0.0",
+		"tshy": "^1.17.0",
+		"typescript": "^5.5.3"
 	},
 	"dependencies": {
 		"@jitl/quickjs-ng-wasmfile-release-sync": "^0.29.2",
