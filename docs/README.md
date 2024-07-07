@@ -1,4 +1,3 @@
-# QuickJS Sandbox in Javascript & Typescript
 
 - [Installation](./intallation.md)
 - Compatibility:
