@@ -1,4 +1,8 @@
-# Installation
+---
+title: Installation of @sebastianwessel/quickjs
+description: The QuickJS sandbox has build in compatibility for the basic NodeJS/Javascript functions
+---
+
 
 Install the package using npm, yarn, or bun:
 

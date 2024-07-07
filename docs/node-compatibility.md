@@ -1,4 +1,7 @@
-# Node compatibility
+---
+title: Node compatibility
+description: This library provides basic support most common node core packages.
+---
 
 ## node:fs
 
