@@ -17,18 +17,10 @@
 		"package",
 		"library"
 	],
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"tshy": {
-		"exclude": [
-			"src/**/*.test.ts",
-			"vendor"
-		],
-		"dialects": [
-			"esm",
-			"commonjs"
-		],
+		"exclude": ["src/**/*.test.ts", "vendor"],
+		"dialects": ["esm", "commonjs"],
 		"exports": {
 			"./package.json": "./package.json",
 			".": "./src/index.ts"
@@ -64,23 +56,24 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
 		"@hono/swagger-ui": "^0.3.0",
-		"@hono/zod-openapi": "^0.14.7",
+		"@hono/zod-openapi": "^0.14.8",
 		"@types/autocannon": "^7.12.5",
 		"@types/bun": "^1.1.6",
 		"@types/node": "^20.14.10",
 		"autocannon": "^7.15.0",
 		"chai": "^5.1.1",
 		"hono": "^4.4.12",
-		"poolifier-web-worker": "^0.4.13",
+		"poolifier-web-worker": "^0.4.14",
 		"quickjs-emscripten": "^0.29.2",
 		"sinon": "^18.0.0",
-		"tshy": "^1.17.0",
+		"tshy": "^1.18.0",
 		"typescript": "^5.5.3"
 	},
 	"dependencies": {
 		"@jitl/quickjs-ng-wasmfile-release-sync": "^0.29.2",
 		"memfs": "^4.9.3",
-		"quickjs-emscripten-core": "^0.29.2"
+		"quickjs-emscripten-core": "^0.29.2",
+		"rate-limiter-flexible": "^5.0.3"
 	},
 	"exports": {
 		"./package.json": "./package.json",

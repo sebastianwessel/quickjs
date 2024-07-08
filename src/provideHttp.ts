@@ -1,3 +1,5 @@
+import type { IFs } from 'memfs'
+import { getDefaultFetchAdapter } from './adapter/fetch.js'
 import type { Arena } from './sync/index.js'
 
 import type { RuntimeOptions } from './types/RuntimeOptions.js'
@@ -5,28 +7,19 @@ import type { RuntimeOptions } from './types/RuntimeOptions.js'
 /**
  * Provide http related functions
  */
-export const provideHttp = (arena: Arena, options: RuntimeOptions) => {
-	const injectUnsupported = (name: string) => () => {
-		throw new Error(`Not supported: ${name} has been disabled for security reasons or is not supported by the runtime`)
-	}
-
-	const injectFetch = async (...params: Parameters<typeof fetch>) => {
-		const res = await fetch(...params)
-
-		return {
-			status: res.status,
-			ok: res.ok,
-			statusText: res.statusText,
-			json: async () => res.json(),
-			text: async () => res.text(),
-			formData: async () => res.formData,
-			headers: res.headers,
-			type: res.type,
-			url: res.url,
-			blob: async () => res.blob,
-			bodyUsed: res.bodyUsed,
-			redirected: res.redirected,
+export const provideHttp = (arena: Arena, options: RuntimeOptions, input?: { fs?: IFs | undefined }) => {
+	const injectUnsupported =
+		<T = any>(name: string) =>
+		() => {
+			throw new Error(
+				`Not supported: ${name} has been disabled for security reasons or is not supported by the runtime`,
+			) as T
 		}
+
+	let fetchFunction: typeof fetch = injectUnsupported('fetch')
+
+	if (options.allowFetch) {
+		fetchFunction = options.fetchAdapter ? options.fetchAdapter : getDefaultFetchAdapter({ fs: input?.fs })
 	}
 
 	arena.expose({
@@ -53,7 +46,7 @@ export const provideHttp = (arena: Arena, options: RuntimeOptions) => {
 				search: url.search,
 			}
 		},
-		fetch: options.allowFetch ? injectFetch : injectUnsupported('fetch'),
+		fetch: fetchFunction,
 		Response,
 		Request,
 	})
