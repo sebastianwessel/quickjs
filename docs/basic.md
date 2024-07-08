@@ -3,25 +3,20 @@ title: Basic Understanding
 description: Get a basic understanding on how to the QuickJS module works
 ---
 
-Here are some information, which will help you to prevent some pitfalls.
-Here, the naming host and guest are used, as it is the general name pattern for such systems.
-The host is your main application, and the guest is the webassembly QuickJS runtime.
+This documentation provides essential information to help you avoid common pitfalls when working with QuickJS WebAssembly runtime. The terms "host" and "guest" are used to describe your main application and the QuickJS runtime, respectively.
 
-## Synchonus Execution
+## Synchronous Execution
 
-In general, the interaction with the guest system is synchonus.
+### Blocking the JavaScript Event Loop
 
-### Blocking the JavaScript Eventloop
+When the `eval` method is called on the host, the event loop of the host system is blocked until the method returns.
 
-If the `eval` in the host is called, the event loop from the host system is blocked, until the method returns.
-
-Here is an example, on how you can block the host system 🔥:
+Here is an example of how the host system can be blocked 🔥:
 
 ```typescript
-import { quickJS } from './src/index.js'
+import { quickJS } from '@sebastianwessel/quickjs'
 
 const { createRuntime } = await quickJS()
-
 const { evalCode } = await createRuntime()
 
 setInterval(() => {
@@ -31,35 +26,249 @@ setInterval(() => {
 console.log('start')
 
 const result = await evalCode(`
-
 const fn = () => new Promise(() => {
   while(true) {
   }
 })
-  
 export default await fn()
 `)
-
 ```
 
-You might expect, that this code does not block the host system, but is does, even if we set `await evalCode`.
-The issue is, that the host system needs to waiting for the guest system, to return a value.
-A value is returned, after the the whole script is being executed. In our case, this does never happend, because of the endless while-loop.
-In this example, we do not await for a promise to be resolved. We need to wait for the actual promise itself, to be returned by the guest system.
+You might expect that this code does not block the host system, but it does, even with `await evalCode`. The host system must wait for the guest system to return a value. In this example, the value is never returned because of the endless while-loop.
 
-**❗️ Set execeution timeouts if possible**
+### Setting Execution Timeouts
 
-As an fallback, it is highly recommended, to set a default timeout value.
-The execution timeout value can be set in the options of `createRuntime` and `evalCode`. If it is set in both functions, the smaller value will be chosen.
-Setting the option `executionTimeout` to `0` or `undefined`, means disabling the execution timeout. Setting the timeout to `0` in  `evalCode`, while some value was set before in `createRuntime`, won´t disable the timeout handling.
+**❗ Set Execution Timeouts if Possible**  
+It is highly recommended to set a default timeout value to avoid blocking the host system indefinitely. The execution timeout can be set in the options of `createRuntime` and `evalCode`. The smaller value between the two functions will be chosen. Setting the `executionTimeout` to `0` or `undefined` disables the execution timeout.
 
-The timeout values are in seconds, to provide a more human friendly reading.
+Timeout values are in seconds for better readability.
 
-### Worker & Threads
+### Workers and Threads
 
-It is **highly recommended**, to not run the guest system in the main thread.
-Instead, you should span workers/threads, which run on their own.
+It is **highly recommended** to run the guest system in separate workers or threads rather than the main thread. This approach has several critical benefits:
 
-## Data from Host to Guest
+1. It ensures that the main event loop is not blocked.
+2. Multiple workers can boost performance.
+3. The host application can terminate a single worker anytime. If the guest system exceeds the maximum runtime, restarting the worker ensures a clean state.
 
-## Data from Guest to Host
+## Asynchronous Behavior
+
+The provided QuickJS WebAssembly runtime does not have an internal event loop like a regular runtime. Instead, the host system must trigger the loop for any provided promises. This library starts an interval on the host that triggers `executePendingJobs` in QuickJS. The interval is automatically stopped and removed when no longer needed.
+
+When a promise is provided by the host and used by the client, the client executes until it reaches the promise. If the promise is not settled, the QuickJS runtime pauses execution. Once the promise is settled, the host needs to call `executePendingJobs` to instruct QuickJS to resume execution.
+
+## Data Exchange Between Host and Guest
+
+### Host to Guest
+
+The host system can provide various data types to the guest system, including primitives, objects, functions, and promises. This library uses an `env` pattern for data and functions provided by the host, which is mirrored to `process.env` inside the guest system.
+
+Example:
+
+```typescript
+import { quickJS } from '@sebastianwessel/quickjs'
+
+const { createRuntime } = await quickJS()
+
+const keyValueStoreOnHost = new Map<string, string>()
+
+const { evalCode } = await createRuntime({
+  env: {
+    MY_PROCESS_ENV: 'some environment variable provided by the host',
+    KV: {
+      set: (key: string, value: string) => keyValueStoreOnHost.set(key, value),
+      get: (key: string) => keyValueStoreOnHost.get(key),
+    },
+  },
+})
+
+const result = await evalCode(`
+console.log(env.MY_PROCESS_ENV)
+env.KV.set('guest-key', 'value set by guest system')
+const value = env.KV.get('guest-key')
+export default value
+`)
+
+console.log('result from guest:', result.data) // result from guest: value set by guest system
+console.log('result from host:', keyValueStoreOnHost.get('guest-key')) // result from host: value set by guest system
+```
+
+#### Wrapping Functions
+
+If a function is provided from host to guest, it should be wrapped in a dummy function.
+
+👎 **Incorrect**:
+
+```typescript
+const { evalCode } = await createRuntime({
+  env: {
+    KV: {
+      set: keyValueStoreOnHost.set,
+      get: keyValueStoreOnHost.get,
+    },
+  },
+})
+```
+
+👍 **Correct**:
+
+```typescript
+const { evalCode } = await createRuntime({
+  env: {
+    KV: {
+      set: (key: string, value: string) => keyValueStoreOnHost.set(key, value),
+      get: (key: string) => keyValueStoreOnHost.get(key),
+    },
+  },
+})
+```
+
+**🚨 Security Information ‼️**  
+The host system only provides the given values but never reads them back. Even if the guest system modifies `env.KV.set`, it will not impact the host side.
+
+Example:
+
+```typescript
+import { quickJS } from '@sebastianwessel/quickjs'
+
+const { createRuntime } = await quickJS()
+const keyValueStoreOnHost = new Map<string, string>()
+
+const { evalCode } = await createRuntime({
+  env: {
+    KV: {
+      set: (key: string, value: string) => keyValueStoreOnHost.set(key, value),
+      get: (key: string) => keyValueStoreOnHost.get(key),
+    },
+  },
+})
+
+const result = await evalCode(`
+env.KV.set('guest-key', 'value set by guest system')
+const value = env.KV.get('guest-key')
+env.KV.get = () => { throw new Error('Security!!!') }
+export default value
+`)
+
+console.log('result from guest:', result)
+console.log('result from host:', keyValueStoreOnHost.get('guest-key'))
+```
+
+### Guest to Host
+
+#### Usage of Return Value
+
+The guest system can return a final value using `export default`. The library sets the execution mode to `module`, expecting the executed script to provide its return value via `export default`.
+
+Example:
+
+```typescript
+import { quickJS } from '@sebastianwessel/quickjs'
+
+const { createRuntime } = await quickJS()
+const { evalCode } = await createRuntime()
+
+const result = await evalCode(`
+export default 'my value'
+`)
+
+console.log('result from guest:', result.data) // result from guest: my value
+```
+
+**❗ Promises Must Be Awaited**  
+If the executed script returns a promise, the promise must be awaited.
+
+👎 **Incorrect**:
+
+```typescript
+import { quickJS } from '@sebastianwessel/quickjs'
+
+const { createRuntime } = await quickJS()
+const { evalCode } = await createRuntime()
+
+const result = await evalCode(`
+const prom = async () => {
+  return 'my value'
+}
+export default prom() // promise is not awaited!!
+`)
+
+console.log('result from guest:', result.data) // result from guest: my value
+```
+
+👍 **Correct**:
+
+```typescript
+import { quickJS } from '@sebastianwessel/quickjs'
+
+const { createRuntime } = await quickJS()
+const { evalCode } = await createRuntime()
+
+const result = await evalCode(`
+const prom = async () => {
+  return 'my value'
+}
+export default await prom() // promise is awaited
+`)
+
+console.log('result from guest:', result.data) // result from guest: my value
+```
+
+The library wraps the result of the `eval` method into a result object, similar to the result of the `fetch` method. This makes handling success and error paths easier for developers.
+
+A success response:
+
+```typescript
+{
+  ok: true,
+  data: 'the return value'
+}
+```
+
+An error response:
+
+```typescript
+{
+  ok: false,
+  isSyntaxError: true,
+  error: {
+    name: "SyntaxError",
+    message: "unexpected end of string",
+    stack: "    at /src/index.js:9:1\n",
+  }
+}
+```
+
+#### Using Provided Env-Functions
+
+It is also possible to exchange values between client and host, while the guest system is running. Therefor, the recommended approach is to call functions, provided by the host, from the client system.
+Here, async functions are supported as well.
+
+#### Setting Values in Host by Guest System (Not Recommended!)
+
+The guest system can change the values in an object provided by the host. Although possible, this pattern is not recommended. Instead, provide functions to mutate the object or array on the host side, allowing for validation and additional functionality like emitting events. This approach keeps the control on the host side.
+
+Example of exchanging data by changing an object's key-value:
+
+```typescript
+import { quickJS } from '@sebastianwessel/quickjs'
+
+const { createRuntime } = await quickJS()
+const dangerousSync = {
+  mutable: 'init value',
+}
+
+const { evalCode } = await createRuntime({
+  dangerousSync,
+})
+
+await evalCode(`
+__dangerousSync.mutable = 'changed by guest'
+`)
+
+console.log(dangerousSync)
+```
+
+**🚨 Security Advice ‼️**
+
+As the guest system can access and potentially overwrite the values provided by the host, ensure that these values do not affect security. Do not provide functions and make sure the provided values are secure.

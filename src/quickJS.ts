@@ -89,7 +89,7 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 				vm.runtime.setInterruptHandler(shouldInterruptAfterDeadline(Date.now() + (getMaxTimeout() as number)))
 			}
 
-			using _eventLoopinterval = createTimeInterval(() => {
+			using eventLoopinterval = createTimeInterval(() => {
 				vm.runtime.executePendingJobs()
 			}, 0)
 
@@ -105,12 +105,14 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 				const result = await Promise.race([
 					(async () => {
 						const res = await evalResult
+						eventLoopinterval?.clear()
 						return JSON.parse(JSON.stringify(res))
 					})(),
 					new Promise((_resolve, reject) => {
 						const maxTimeout = getMaxTimeout()
 						if (maxTimeout) {
 							setTimeout(() => {
+								eventLoopinterval?.clear()
 								const err = new Error('The script execution has exceeded the maximum allowed time limit.')
 								err.name = 'ExecutionTimeout'
 								err.stack = undefined

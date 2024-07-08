@@ -21,3 +21,5 @@ or
 ```sh
 yarn add @sebastianwessel/quickjs
 ```
+
+This package is also available at [jsr.io/@sebastianwessel/quickjs](https://jsr.io/@sebastianwessel/quickjs)

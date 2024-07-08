@@ -1,6 +1,9 @@
 export type ErrorResponse = {
 	ok: false
-	error: Error
-	stack?: string
+	error: {
+		name: string
+		message: string
+		stack?: string
+	}
 	isSyntaxError?: boolean
 }
