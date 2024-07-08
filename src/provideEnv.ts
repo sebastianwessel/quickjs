@@ -9,7 +9,13 @@ export const provideEnv = (arena: Arena, options: RuntimeOptions) => {
 	const intervals = new Map<number, ReturnType<typeof setTimeout>>()
 	let intervalCounter = 0
 
+	let dangerousSync: Record<string, unknown> = {}
+	if (options.dangerousSync) {
+		dangerousSync = arena.sync(options.dangerousSync)
+	}
+
 	arena.expose({
+		__dangerousSync: dangerousSync,
 		env: options.env ?? {},
 		process: {
 			env: options.env ?? { NODE_DEBUG: 'true' },

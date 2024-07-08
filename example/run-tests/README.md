@@ -1,4 +1,4 @@
-## Run-Tests Example
+# Run-Tests Example
 
 In the *run-tests* example, the usage of the included test runner is shown. You can test it out by running:
 

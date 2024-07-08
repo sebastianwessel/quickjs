@@ -5,6 +5,11 @@ This TypeScript package allows you to safely execute JavaScript code within a We
 ## Documentation
 
 - [Installation](./intallation.md)
+- Usage and Best Practice:
+  - [Basic understanding](./basic.md)
+  - [Fetch in Guest System](./fetch.md)
+  - [Custom Node Modules](./custom-modules.md)
+  - [Custom File System](./custom-file-system.md)
 - Compatibility:
   - [Core Javascript](./core-js-compatibility.md)
   - [NodeJS](./node-compatibility.md)

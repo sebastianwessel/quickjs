@@ -14,12 +14,10 @@ import type { RuntimeOptions } from './types/RuntimeOptions.js'
 export const getModuleLoader = (options: RuntimeOptions) => {
 	//const __dirname = dirname(fileURLToPath(import.meta.url))
 
-	const customVol = options?.nodeModules ? Volume.fromNestedJSON(options?.nodeModules) : {}
-
 	const modules: Record<string, any> = {
 		'/': {
 			node_modules: {
-				...customVol,
+				...options?.nodeModules,
 				path: {
 					'index.js': pathModule,
 				},

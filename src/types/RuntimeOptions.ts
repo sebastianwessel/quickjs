@@ -1,4 +1,4 @@
-import type { DirectoryJSON } from 'memfs'
+import type { NestedDirectoryJSON } from 'memfs'
 
 export type RuntimeOptions = {
 	/**
@@ -10,12 +10,12 @@ export type RuntimeOptions = {
 	 * Mount a virtual file system
 	 * @link https://github.com/streamich/memfs
 	 */
-	mountFs?: DirectoryJSON
+	mountFs?: NestedDirectoryJSON
 	/**
 	 * Mount custom node_modules in a virtual file system
 	 * @link https://github.com/streamich/memfs
 	 */
-	nodeModules?: DirectoryJSON
+	nodeModules?: NestedDirectoryJSON
 	/**
 	 * Enable file capabilities
 	 * If enabled, the package node:fs becomes available
@@ -63,6 +63,8 @@ export type RuntimeOptions = {
 	}
 	/**
 	 * Key-value list of ENV vars, which should be available in QuickJS
+	 * It is not limited to primitives like string and numbers.
+	 * Objects, arrays and functions can be provided as well.
 	 *
 	 * @example
 	 * ```js
@@ -78,4 +80,9 @@ export type RuntimeOptions = {
 	 * ```
 	 */
 	env?: Record<string, unknown>
+	/**
+	 * The object is synchronized between host and guest system.
+	 * This means, the values on the host, can be set by the guest system
+	 */
+	dangerousSync?: Record<string, unknown>
 }
