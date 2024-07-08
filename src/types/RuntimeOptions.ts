@@ -1,4 +1,4 @@
-import type { DirectoryJSON } from 'memfs'
+import type { NestedDirectoryJSON } from 'memfs'
 
 export type RuntimeOptions = {
 	/**
@@ -10,12 +10,12 @@ export type RuntimeOptions = {
 	 * Mount a virtual file system
 	 * @link https://github.com/streamich/memfs
 	 */
-	mountFs?: DirectoryJSON
+	mountFs?: NestedDirectoryJSON
 	/**
 	 * Mount custom node_modules in a virtual file system
 	 * @link https://github.com/streamich/memfs
 	 */
-	nodeModules?: DirectoryJSON
+	nodeModules?: NestedDirectoryJSON
 	/**
 	 * Enable file capabilities
 	 * If enabled, the package node:fs becomes available

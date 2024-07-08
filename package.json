@@ -17,18 +17,10 @@
 		"package",
 		"library"
 	],
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"tshy": {
-		"exclude": [
-			"src/**/*.test.ts",
-			"vendor"
-		],
-		"dialects": [
-			"esm",
-			"commonjs"
-		],
+		"exclude": ["src/**/*.test.ts", "vendor"],
+		"dialects": ["esm", "commonjs"],
 		"exports": {
 			"./package.json": "./package.json",
 			".": "./src/index.ts"
@@ -46,7 +38,8 @@
 		"postpublish": "npx jsr publish",
 		"example:basic": "bun example/basic/server.ts",
 		"example:server": "bun example/server/server.ts",
-		"example:tests": "bun example/run-tests/index.ts"
+		"example:tests": "bun example/run-tests/index.ts",
+		"example:module": "bun example/custom-module/index.ts"
 	},
 	"author": {
 		"name": "Sebastian Wessel",
