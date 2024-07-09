@@ -11,7 +11,9 @@ import type { ErrorResponse } from './types/ErrorResponse.js'
 import type { InitResponseType } from './types/InitResponseType.js'
 import type { OkResponse } from './types/OkResponse.js'
 
+import type { IFs } from 'memfs'
 import { createTimeInterval } from './createTimeInterval.js'
+import { createVirtualFileSystem } from './createVirtualFileSystem.js'
 import { getModuleLoader } from './getModuleLoader.js'
 import { modulePathNormalizer } from './modulePathNormalizer.js'
 
@@ -23,17 +25,19 @@ import { modulePathNormalizer } from './modulePathNormalizer.js'
 export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-release-sync') => {
 	const module = await newQuickJSWASMModuleFromVariant(import(wasmVariantName))
 
-	const createRuntime = async (runtimeOptions: RuntimeOptions = {}): Promise<InitResponseType> => {
+	const createRuntime = async (runtimeOptions: RuntimeOptions = {}, existingFs?: IFs): Promise<InitResponseType> => {
 		const vm = module.newContext()
 
-		vm.runtime.setModuleLoader(getModuleLoader(runtimeOptions), modulePathNormalizer)
+		const fs = existingFs ?? createVirtualFileSystem(runtimeOptions).fs
+
+		vm.runtime.setModuleLoader(getModuleLoader(fs, runtimeOptions), modulePathNormalizer)
 
 		const arena = new Arena(vm, { isMarshalable: true })
 
-		const fs = provideFs(arena, runtimeOptions)
+		provideFs(arena, runtimeOptions, fs)
 		provideConsole(arena, runtimeOptions)
 		provideEnv(arena, runtimeOptions)
-		provideHttp(arena, runtimeOptions, { fs: runtimeOptions.allowFs ? fs?.fs : undefined })
+		provideHttp(arena, runtimeOptions, { fs: runtimeOptions.allowFs ? fs : undefined })
 
 		const dispose = () => {
 			let err: unknown | undefined

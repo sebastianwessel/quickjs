@@ -85,6 +85,7 @@ export class Arena {
 		this._map = new VMMap(ctx)
 		this._registeredMap = new VMMap(ctx)
 		this.registerAll(options?.registeredObjects ?? defaultRegisteredObjects)
+		ctx.evalCode('var global = globalThis')
 	}
 
 	/**

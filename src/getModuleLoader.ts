@@ -1,53 +1,34 @@
-import { Volume } from 'memfs'
+import type { IFs } from 'memfs'
 import type { JSModuleLoader } from 'quickjs-emscripten-core'
 
-import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-// import { fileURLToPath } from 'node:url'
-import assertModule from './modules/assert.js'
-import fsPromisesModule from './modules/fs-promises.js'
-import fsModule from './modules/fs.js'
-import pathModule from './modules/path.js'
-import utilModule from './modules/util.js'
+
 import type { RuntimeOptions } from './types/RuntimeOptions.js'
 
-export const getModuleLoader = (options: RuntimeOptions) => {
-	//const __dirname = dirname(fileURLToPath(import.meta.url))
+export const getModuleLoader = (fs: IFs, _runtimeOptions: RuntimeOptions) => {
+	const moduleLoader: JSModuleLoader = (inputName, _context) => {
+		let name = inputName
 
-	const modules: Record<string, any> = {
-		'/': {
-			node_modules: {
-				...options?.nodeModules,
-				path: {
-					'index.js': pathModule,
-				},
-				util: {
-					'index.js': utilModule,
-				},
-				assert: {
-					'index.js': assertModule,
-				},
-			},
-		},
-	}
-	if (options.allowFs) {
-		modules['/'].node_modules.fs = { 'index.js': fsModule, promises: { 'index.js': fsPromisesModule } }
-	}
-
-	if (options.enableTestUtils) {
-		modules['/'].node_modules.test = {
-			'index.js': readFileSync(join(__dirname, 'modules', 'build', 'test-lib.js')),
-		}
-	}
-
-	const vol = Volume.fromNestedJSON(modules)
-
-	const moduleLoader: JSModuleLoader = (name, _context) => {
-		if (!vol.existsSync(name)) {
-			return { error: new Error(`Module '${name}' not installed or available`) }
+		// if it does not exist
+		if (!fs.existsSync(name)) {
+			// try to add the .js extension
+			if (fs.existsSync(`${name}.js`)) {
+				name = `${name}.js`
+			} else {
+				return { error: new Error(`Module '${inputName}' not installed or available`) }
+			}
 		}
 
-		const value = vol.readFileSync(name)?.toString()
+		// if it is a folder, we need to use the index.js file
+		if (fs.lstatSync(name).isDirectory()) {
+			name = join(name, 'index.js')
+			if (!fs.existsSync(name)) {
+				return { error: new Error(`Module '${inputName}' not installed or available`) }
+			}
+		}
+
+		// workaround: as we can not provide the real import.meta.url functionality, we replace it dynamically with the current value string
+		const value = fs.readFileSync(name)?.toString().replaceAll('import.meta.url', `'file://${name}'`)
 
 		if (!value) {
 			return { error: new Error(`Module '${name}' not installed or available`) }
