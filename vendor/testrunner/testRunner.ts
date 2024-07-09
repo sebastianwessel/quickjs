@@ -134,7 +134,11 @@ async function runSuite(suite: Suite, timeout: number): Promise<SuiteResult> {
 			suiteResult.beforeAll.push({
 				title: 'beforeAll hook',
 				passed: false,
-				error,
+				error: {
+					name: (error as Error).name,
+					message: (error as Error).message,
+					stack: (error as Error).stack,
+				},
 			})
 		}
 	}
@@ -152,7 +156,11 @@ async function runSuite(suite: Suite, timeout: number): Promise<SuiteResult> {
 				suiteResult.beforeEach.push({
 					title: 'beforeEach hook',
 					passed: false,
-					error,
+					error: {
+						name: (error as Error).name,
+						message: (error as Error).message,
+						stack: (error as Error).stack,
+					},
 				})
 			}
 		}
@@ -167,7 +175,11 @@ async function runSuite(suite: Suite, timeout: number): Promise<SuiteResult> {
 			suiteResult.tests.push({
 				title: test.title,
 				passed: false,
-				error,
+				error: {
+					name: (error as Error).name,
+					message: (error as Error).message,
+					stack: (error as Error).stack,
+				},
 			})
 		}
 
@@ -182,7 +194,11 @@ async function runSuite(suite: Suite, timeout: number): Promise<SuiteResult> {
 				suiteResult.afterEach.push({
 					title: 'afterEach hook',
 					passed: false,
-					error,
+					error: {
+						name: (error as Error).name,
+						message: (error as Error).message,
+						stack: (error as Error).stack,
+					},
 				})
 			}
 		}
@@ -206,7 +222,11 @@ async function runSuite(suite: Suite, timeout: number): Promise<SuiteResult> {
 			suiteResult.afterAll.push({
 				title: 'afterAll hook',
 				passed: false,
-				error,
+				error: {
+					name: (error as Error).name,
+					message: (error as Error).message,
+					stack: (error as Error).stack,
+				},
 			})
 		}
 	}
