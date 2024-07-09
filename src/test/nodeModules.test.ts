@@ -42,17 +42,19 @@ describe('node_modules', () => {
 		const { evalCode } = await createRuntime()
 
 		const code = `
-    import { readFileSync } from 'node:fs'
+    import { writeFileSync } from 'node:fs'
+
+    writeFileSync('test.txt', 'text content')
+
     export default 'ok'
     `
 
 		const result = (await evalCode(code)) as ErrorResponse
 
 		expect(result.ok).toBeFalse()
-		expect(result.error).toStrictEqual({
+		expect(result.error).toMatchObject({
 			name: 'Error',
-			message: "Module '/node_modules/fs/index.js' not installed or available",
-			stack: undefined,
+			message: 'File access is disabled',
 		})
 	})
 
@@ -73,7 +75,81 @@ describe('node_modules', () => {
 
 		const result = (await evalCode(code)) as OkResponse
 
+		console.log(result)
+
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('text content')
+	})
+
+	it('can use a custom module', async () => {
+		const { createRuntime } = await quickJS()
+
+		const { evalCode } = await createRuntime({
+			allowFs: true,
+			nodeModules: {
+				custom: {
+					'index.js': `export const customModuleFunction = ()=>'Hello from custom module function'`,
+				},
+			},
+		})
+
+		const code = `
+    import { customModuleFunction } from 'custom'
+
+    export default customModuleFunction()
+    `
+
+		const result = (await evalCode(code)) as OkResponse
+
+		expect(result.ok).toBeTrue()
+		expect(result.data).toBe('Hello from custom module function')
+	})
+
+	it('can use relative imports with js extension', async () => {
+		const { createRuntime } = await quickJS()
+
+		const { evalCode } = await createRuntime({
+			allowFs: true,
+			mountFs: {
+				src: {
+					'custom.js': `export const relativeImportFunction = ()=>'Hello from relative import function'`,
+				},
+			},
+		})
+
+		const code = `
+    import { relativeImportFunction } from './custom.js'
+
+    export default relativeImportFunction()
+    `
+
+		const result = (await evalCode(code)) as OkResponse
+
+		expect(result.ok).toBeTrue()
+		expect(result.data).toBe('Hello from relative import function')
+	})
+
+	it('can use relative imports without js extension', async () => {
+		const { createRuntime } = await quickJS()
+
+		const { evalCode } = await createRuntime({
+			allowFs: true,
+			mountFs: {
+				src: {
+					'custom.js': `export const relativeImportFunction = ()=>'Hello from relative import function'`,
+				},
+			},
+		})
+
+		const code = `
+    import { relativeImportFunction } from './custom'
+
+    export default relativeImportFunction()
+    `
+
+		const result = (await evalCode(code)) as OkResponse
+
+		expect(result.ok).toBeTrue()
+		expect(result.data).toBe('Hello from relative import function')
 	})
 })

@@ -95,6 +95,15 @@ Thanks to [memfs](https://github.com/streamich/memfs), this lib provides basic s
 | strictEqual     | ✅        |
 | notStrictEqual  | ✅        |
 
+## node:module
+
+| Method          | Supported |
+|-----------------|-----------|
+| createRequire   | ✅         |
+| isBuiltin       | ✅         |
+| register        | ❌         |
+| syncBuiltinESMExports | ❌        |
+
 ## node:path
 
 | Method               | Supported |

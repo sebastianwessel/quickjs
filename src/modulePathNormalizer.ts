@@ -12,5 +12,5 @@ export const modulePathNormalizer: JSModuleNormalizer = (baseName: string, reque
 
 	// module import
 	const moduleName = requestedName.replace('node:', '')
-	return join('/node_modules', moduleName, 'index.js')
+	return join('/node_modules', moduleName)
 }

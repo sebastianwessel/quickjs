@@ -19,16 +19,24 @@ const { evalCode } = await createRuntime({
 			'index.js': await Bun.file(customModuleHostLocation).text(),
 		},
 	},
+	mountFs: {
+		src: {
+			'custom.js': `export const relativeImportFunction = ()=>'Hello from relative import function'`,
+		},
+	},
 })
 
 const result = await evalCode(`
 import { customFn } from 'custom-module'
+import { relativeImportFunction } from './custom.js'
 
-const result = customFn()
+const customModule = customFn()
+console.log('customModule:', customModule)
 
-console.log(result)
+const relativeImport = relativeImportFunction()
+console.log('relativeImport:', relativeImport)
   
-export default result
+export default { customModule, relativeImport }
 `)
 
 console.log(result) // { ok: true, data: 'Hello from the custom module' }
