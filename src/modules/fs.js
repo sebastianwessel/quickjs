@@ -1,5 +1,6 @@
 export default `
 import { resolve } from 'node:path'
+import { Buffer } from 'node:buffer
 
 export const access = (path, ...params) => __fs.access(resolve(path), ...params)
 export const accessSync = (path, ...params) => __fs.accessSync(resolve(path), ...params)
