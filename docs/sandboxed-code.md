@@ -9,6 +9,8 @@ The most common use case is, to execute a give JavaScript code in the QuickJS we
 The `evalCode` function described below, is intend to be used, when a given JavaScript code should be executed and optional a result value is returned.
 It is recommended, to always return a value, for better validation on the host side, that the code was executed as expected.
 
+In the sandbox, the executed code "lives" in `/src/index.js`. If custom files are added via configuration, source files should be placed below `/src`. Nested directories are supported.
+
 ```typescript
 import { quickJS } from '@sebastianwessel/quickjs'
 
@@ -84,3 +86,52 @@ console.log(result)
 The `validateCode` functions returns a unified result object, and does not throw.
 
 For further information, it is hight recommended to [read "Basic Understanding"](./basic.md).
+
+## Execute TypeScript in the Sandbox
+
+Executing TypeScript in the sandboxed runtime, is similar to executing JavaScript. An additional transpile step will be applied to the given code. Additionally each file below `/src` with file extension`.ts` in the custom file system will be transpiled.
+
+The TypeScript code is only transpiled, but not type-checked!
+If checking types is required, it should be done and handled, before using this library.
+
+**Requirements:**
+
+- optional dependency package `typescript` must be installed on the host system
+- `createRuntime` option `transformTypescript` must be set to `true`
+
+Example:
+
+```typescript
+import { quickJS } from '@sebastianwessel/quickjs'
+
+const { createRuntime } = await quickJS()
+
+// Create a runtime instance (sandbox)
+const { evalCode } = await createRuntime({
+  transformTypescript: true,
+  mountFs: {
+    src: {
+      'test.ts': `export const testFn = (value: string): string => {
+                    console.log(value)
+                    return value
+                  }`,
+    },
+  },
+})
+
+
+const result = await evalCode(`
+import { testFn } from './test.js'
+
+const t = (value:string):number=>value.length
+
+console.log(t('abc'))
+  
+export default testFn('hello')
+`)
+
+console.log(result) // { ok: true, data: 'hello' }
+// console log on host:
+// 3
+// hello
+```

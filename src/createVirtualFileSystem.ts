@@ -18,13 +18,15 @@ import type { RuntimeOptions } from './types/RuntimeOptions.js'
  * @returns filesystem fs and volume vol
  */
 export const createVirtualFileSystem = (runtimeOptions: RuntimeOptions = {}) => {
+	const customFileSystem = runtimeOptions.mountFs
+
 	// setup node_modules folder
 	const virtualFS: Record<string, any> = {
 		'/': {
-			...runtimeOptions.mountFs,
+			...customFileSystem,
 			src: {
 				// biome-ignore lint/complexity/useLiteralKeys: <explanation>
-				...(runtimeOptions.mountFs?.['src'] ? (runtimeOptions.mountFs?.['src'] as NestedDirectoryJSON) : {}),
+				...(customFileSystem?.['src'] ? (customFileSystem?.['src'] as NestedDirectoryJSON) : {}),
 			},
 			node_modules: {
 				...runtimeOptions?.nodeModules,

@@ -1,4 +1,5 @@
 import type { NestedDirectoryJSON } from 'memfs'
+import type { default as TS } from 'typescript'
 
 export type RuntimeOptions = {
 	/**
@@ -85,4 +86,13 @@ export type RuntimeOptions = {
 	 * This means, the values on the host, can be set by the guest system
 	 */
 	dangerousSync?: Record<string, unknown>
+	/**
+	 * Transpile all typescript files to javascript file in mountFs
+	 * Requires dependency typescript to be installed
+	 */
+	transformTypescript?: boolean
+	/**
+	 * The Typescript compiler options for transpiling files from typescript to JavaScript
+	 */
+	transformCompilerOptions?: TS.CompilerOptions
 }
