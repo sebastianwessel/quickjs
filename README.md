@@ -5,10 +5,11 @@ This TypeScript package allows you to safely execute JavaScript code within a We
 ## Features
 
 - **Security**: Run untrusted JavaScript code in a safe, isolated environment.
-- **File System**: Can mount a virtual file system
-- **Custom Node Modules**: Custom node modules are mountable
-- **Fetch Client**: Can provide a fetch client to make http(s) calls
-- **Test-Runner**: Includes a test runner and chai based `expect`
+- **Basic Node.js modules**: Provides basic standard Node.js module support for common use cases.
+- **File System**: Can mount a virtual file system.
+- **Custom Node Modules**: Custom node modules are mountable.
+- **Fetch Client**: Can provide a fetch client to make http(s) calls.
+- **Test-Runner**: Includes a test runner and chai based `expect`.
 - **Performance**: Benefit from the lightweight and efficient QuickJS engine.
 - **Versatility**: Easily integrate with existing TypeScript projects.
 - **Simplicity**: User-friendly API for executing and managing JavaScript code in the sandbox.
@@ -28,7 +29,7 @@ import { quickJS } from '@sebastianwessel/quickjs'
 // It is a ressource intensive job and should be done only once if possible 
 const { createRuntime } = await quickJS()
 
-// Create a runtime instance each time a js code should be executed
+// Create a runtime instance (sandbox)
 const { evalCode } = await createRuntime({
   allowFetch: true, // inject fetch and allow the code to fetch data
   allowFs: true, // mount a virtual file system and provide node:fs module
