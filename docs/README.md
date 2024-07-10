@@ -6,6 +6,7 @@ This TypeScript package allows you to safely execute JavaScript code within a We
 
 - [Installation](./intallation.md)
 - Usage and Best Practice:
+  - [Code in the sandbox](./sandboxed-code.md)
   - [Basic understanding](./basic.md)
   - [Fetch in Guest System](./fetch.md)
   - [Custom Node Modules](./custom-modules.md)
@@ -21,11 +22,12 @@ This TypeScript package allows you to safely execute JavaScript code within a We
 ## Features
 
 - **Security**: Run untrusted JavaScript code in a safe, isolated environment.
-- **File System**: Can mount a virtual file system
-- **Custom Node Modules**: Custom node modules are mountable
-- **Fetch Client**: Can provide a fetch client to make http(s) calls
-- **Test-Runner**: Includes a test runner and chai based `expect`
-- **Performance**: Benefit from the lightweight and efficient QuickJS engine.
+- **Basic Node.js modules**: Provides basic standard Node.js module support for common use cases.
+- **File System**: Can mount a virtual file system.
+- **Custom Node Modules**: Custom node modules are mountable.
+- **Fetch Client**: Can provide a fetch client to make http(s) calls.
+- **Test-Runner**: Includes a test runner and chai based `expect`.
+- **Performance**: Benefit from the lightweight and efficient QuickJS engine..
 - **Versatility**: Easily integrate with existing TypeScript projects.
 - **Simplicity**: User-friendly API for executing and managing JavaScript code in the sandbox.
 

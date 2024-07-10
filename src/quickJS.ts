@@ -16,6 +16,7 @@ import { createTimeInterval } from './createTimeInterval.js'
 import { createVirtualFileSystem } from './createVirtualFileSystem.js'
 import { getModuleLoader } from './getModuleLoader.js'
 import { modulePathNormalizer } from './modulePathNormalizer.js'
+import type { OkResponseCheck } from './types/OkResponseCheck.js'
 
 /**
  * Loads and creates a QuickJS instance
@@ -38,6 +39,12 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 		provideConsole(arena, runtimeOptions)
 		provideEnv(arena, runtimeOptions)
 		provideHttp(arena, runtimeOptions, { fs: runtimeOptions.allowFs ? fs : undefined })
+
+		await arena.evalCode(`
+          import 'node:util'
+          import 'node:buffer'
+          ${runtimeOptions.enableTestUtils ? "import 'test'" : ''}
+        `)
 
 		const dispose = () => {
 			let err: unknown | undefined
@@ -150,7 +157,49 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 			}
 		}
 
-		return { vm: arena, dispose, evalCode }
+		/**
+		 * Compile code only, but does not execute the code.
+		 *
+		 * @example
+		 * ```js
+		 * const result = await validateCode('export default await asyncFunction()')
+		 * ```
+		 */
+		const validateCode: InitResponseType['validateCode'] = async (code, filename = '/src/index.js', evalOptions?) => {
+			try {
+				arena.evalCode(code, filename, {
+					strict: true,
+					strip: true,
+					backtraceBarrier: true,
+					...evalOptions,
+					type: 'module',
+					compileOnly: true,
+				})
+				return { ok: true } as OkResponseCheck
+			} catch (err) {
+				const e = err as Error
+
+				const errorReturn: ErrorResponse = {
+					ok: false,
+					error: {
+						name: `${e.name}`,
+						message: `${e.message}`,
+						stack: e.stack ? `${e.stack}` : undefined,
+					},
+					isSyntaxError: e.name === 'SyntaxError',
+				}
+
+				return errorReturn
+			} finally {
+				try {
+					dispose()
+				} catch (error) {
+					console.error('Failed to dispose', error)
+				}
+			}
+		}
+
+		return { vm: arena, dispose, evalCode, validateCode }
 	}
 
 	return { createRuntime }
