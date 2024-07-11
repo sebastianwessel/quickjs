@@ -15,6 +15,7 @@ import type { IFs } from 'memfs'
 import { createTimeInterval } from './createTimeInterval.js'
 import { createVirtualFileSystem } from './createVirtualFileSystem.js'
 import { getModuleLoader } from './getModuleLoader.js'
+import { getTypescriptSupport } from './getTypescriptSupport.js'
 import { modulePathNormalizer } from './modulePathNormalizer.js'
 import type { OkResponseCheck } from './types/OkResponseCheck.js'
 
@@ -30,6 +31,9 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 		const vm = module.newContext()
 
 		const fs = existingFs ?? createVirtualFileSystem(runtimeOptions).fs
+
+		const { transpileVirtualFs, transpileFile } = await getTypescriptSupport(runtimeOptions.transformTypescript)
+		transpileVirtualFs(fs)
 
 		vm.runtime.setModuleLoader(getModuleLoader(fs, runtimeOptions), modulePathNormalizer)
 
@@ -47,7 +51,7 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
         `)
 
 		const dispose = () => {
-			let err: unknown | undefined
+			let err: unknown
 			try {
 				arena.dispose()
 			} catch (error) {
@@ -105,7 +109,8 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 			}, 0)
 
 			try {
-				const evalResult = arena.evalCode(code, filename, {
+				const jsCode = transpileFile(code)
+				const evalResult = arena.evalCode(jsCode, filename, {
 					strict: true,
 					strip: true,
 					backtraceBarrier: true,
@@ -199,7 +204,7 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 			}
 		}
 
-		return { vm: arena, dispose, evalCode, validateCode }
+		return { vm: arena, dispose, evalCode, validateCode, mountedFs: fs }
 	}
 
 	return { createRuntime }

@@ -1,10 +1,10 @@
-# QuickJS - Execute JavaScript in a WebAssembly QuickJS Sandbox
+# QuickJS - Execute JavaScript and TypeScript in a WebAssembly QuickJS Sandbox
 
-This TypeScript package allows you to safely execute JavaScript code within a WebAssembly sandbox using the QuickJS engine. Perfect for isolating and running untrusted code securely, it leverages the lightweight and fast QuickJS engine compiled to WebAssembly, providing a robust environment for code execution.
+This TypeScript package allows you to safely execute **JavaScript AND TypeScript code** within a WebAssembly sandbox using the QuickJS engine. Perfect for isolating and running untrusted code securely, it leverages the lightweight and fast QuickJS engine compiled to WebAssembly, providing a robust environment for code execution.
 
 ## Features
 
-- **Security**: Run untrusted JavaScript code in a safe, isolated environment.
+- **Security**: Run untrusted JavaScript and TypeScript code in a safe, isolated environment.
 - **Basic Node.js modules**: Provides basic standard Node.js module support for common use cases.
 - **File System**: Can mount a virtual file system.
 - **Custom Node Modules**: Custom node modules are mountable.
@@ -12,7 +12,7 @@ This TypeScript package allows you to safely execute JavaScript code within a We
 - **Test-Runner**: Includes a test runner and chai based `expect`.
 - **Performance**: Benefit from the lightweight and efficient QuickJS engine.
 - **Versatility**: Easily integrate with existing TypeScript projects.
-- **Simplicity**: User-friendly API for executing and managing JavaScript code in the sandbox.
+- **Simplicity**: User-friendly API for executing and managing JavaScript and TypeScript code in the sandbox.
 
 **[View the full documentation](https://sebastianwessel.github.io/quickjs/)**
 

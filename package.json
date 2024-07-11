@@ -1,7 +1,7 @@
 {
 	"name": "@sebastianwessel/quickjs",
 	"version": "1.2.0",
-	"description": "A typescript package to execute javascript code in a webassembly quickjs sandbox",
+	"description": "A typescript package to execute JavaScript and TypeScript code in a webassembly quickjs sandbox",
 	"type": "module",
 	"engines": {
 		"node": ">=18.0.0"
@@ -77,6 +77,14 @@
 		"memfs": "^4.9.3",
 		"quickjs-emscripten-core": "^0.29.2",
 		"rate-limiter-flexible": "^5.0.3"
+	},
+	"peerDependencies": {
+		"typescript": ">= 5.5.3"
+	},
+	"peerDependenciesMeta": {
+		"typescript": {
+			"optional": true
+		}
 	},
 	"exports": {
 		"./package.json": "./package.json",

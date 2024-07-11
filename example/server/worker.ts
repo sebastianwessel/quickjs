@@ -28,6 +28,15 @@ class MyThreadWorker extends ThreadWorker<InputData, ResponseData> {
 			allowFetch: true,
 			enableTestUtils: true,
 			env: {},
+			transformTypescript: true,
+			mountFs: {
+				src: {
+					'test.ts': `export const testFn = (value: string): string => {
+            console.log(value)
+            return value
+          }`,
+				},
+			},
 		})
 
 		const result = await evalCode(data.content)
