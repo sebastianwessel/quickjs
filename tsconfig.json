@@ -1,11 +1,10 @@
 {
 	"compilerOptions": {
 		"outDir": "dist",
-		"lib": ["ESNext"],
-		"target": "ESNext",
-		"module": "ESNext",
+		"lib": ["ES2023"],
+		"target": "ES2022",
+		"module": "node16",
 		"moduleDetection": "force",
-		"jsx": "react-jsx",
 		"allowJs": true,
 
 		"moduleResolution": "bundler",
