@@ -32,6 +32,18 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 
 		vm.runtime.setModuleLoader(getModuleLoader(fs, runtimeOptions), modulePathNormalizer)
 
+		const handle = vm.unwrapResult(
+			vm.evalCode(
+				`
+      import 'node:buffer'
+      import 'node:util'
+      `,
+				undefined,
+				{ type: 'module' },
+			),
+		)
+		handle.dispose()
+
 		const arena = new Arena(vm, { isMarshalable: true })
 
 		provideFs(arena, runtimeOptions, fs)
