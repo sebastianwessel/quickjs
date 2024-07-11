@@ -51,7 +51,7 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
         `)
 
 		const dispose = () => {
-			let err: unknown | undefined
+			let err: unknown
 			try {
 				arena.dispose()
 			} catch (error) {
@@ -204,7 +204,7 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 			}
 		}
 
-		return { vm: arena, dispose, evalCode, validateCode }
+		return { vm: arena, dispose, evalCode, validateCode, mountedFs: fs }
 	}
 
 	return { createRuntime }
