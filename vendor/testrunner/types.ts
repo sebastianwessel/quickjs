@@ -54,6 +54,13 @@ export interface SuiteResult {
 	afterEach: HookResult[] // Results of afterEach hooks.
 	afterAll: HookResult[] // Results of afterAll hooks.
 	suites: SuiteResult[] // Results of nested suites.
+	passed: boolean // Indicates whether the test passed or failed.
+	passedSuites: number
+	failedSuites: number
+	passedTests: number
+	failedTests: number
+	totalTests: number
+	totalSuites: number
 }
 
 /**

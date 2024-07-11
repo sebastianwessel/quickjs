@@ -120,6 +120,13 @@ async function runSuite(suite: Suite, timeout: number): Promise<SuiteResult> {
 		afterEach: [],
 		afterAll: [],
 		suites: [],
+		passed: true,
+		passedSuites: 0,
+		failedSuites: 0,
+		passedTests: 0,
+		failedTests: 0,
+		totalTests: 0,
+		totalSuites: 0,
 	}
 
 	// Run beforeAll hooks
@@ -228,6 +235,36 @@ async function runSuite(suite: Suite, timeout: number): Promise<SuiteResult> {
 					stack: (error as Error).stack,
 				},
 			})
+		}
+	}
+
+	for (const suite of suiteResult.suites) {
+		const { failed, passed } = suite.tests.reduce(
+			(total, k) => {
+				let failed = total.failed
+				let passed = total.passed
+				if (k.passed) {
+					passed++
+				} else {
+					failed++
+				}
+
+				return { failed, passed }
+			},
+			{ failed: 0, passed: 0 },
+		)
+
+		suiteResult.totalSuites++
+
+		suiteResult.totalTests = suiteResult.totalTests + passed + failed
+		suiteResult.passedTests = suiteResult.passedTests + passed
+		suiteResult.failedTests = suiteResult.failedTests + failed
+
+		if (!suite.passed) {
+			suiteResult.passed = false
+			suiteResult.passedSuites++
+		} else {
+			suiteResult.failedSuites++
 		}
 	}
 
