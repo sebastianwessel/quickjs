@@ -14,6 +14,18 @@ export const provideEnv = (arena: Arena, options: RuntimeOptions) => {
 		dangerousSync = arena.sync(options.dangerousSync)
 	}
 
+	const dispose = () => {
+		for (const [_key, value] of timeouts) {
+			clearTimeout(value)
+		}
+		timeouts.clear()
+
+		for (const [_key, value] of intervals) {
+			clearInterval(value)
+		}
+		intervals.clear()
+	}
+
 	arena.expose({
 		__dangerousSync: dangerousSync,
 		env: options.env ?? {},
@@ -30,6 +42,7 @@ export const provideEnv = (arena: Arena, options: RuntimeOptions) => {
 			const timeout = timeouts.get(id)
 			if (timeout) {
 				clearTimeout(timeout)
+				timeouts.delete(id)
 			}
 		},
 		setInterval: (fn: () => void, time: number) => {
@@ -43,7 +56,10 @@ export const provideEnv = (arena: Arena, options: RuntimeOptions) => {
 			const interval = intervals.get(id)
 			if (interval) {
 				clearInterval(interval)
+				intervals.delete(id)
 			}
 		},
 	})
+
+	return { dispose }
 }
