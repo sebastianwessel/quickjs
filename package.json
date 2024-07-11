@@ -17,18 +17,10 @@
 		"package",
 		"library"
 	],
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"tshy": {
-		"exclude": [
-			"src/**/*.test.ts",
-			"vendor"
-		],
-		"dialects": [
-			"esm",
-			"commonjs"
-		],
+		"exclude": ["src/**/*.test.ts", "vendor"],
+		"dialects": ["esm", "commonjs"],
 		"exports": {
 			"./package.json": "./package.json",
 			".": "./src/index.ts"
