@@ -3,6 +3,9 @@
 	"version": "1.2.0",
 	"description": "A typescript package to execute javascript code in a webassembly quickjs sandbox",
 	"type": "module",
+	"engines": {
+		"node": ">=18.0.0"
+	},
 	"keywords": [
 		"typescript",
 		"quickjs",
@@ -57,13 +60,13 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
 		"@hono/swagger-ui": "^0.3.0",
-		"@hono/zod-openapi": "^0.14.8",
+		"@hono/zod-openapi": "^0.14.9",
 		"@types/autocannon": "^7.12.5",
 		"@types/bun": "^1.1.6",
 		"@types/node": "^20.14.10",
 		"autocannon": "^7.15.0",
 		"chai": "^5.1.1",
-		"hono": "^4.4.12",
+		"hono": "^4.4.13",
 		"poolifier-web-worker": "^0.4.14",
 		"quickjs-emscripten": "^0.29.2",
 		"tshy": "^1.18.0",
