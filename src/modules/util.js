@@ -1,5 +1,34 @@
 export default `
 
+class TextEncoder {
+    encode(input = '') {
+        const utf8 = unescape(encodeURIComponent(input));
+        const result = new Uint8Array(utf8.length);
+        
+        for (let i = 0; i < utf8.length; i++) {
+            result[i] = utf8.charCodeAt(i);
+        }
+          
+        return result;
+    }
+}
+
+class TextDecoder {
+    constructor(encoding = 'utf-8') {
+        if (encoding !== 'utf-8') {
+            throw new Error('Only utf-8 encoding is supported');
+        }
+    }
+
+    decode(input = new Uint8Array()) {
+        let str = '';
+        for (let i = 0; i < input.length; i++) {
+          str += String.fromCharCode(input[i]);
+        }
+        return decodeURIComponent(escape(str));
+    }
+}
+
 // Promisify: converts a callback-based function to a promise-based one
 function promisify(fn) {
   return function (...args) {
@@ -183,17 +212,22 @@ const types = {
     },
   }
 
+
 const util = {
   promisify,
   callbackify,
   inherits,
   deprecate,
-  types
+  types,
+  TextEncoder,
+  TextDecoder
 };
+
+globalThis.TextEncoder = TextEncoder;
+globalThis.TextDecoder = TextDecoder;
 
 export default util;
 
-export { promisify, callbackify, inherits, deprecate, types };
-
+export { promisify, callbackify, inherits, deprecate, types, TextEncoder,TextDecoder };
 
 `
