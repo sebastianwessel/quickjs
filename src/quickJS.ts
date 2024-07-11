@@ -53,7 +53,7 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 
 		provideFs(arena, runtimeOptions, fs)
 		provideConsole(arena, runtimeOptions)
-		provideEnv(arena, runtimeOptions)
+		const { dispose: disposeEnvironment } = provideEnv(arena, runtimeOptions)
 		provideHttp(arena, runtimeOptions, { fs: runtimeOptions.allowFs ? fs : undefined })
 
 		await arena.evalCode(`
@@ -64,6 +64,12 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 
 		const dispose = () => {
 			let err: unknown
+			try {
+				disposeEnvironment()
+			} catch (error) {
+				err = error
+				console.error('Failed to dispose environment')
+			}
 			try {
 				arena.dispose()
 			} catch (error) {
