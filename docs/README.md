@@ -11,6 +11,7 @@ This TypeScript package allows you to safely execute **JavaScript and TypeScript
   - [Fetch in Guest System](./fetch.md)
   - [Custom Node Modules](./custom-modules.md)
   - [Custom File System](./custom-file-system.md)
+  - [Usage in browser and on Providers](./usage-in-browser-and-providers.md)
 - Compatibility:
   - [Core Javascript](./core-js-compatibility.md)
   - [NodeJS](./node-compatibility.md)

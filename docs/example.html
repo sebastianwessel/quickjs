@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@sebastianwessel/quickjs in browser exmple</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .CodeMirror {
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="flex h-screen font-sans">
+    <div class="flex flex-col w-2/3 border-r border-gray-300">
+        <div class="bg-gray-100 text-center text-xl font-bold p-4">
+            Enter your code
+        </div>
+        <div class="flex-1">
+            <textarea id="code" class="h-full w-full">import { readFileSync, writeFileSync } from 'node:fs'
+console.info('Starting...')
+const fn = async (value: string)=> {
+  console.debug(value)
+  writeFileSync('./text.txt', value)
+  return readFileSync('./text.txt')
+}
+
+console.warn('Might be cool!')
+
+const getExample = async ()=> {
+  try {
+    const response = await fetch('https://example.com')
+
+    if(!response.ok) {
+      console.error('Request failed ' + response.statusCode )
+      return 
+    }
+    console.log(await response.text())
+  }catch(err){
+    console.error('Failed to fetch! Check browser console!')
+    console.error(JSON.stringify(err,null,2))
+  }
+}
+
+await getExample()
+
+console.warn('top-level await is nice')
+
+export default await fn('Hello World')</textarea>
+        </div>
+        <button id="runButton" class="bg-blue-500 text-white font-semibold text-lg p-4 hover:bg-blue-700">
+            Run Code
+        </button>
+    </div>
+    <div class="flex flex-col w-1/3">
+        <div class="bg-gray-100 p-4">
+            <div class="text-center text-xl font-bold ">Result</div>
+            <pre id="output" class="font-semibold"></pre>
+        </div>
+        <div id="consoleOutput" class="flex-1 p-4 bg-black text-white overflow-y-auto">
+            <pre id="console"></pre>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/typescript.min.js"></script>
+    <script type="module">
+        var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
+            mode: { name: "javascript", typescript: true },
+            lineNumbers: true
+        });
+
+        function logMessage(type, message) {
+            var outputElement = document.getElementById('console');
+            var logMessage = document.createElement('div');
+            logMessage.className = type;
+            logMessage.textContent = message;
+            outputElement.appendChild(logMessage);
+        }
+
+      
+// =========== QuickJS =====================
+        import { quickJS } from "https://esm.sh/@sebastianwessel/quickjs@1.3.0"
+        import "https://esm.sh/typescript"
+
+        const {createRuntime} = await quickJS('https://esm.sh/@jitl/quickjs-wasmfile-release-sync')
+
+        const fetchAdapter = (...param)=>fetch(...param)
+
+        document.getElementById('runButton').addEventListener('click', async function() {
+            var code = editor.getValue();
+            var outputElement = document.getElementById('output');
+            var consoleElement = document.getElementById('console');
+            outputElement.innerHTML=''
+            consoleElement.innerHTML=''
+
+            const { evalCode } = await createRuntime({
+              allowFetch: true, // inject fetch and allow the code to fetch data
+              allowFs: true, // mount a virtual file system and provide node:fs module
+              transformTypescript: true, // typescript support
+              fetchAdapter, // browser-fetch
+              env: {
+                MY_ENV_VAR: 'env var value',
+              },
+              console: {
+                log: (message)=>logMessage('log text-gray-400', message),
+                info: (message)=>logMessage('info text-blue-500', message),
+                warn: (message)=>logMessage('warn text-yellow-500', message),
+                error: (message)=>logMessage('error text-red-500', message),
+              }
+            })
+
+
+
+            
+            try {
+                const res = await evalCode(code);
+                outputElement.innerHTML = JSON.stringify(res,null,2).replaceAll('\\n','<br>')
+            } catch (e) {
+                console.error(e);
+                logMessage('error text-red-500', JSON.stringify(e).replaceAll('\\n','<br>'))
+            }
+        });
+    </script>
+</body>
+</html>
