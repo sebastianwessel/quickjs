@@ -29,21 +29,14 @@ const fn = async (value: string)=> {
 console.warn('Might be cool!')
 
 const getExample = async ()=> {
-  try {
     const response = await fetch('https://sebastianwessel.github.io/quickjs/example-request.html')
-
     if(!response.ok) {
       console.error('Request failed: ' + response.status + ' ' + response.statusText)
       return 
     }
-
     const body = await response.text()
-    console.log('Response body: ', body)
+    console.log('Response body: '+ body)
     return body
-  }catch(err){
-    console.error('Failed to fetch! Check browser console!')
-    console.error(JSON.stringify(err,null,2))
-  }
 }
 
 await getExample()
