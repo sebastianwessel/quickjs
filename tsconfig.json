@@ -27,5 +27,6 @@
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"declaration": true
-	}
+	},
+	"exclude": ["./dist"]
 }
