@@ -91,7 +91,6 @@ export default await fn('Hello World')</textarea>
 
         const fetchAdapter = async (url,param)=> {
             const res = await fetch(url,{...param,mode:"no-cors"})
-            console.log(await res.text())
             return {
               status: res.status,
               ok: res.ok,
