@@ -30,10 +30,10 @@ console.warn('Might be cool!')
 
 const getExample = async ()=> {
   try {
-    const response = await fetch('https://example.com')
+    const response = await fetch('https://github.com')
 
     if(!response.ok) {
-      console.error('Request failed ' + response.statusCode )
+      console.error('Request failed: ' + response.status + ' ' + response.statusText)
       return 
     }
     console.log(await response.text())
@@ -79,7 +79,6 @@ export default await fn('Hello World')</textarea>
             logMessage.textContent = message;
             outputElement.appendChild(logMessage);
         }
-
       
 // =========== QuickJS =====================
         import { quickJS } from "https://esm.sh/@sebastianwessel/quickjs@1.3.0"
@@ -87,7 +86,27 @@ export default await fn('Hello World')</textarea>
 
         const {createRuntime} = await quickJS('https://esm.sh/@jitl/quickjs-wasmfile-release-sync')
 
-        const fetchAdapter = (...param)=>fetch(...param)
+        const fetchAdapter = async (url,param)=> {
+            const res = await fetch(url,{...param,mode:"no-cors"})
+            console.log(await res.text())
+            return {
+              status: res.status,
+              ok: res.ok,
+              statusText: res.statusText,
+              json: () => res.json(),
+              text: () => res.text(),
+              formData: () => res.formData(),
+              headers: res.headers,
+              type: res.type,
+              url: res.url,
+              blob: () => res.blob(),
+              bodyUsed: res.bodyUsed,
+              redirected: res.redirected,
+              body: res.body,
+              arrayBuffer: () => res.arrayBuffer(),
+              clone: () => res.clone(),
+            }
+        } 
 
         document.getElementById('runButton').addEventListener('click', async function() {
             var code = editor.getValue();
