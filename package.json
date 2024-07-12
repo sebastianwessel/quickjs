@@ -20,18 +20,10 @@
 		"package",
 		"library"
 	],
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"tshy": {
-		"exclude": [
-			"src/**/*.test.ts",
-			"vendor"
-		],
-		"dialects": [
-			"esm",
-			"commonjs"
-		],
+		"exclude": ["src/**/*.test.ts", "vendor"],
+		"dialects": ["esm", "commonjs"],
 		"exports": {
 			"./package.json": "./package.json",
 			".": "./src/index.ts"
@@ -75,7 +67,7 @@
 		"autocannon": "^7.15.0",
 		"chai": "^5.1.1",
 		"hono": "^4.4.13",
-		"poolifier-web-worker": "^0.4.14",
+		"poolifier-web-worker": "^0.4.15",
 		"quickjs-emscripten": "^0.29.2",
 		"tshy": "^1.18.0",
 		"typescript": "^5.5.3"
