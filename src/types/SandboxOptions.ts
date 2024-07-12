@@ -1,7 +1,7 @@
 import type { IFs, NestedDirectoryJSON } from 'memfs'
 import type { default as TS } from 'typescript'
 
-export type RuntimeOptions = {
+export type SandboxOptions = {
 	/**
 	 * The maximum time in seconds a script can run.
 	 * Unset or set to 0 for unlimited execution time.

@@ -17,6 +17,7 @@ import { createVirtualFileSystem } from './createVirtualFileSystem.js'
 import { getModuleLoader } from './getModuleLoader.js'
 import { getTypescriptSupport } from './getTypescriptSupport.js'
 import { modulePathNormalizer } from './modulePathNormalizer.js'
+import { provideTimingFunctions } from './provideTimingFunctions.js'
 import type { OkResponseCheck } from './types/OkResponseCheck.js'
 
 /**
@@ -53,7 +54,8 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 
 		provideFs(arena, runtimeOptions, fs)
 		provideConsole(arena, runtimeOptions)
-		const { dispose: disposeEnvironment } = provideEnv(arena, runtimeOptions)
+		provideEnv(arena, runtimeOptions)
+		const { dispose: disposeTimingFunctions } = provideTimingFunctions(arena)
 		provideHttp(arena, runtimeOptions, { fs: runtimeOptions.allowFs ? fs : undefined })
 
 		await arena.evalCode(`
@@ -65,7 +67,7 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 		const dispose = () => {
 			let err: unknown
 			try {
-				disposeEnvironment()
+				disposeTimingFunctions()
 			} catch (error) {
 				err = error
 				console.error('Failed to dispose environment')
