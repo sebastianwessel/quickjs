@@ -31,3 +31,10 @@ Using `fetch`is possible, but there are the same restrictions as in any other br
 </script>
 ```
 
+## Cloudflare Workers
+
+Cloudflare workers have some limitations regarding bundling. The developers of the underlaying quickjs-emscripten library, already solved this.
+
+[github.com/justjake/quickjs-emscripten/tree/main/examples/cloudflare-workers](https://github.com/justjake/quickjs-emscripten/tree/main/examples/cloudflare-workers)
+
+This library will be aligned soon, to support cloudflare as well.
