@@ -22,12 +22,33 @@ import type { OkResponseCheck } from './types/OkResponseCheck.js'
 
 /**
  * Loads and creates a QuickJS instance
- * @param wasmVariantName name of the variant
- * @returns
+ * @deprecated Use loadQuickJs()
+ * @example ```typescript
+ * import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
+ *
+ * const { runSandboxed } = await loadQuickJs()
+ *
+ * const result = await runSandboxed(async ({ evalCode }) => {
+ *   return evalCode(code)
+ * })
+ * ```
  */
 export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-release-sync') => {
 	const module = await newQuickJSWASMModuleFromVariant(import(wasmVariantName))
 
+	/**
+	 *
+	 * @deprecated Use runSandboxed()
+	 * @example ```typescript
+	 * import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
+	 *
+	 * const { runSandboxed } = await loadQuickJs()
+	 *
+	 * const result = await runSandboxed(async ({ evalCode }) => {
+	 *   return evalCode(code)
+	 * })
+	 * ```
+	 */
 	const createRuntime = async (runtimeOptions: RuntimeOptions = {}, existingFs?: IFs): Promise<InitResponseType> => {
 		const vm = module.newContext()
 
@@ -92,14 +113,16 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 		}
 
 		/**
-		 * Execute code once and cleanup after execution.
 		 *
-		 * The result of the code execution must be exported with export default.
-		 * If the code is async, it needs to be awaited on export.
+		 * @deprecated Use runSandboxed()
+		 * @example ```typescript
+		 * import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
 		 *
-		 * @example
-		 * ```js
-		 * const result = await evalCode('export default await asyncFunction()')
+		 * const { runSandboxed } = await loadQuickJs()
+		 *
+		 * const result = await runSandboxed(async ({ evalCode }) => {
+		 *   return evalCode(code)
+		 * })
 		 * ```
 		 */
 		const evalCode: InitResponseType['evalCode'] = async (code, filename = '/src/index.js', evalOptions?) => {
@@ -183,11 +206,16 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 		}
 
 		/**
-		 * Compile code only, but does not execute the code.
 		 *
-		 * @example
-		 * ```js
-		 * const result = await validateCode('export default await asyncFunction()')
+		 * @deprecated Use runSandboxed()
+		 * @example ```typescript
+		 * import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
+		 *
+		 * const { runSandboxed } = await loadQuickJs()
+		 *
+		 * const result = await runSandboxed(async ({ validateCode }) => {
+		 *   return validateCode(code)
+		 * })
 		 * ```
 		 */
 		const validateCode: InitResponseType['validateCode'] = async (code, filename = '/src/index.js', evalOptions?) => {
