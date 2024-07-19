@@ -4,17 +4,21 @@ import type { SandboxValidateCode } from '../types/SandboxValidateCode.js'
 import { handleEvalError } from './handleEvalError.js'
 
 export const createValidateCodeFunction = (input: CodeFunctionInput): SandboxValidateCode => {
-	const { arena } = input
+	const { ctx } = input
 	return async (code, filename = '/src/index.js', evalOptions?) => {
 		try {
-			arena.evalCode(code, filename, {
-				strict: true,
-				strip: true,
-				backtraceBarrier: true,
-				...evalOptions,
-				type: 'module',
-				compileOnly: true,
-			})
+			ctx
+				.unwrapResult(
+					ctx.evalCode(code, filename, {
+						strict: true,
+						strip: true,
+						backtraceBarrier: true,
+						...evalOptions,
+						type: 'module',
+						compileOnly: true,
+					}),
+				)
+				.dispose()
 			return { ok: true } as OkResponseCheck
 		} catch (err) {
 			return handleEvalError(err)

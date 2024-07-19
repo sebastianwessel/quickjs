@@ -8,6 +8,14 @@ export type SandboxOptions = {
 	 */
 	executionTimeout?: number
 	/**
+	 * Set the max stack size for this runtime, in bytes. To remove the limit, set to 0.
+	 */
+	maxStackSize?: number
+	/**
+	 * Set the max memory this runtime can allocate. To remove the limit, set to -1
+	 */
+	memoryLimit?: number
+	/**
 	 * Mount a virtual file system
 	 * @link https://github.com/streamich/memfs
 	 */

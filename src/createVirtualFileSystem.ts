@@ -3,14 +3,19 @@ import { join } from 'node:path'
 import { type NestedDirectoryJSON, memfs } from 'memfs'
 import assertModule from './modules/assert.js'
 import bufferModule from './modules/buffer.js'
-import fsPromisesModule from './modules/fs-promises.js'
 import fsModule from './modules/fs.js'
+import fsPromisesModule from './modules/fs_promises.js'
 import moduleModule from './modules/module.js'
+import compatibilityHeaders from './modules/nodeCompatibility/headers.js'
+import compatibilityRequest from './modules/nodeCompatibility/request.js'
+import compatibilityResponse from './modules/nodeCompatibility/response.js'
 import pathModule from './modules/path.js'
 import processModule from './modules/process.js'
 import punycodeModule from './modules/punycode.js'
 import queryStringModule from './modules/querystring.js'
 import stringDecoderModule from './modules/string_decoder.js'
+import timersModule from './modules/timers.js'
+import timersPromisesModule from './modules/timers_promises.js'
 import urlModule from './modules/url.js'
 import utilModule from './modules/util.js'
 import type { RuntimeOptions } from './types/RuntimeOptions.js'
@@ -35,6 +40,11 @@ export const createVirtualFileSystem = (runtimeOptions: RuntimeOptions = {}) => 
 			},
 			node_modules: {
 				...runtimeOptions?.nodeModules,
+				'@node_compatibility': {
+					headers: compatibilityHeaders,
+					request: compatibilityRequest,
+					response: compatibilityResponse,
+				},
 				assert: {
 					'index.js': assertModule,
 				},
@@ -123,7 +133,10 @@ export const createVirtualFileSystem = (runtimeOptions: RuntimeOptions = {}) => 
 					'index.js': stringDecoderModule,
 				},
 				timers: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': timersModule,
+					promises: {
+						'index.js': timersPromisesModule,
+					},
 				},
 				tls: {
 					'index.js': "throw new Error('Not implemented')",

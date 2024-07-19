@@ -1,4 +1,8 @@
-import { newQuickJSWASMModuleFromVariant } from 'quickjs-emscripten-core'
+import {
+	type QuickJSAsyncWASMModule,
+	type QuickJSWASMModule,
+	newQuickJSWASMModuleFromVariant,
+} from 'quickjs-emscripten-core'
 import type { LoadQuickJsOptions } from '../types/LoadQuickJsOptions.js'
 import type { WasmModule } from '../types/WasmModule.js'
 
@@ -12,7 +16,7 @@ export const loadWasmModule = async (loadOptions: LoadQuickJsOptions): Promise<W
 		if (typeof loadOptions === 'string') {
 			return await newQuickJSWASMModuleFromVariant(import(loadOptions))
 		}
-		return loadOptions
+		return loadOptions as QuickJSWASMModule | QuickJSAsyncWASMModule
 	} catch (error) {
 		throw new Error('Failed to load webassembly', { cause: error })
 	}

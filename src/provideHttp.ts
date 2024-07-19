@@ -23,14 +23,7 @@ export const provideHttp = (arena: Arena, options: RuntimeOptions, input?: { fs?
 	}
 
 	arena.expose({
-		__parseURL: (
-			input:
-				| string
-				| {
-						toString: () => string
-				  },
-			base?: string | URL | undefined,
-		) => {
+		__parseURL: (input: string | URL, base?: string | URL | undefined) => {
 			const url = new URL(input, base)
 			return {
 				href: url.href,

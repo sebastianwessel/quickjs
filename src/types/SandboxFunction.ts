@@ -1,10 +1,10 @@
 import type { IFs } from 'memfs'
-import type { Arena } from '../sync/index.js'
 import type { SandboxEvalCode } from './SandboxEvalCode.js'
 import type { SandboxValidateCode } from './SandboxValidateCode.js'
+import type { VMContext } from './VMContext.js'
 
 export type SandboxFunction<T> = (sandbox: {
-	arena: Arena
+	ctx: VMContext
 	evalCode: SandboxEvalCode
 	validateCode: SandboxValidateCode
 	mountedFs: IFs
