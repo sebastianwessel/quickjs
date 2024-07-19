@@ -100,14 +100,12 @@ type RuntimeOptions = {
 The options are passed to the `createRuntime` method. Here is a basic example:
 
 ```typescript
-import { quickJS } from '@sebastianwessel/quickjs';
+import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
 
-// General setup like loading and init of the QuickJS wasm
-// It is a resource-intensive job and should be done only once if possible 
-const { createRuntime } = await quickJS();
+const { runSandboxed } = await loadQuickJs()
 
 // Create a runtime instance each time a JS code should be executed
-const { evalCode } = await createRuntime({
+const options:SandboxOptions = {
   allowFetch: true, // inject fetch and allow the code to fetch data
   allowFs: true,    // mount a virtual file system and provide node:fs module
   env: {
@@ -122,9 +120,9 @@ const { evalCode } = await createRuntime({
     }
     // Customize other console methods as needed
   }
-});
+};
 
-const result = await evalCode(`
+const code = `
 import { join } as path from 'path';
 
 const fn = async () => {
@@ -140,7 +138,9 @@ const fn = async () => {
 }
 
 export default await fn();
-`);
+`
+
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
 
 console.log(result); // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
 ```
