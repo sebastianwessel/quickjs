@@ -21,7 +21,8 @@ A common example is calling an API. A better alternative is to create a helper f
 ### Simple Example
 
 ```typescript
-import { quickJS } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
+
 import { z } from 'zod'
 
 const getData = async (input: string) => {
@@ -50,16 +51,16 @@ const getData = async (input: string) => {
   }
 }
 
-const { createRuntime } = await quickJS()
+const { runSandboxed } = await loadQuickJs()
 
-const { evalCode } = await createRuntime({
+const options:SandboxOptions = {
   allowFetch: false,
   env: {
     getExternalData: getData,
   },
-})
+}
 
-const result = await evalCode(`
+const code = `
 const fn = async ()=>{
   const data = await env.getExternalData('some-id')
 
@@ -67,7 +68,9 @@ const fn = async ()=>{
 }
   
 export default await fn()
-`)
+`
+
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
 
 console.log(result)
 ```

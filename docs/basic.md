@@ -14,10 +14,9 @@ When the `eval` method is called on the host, the event loop of the host system 
 Here is an example of how the host system can be blocked 🔥:
 
 ```typescript
-import { quickJS } from '@sebastianwessel/quickjs'
+import { loadQuickJs } from '@sebastianwessel/quickjs'
 
-const { createRuntime } = await quickJS()
-const { evalCode } = await createRuntime()
+const { runSandboxed } = await loadQuickJs()
 
 setInterval(() => {
   console.log('y')
@@ -25,13 +24,15 @@ setInterval(() => {
 
 console.log('start')
 
-const result = await evalCode(`
+const code = `
 const fn = () => new Promise(() => {
   while(true) {
   }
 })
 export default await fn()
-`)
+`
+
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code))
 ```
 
 You might expect that this code does not block the host system, but it does, even with `await evalCode`. The host system must wait for the guest system to return a value. In this example, the value is never returned because of the endless while-loop.
@@ -66,13 +67,13 @@ The host system can provide various data types to the guest system, including pr
 Example:
 
 ```typescript
-import { quickJS } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
 
-const { createRuntime } = await quickJS()
+const { runSandboxed } = await loadQuickJs()
 
 const keyValueStoreOnHost = new Map<string, string>()
 
-const { evalCode } = await createRuntime({
+const options:SandboxOptions = {
   env: {
     MY_PROCESS_ENV: 'some environment variable provided by the host',
     KV: {
@@ -80,14 +81,16 @@ const { evalCode } = await createRuntime({
       get: (key: string) => keyValueStoreOnHost.get(key),
     },
   },
-})
+}
 
-const result = await evalCode(`
+const code = `
 console.log(env.MY_PROCESS_ENV)
 env.KV.set('guest-key', 'value set by guest system')
 const value = env.KV.get('guest-key')
 export default value
-`)
+`
+
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
 
 console.log('result from guest:', result.data) // result from guest: value set by guest system
 console.log('result from host:', keyValueStoreOnHost.get('guest-key')) // result from host: value set by guest system
@@ -100,27 +103,27 @@ If a function is provided from host to guest, it should be wrapped in a dummy fu
 👎 **Incorrect**:
 
 ```typescript
-const { evalCode } = await createRuntime({
+const options:SandboxOptions = {
   env: {
     KV: {
       set: keyValueStoreOnHost.set,
       get: keyValueStoreOnHost.get,
     },
   },
-})
+}
 ```
 
 👍 **Correct**:
 
 ```typescript
-const { evalCode } = await createRuntime({
+const options:SandboxOptions = {
   env: {
     KV: {
       set: (key: string, value: string) => keyValueStoreOnHost.set(key, value),
       get: (key: string) => keyValueStoreOnHost.get(key),
     },
   },
-})
+}
 ```
 
 **🚨 Security Information ‼️**  
@@ -129,26 +132,29 @@ The host system only provides the given values but never reads them back. Even i
 Example:
 
 ```typescript
-import { quickJS } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
 
-const { createRuntime } = await quickJS()
+const { runSandboxed } = await loadQuickJs()
+
 const keyValueStoreOnHost = new Map<string, string>()
 
-const { evalCode } = await createRuntime({
+const options:SandboxOptions = {
   env: {
     KV: {
       set: (key: string, value: string) => keyValueStoreOnHost.set(key, value),
       get: (key: string) => keyValueStoreOnHost.get(key),
     },
   },
-})
+}
 
-const result = await evalCode(`
+const code = `
 env.KV.set('guest-key', 'value set by guest system')
 const value = env.KV.get('guest-key')
 env.KV.get = () => { throw new Error('Security!!!') }
 export default value
-`)
+`
+
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
 
 console.log('result from guest:', result)
 console.log('result from host:', keyValueStoreOnHost.get('guest-key'))
@@ -163,14 +169,15 @@ The guest system can return a final value using `export default`. The library se
 Example:
 
 ```typescript
-import { quickJS } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
 
-const { createRuntime } = await quickJS()
-const { evalCode } = await createRuntime()
+const { runSandboxed } = await loadQuickJs()
 
-const result = await evalCode(`
+const code = `
 export default 'my value'
-`)
+`
+
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code))
 
 console.log('result from guest:', result.data) // result from guest: my value
 ```
@@ -181,17 +188,18 @@ If the executed script returns a promise, the promise must be awaited.
 👎 **Incorrect**:
 
 ```typescript
-import { quickJS } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
 
-const { createRuntime } = await quickJS()
-const { evalCode } = await createRuntime()
+const { runSandboxed } = await loadQuickJs()
 
-const result = await evalCode(`
+const options:SandboxOptions = `
 const prom = async () => {
   return 'my value'
 }
 export default prom() // promise is not awaited!!
-`)
+`
+
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
 
 console.log('result from guest:', result.data) // result from guest: my value
 ```
@@ -199,17 +207,17 @@ console.log('result from guest:', result.data) // result from guest: my value
 👍 **Correct**:
 
 ```typescript
-import { quickJS } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
 
-const { createRuntime } = await quickJS()
-const { evalCode } = await createRuntime()
+const { runSandboxed } = await loadQuickJs()
 
-const result = await evalCode(`
+const options:SandboxOptions = `
 const prom = async () => {
   return 'my value'
 }
 export default await prom() // promise is awaited
-`)
+`
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
 
 console.log('result from guest:', result.data) // result from guest: my value
 ```
@@ -243,32 +251,3 @@ An error response:
 
 It is also possible to exchange values between client and host, while the guest system is running. Therefor, the recommended approach is to call functions, provided by the host, from the client system.
 Here, async functions are supported as well.
-
-#### Setting Values in Host by Guest System (Not Recommended!)
-
-The guest system can change the values in an object provided by the host. Although possible, this pattern is not recommended. Instead, provide functions to mutate the object or array on the host side, allowing for validation and additional functionality like emitting events. This approach keeps the control on the host side.
-
-Example of exchanging data by changing an object's key-value:
-
-```typescript
-import { quickJS } from '@sebastianwessel/quickjs'
-
-const { createRuntime } = await quickJS()
-const dangerousSync = {
-  mutable: 'init value',
-}
-
-const { evalCode } = await createRuntime({
-  dangerousSync,
-})
-
-await evalCode(`
-__dangerousSync.mutable = 'changed by guest'
-`)
-
-console.log(dangerousSync)
-```
-
-**🚨 Security Advice ‼️**
-
-As the guest system can access and potentially overwrite the values provided by the host, ensure that these values do not affect security. Do not provide functions and make sure the provided values are secure.
