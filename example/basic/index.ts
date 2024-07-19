@@ -1,4 +1,4 @@
-import { quickJS } from '@sebastianwessel/quickjs'
+import { quickJS } from '../../src/index.js'
 
 // General setup like loading and init of the QuickJS wasm
 // It is a ressource intensive job and should be done only once if possible

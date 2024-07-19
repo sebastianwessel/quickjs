@@ -1,7 +1,6 @@
-import { join } from 'node:path'
-import { dirname } from 'node:path'
+import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { quickJS } from '@sebastianwessel/quickjs'
+import { quickJS } from '../../src/index.js'
 
 // General setup like loading and init of the QuickJS wasm
 // It is a ressource intensive job and should be done only once if possible
