@@ -1,24 +1,35 @@
-import { shouldInterruptAfterDeadline } from 'quickjs-emscripten-core'
+import { type Scope, shouldInterruptAfterDeadline } from 'quickjs-emscripten-core'
 import { createTimeInterval } from '../createTimeInterval.js'
-import { provideTimingFunctions } from '../provideTimingFunctions.js'
 import type { CodeFunctionInput } from '../types/CodeFunctionInput.js'
 import type { OkResponse } from '../types/OkResponse.js'
 import type { SandboxEvalCode } from '../types/SandboxEvalCode.js'
 import { getMaxTimeout } from './getMaxTimeout.js'
 import { handleEvalError } from './handleEvalError.js'
+import { handleToNative } from './handleToNative/handleToNative.js'
+import { provideTimingFunctions } from './provide/provideTimingFunctions.js'
 
-export const createEvalCodeFunction = (input: CodeFunctionInput): SandboxEvalCode => {
-	const { arena, sandboxOptions, transpileFile } = input
+export const createEvalCodeFunction = (input: CodeFunctionInput, scope: Scope): SandboxEvalCode => {
+	const { ctx, sandboxOptions, transpileFile } = input
 	return async (code, filename = '/src/index.js', evalOptions?) => {
 		const maxTimeout = getMaxTimeout(sandboxOptions, evalOptions)
+		const maxStackSize = getMaxTimeout(sandboxOptions, evalOptions)
+		const memoryLimit = getMaxTimeout(sandboxOptions, evalOptions)
 
 		if (maxTimeout) {
-			arena.context.runtime.setInterruptHandler(shouldInterruptAfterDeadline(Date.now() + maxTimeout))
+			ctx.runtime.setInterruptHandler(shouldInterruptAfterDeadline(Date.now() + maxTimeout))
 		}
 
-		const eventLoopinterval = createTimeInterval(() => arena.context.runtime.executePendingJobs(), 0)
+		if (maxStackSize !== undefined) {
+			ctx.runtime.setMaxStackSize(maxStackSize)
+		}
 
-		const { dispose: disposeTimer } = provideTimingFunctions(arena)
+		if (memoryLimit !== undefined) {
+			ctx.runtime.setMemoryLimit(memoryLimit)
+		}
+
+		const eventLoopinterval = createTimeInterval(() => ctx.runtime.executePendingJobs(), 0)
+
+		const { dispose: disposeTimer } = provideTimingFunctions(ctx, scope)
 
 		const disposeStep = () => {
 			eventLoopinterval?.clear()
@@ -27,18 +38,22 @@ export const createEvalCodeFunction = (input: CodeFunctionInput): SandboxEvalCod
 
 		try {
 			const jsCode = transpileFile(code)
-			const evalResult = arena.evalCode(jsCode, filename, {
+			const evalResult = ctx.evalCode(jsCode, filename, {
 				strict: true,
-				strip: true,
+				strip: false,
 				backtraceBarrier: true,
 				...evalOptions,
 				type: 'module',
 			})
 
+			const handle = scope.manage(ctx.unwrapResult(evalResult))
+
+			const native = handleToNative(ctx, handle, evalOptions?.allowInteraction)
+
 			const result = await Promise.race([
 				(async () => {
-					const res = await evalResult
-					return JSON.parse(JSON.stringify(res))
+					const res = await native
+					return res.default
 				})(),
 				new Promise((_resolve, reject) => {
 					if (maxTimeout) {
@@ -51,7 +66,7 @@ export const createEvalCodeFunction = (input: CodeFunctionInput): SandboxEvalCod
 				}),
 			])
 
-			return { ok: true, data: result.default } as OkResponse
+			return { ok: true, data: result } as OkResponse
 		} catch (err) {
 			return handleEvalError(err)
 		} finally {
