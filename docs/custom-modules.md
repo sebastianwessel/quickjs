@@ -91,17 +91,16 @@ Example:
 import { join } from 'node:path';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { quickJS } from '@sebastianwessel/quickjs';
+import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs';
 
 // General setup, such as loading and initializing the QuickJS WASM
 // This is a resource-intensive job and should be done only once if possible
-const { createRuntime } = await quickJS();
+const { runSandboxed } = await loadQuickJs()
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const customModuleHostLocation = join(__dirname, './custom.js');
 
-// Create a runtime instance each time JS code should be executed
-const { evalCode } = await createRuntime({
+const options:SandboxOptions = {
   nodeModules: {
     // Module name
     'custom-module': {
@@ -109,9 +108,9 @@ const { evalCode } = await createRuntime({
       'index.js': await Bun.file(customModuleHostLocation).text(),
     },
   },
-});
+};
 
-const result = await evalCode(`
+const code = `
 import { customFn } from 'custom-module';
 
 const result = customFn();
@@ -119,7 +118,10 @@ const result = customFn();
 console.log(result);
 
 export default result;
-`);
+`
+
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
+
 
 console.log(result); // { ok: true, data: 'Hello from the custom module' }
 ```
