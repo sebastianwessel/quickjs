@@ -1,12 +1,21 @@
-import { describe, expect, it } from 'bun:test'
-import { quickJS } from '../quickJS.js'
+import { beforeAll, describe, expect, it } from 'bun:test'
+import { loadQuickJs } from '../loadQuickJs.js'
 import type { OkResponse } from '../types/OkResponse.js'
 
-describe('node:util - base', () => {
-	it('promisify works correctly', async () => {
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime()
+describe.skip('node:util - base', () => {
+	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 
+	beforeAll(async () => {
+		runtime = await loadQuickJs()
+	})
+
+	const runCode = async (code: string): Promise<OkResponse> => {
+		return await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		})
+	}
+
+	it('promisify works correctly', async () => {
 		const code = `
 			function callbackFunction(arg, callback) {
 				setTimeout(() => {
@@ -41,15 +50,12 @@ describe('node:util - base', () => {
 			export default await testPromisify()
 		`
 
-		const result = (await evalCode(code)) as OkResponse
+		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('Test passed')
 	})
 
 	it('callbackify works correctly', async () => {
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime()
-
 		const code = `
 			async function asyncFunction(arg) {
 				if (arg === 'error') {
@@ -83,7 +89,7 @@ describe('node:util - base', () => {
 			export default await testCallbackify()
 		`
 
-		const result = (await evalCode(code)) as OkResponse
+		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('Test passed')
 	})

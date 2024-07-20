@@ -1,8 +1,9 @@
-import { describe, expect, it } from 'bun:test'
-import { quickJS } from '../quickJS.js'
+import { beforeAll, describe, expect, it } from 'bun:test'
+import { loadQuickJs } from '../loadQuickJs.js'
 import type { OkResponse } from '../types/OkResponse.js'
 
 describe('node:util - types', () => {
+	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 	const typesToTest = [
 		{ method: 'isAnyArrayBuffer', value: 'new ArrayBuffer(10)', expected: true },
 		{ method: 'isAnyArrayBuffer', value: 'new SharedArrayBuffer(10)', expected: true },
@@ -43,18 +44,25 @@ describe('node:util - types', () => {
 		{ method: 'isWeakSet', value: 'new WeakSet()', expected: true },
 	]
 
+	beforeAll(async () => {
+		runtime = await loadQuickJs()
+	})
+
+	const runCode = async (code: string): Promise<OkResponse> => {
+		return await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		})
+	}
+
 	for (const { method, value, expected } of typesToTest) {
 		it(`${method} works correctly`, async () => {
-			const { createRuntime } = await quickJS()
-			const { evalCode } = await createRuntime()
-
 			const code = `
-        import { types } from 'node:util'
-        const result = types.${method}(${value})
-        export default result
-      `
+				import { types } from 'node:util'
+				const result = types.${method}(${value})
+				export default result
+			`
 
-			const result = (await evalCode(code)) as OkResponse
+			const result = await runCode(code)
 			expect(result.ok).toBeTrue()
 			expect(result.data).toBe(expected)
 		})
