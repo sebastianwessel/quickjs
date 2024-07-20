@@ -1,55 +1,55 @@
-import { describe, expect, it } from 'bun:test'
-import { quickJS } from '../quickJS.js'
+import { beforeAll, describe, expect, it } from 'bun:test'
+import { loadQuickJs } from '../loadQuickJs.js'
 import type { ErrorResponse } from '../types/ErrorResponse.js'
 import type { OkResponse } from '../types/OkResponse.js'
 
 describe('node_modules', () => {
+	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
+
+	beforeAll(async () => {
+		runtime = await loadQuickJs()
+	})
+
+	const runCode = async (code: string, options: object = {}): Promise<OkResponse | ErrorResponse> => {
+		return await runtime.runSandboxed(async ({ evalCode }) => {
+			return await evalCode(code)
+		}, options)
+	}
+
 	it('can use node:path module', async () => {
-		const { createRuntime } = await quickJS()
-
-		const { evalCode } = await createRuntime()
-
 		const code = `
-    import { join } from 'node:path'
-    export default join('example','folder')
-    `
+			import { join } from 'node:path'
+			export default join('example', 'folder')
+		`
 
-		const result = (await evalCode(code)) as OkResponse
+		const result = (await runCode(code)) as OkResponse
 
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('example/folder')
 	})
 
 	it('can use node:path module', async () => {
-		const { createRuntime } = await quickJS()
-
-		const { evalCode } = await createRuntime()
-
 		const code = `
-    import { resolve } from 'node:path'
-    export default resolve('/example','folder','../index')
-    `
+			import { resolve } from 'node:path'
+			export default resolve('/example', 'folder', '../index')
+		`
 
-		const result = (await evalCode(code)) as OkResponse
+		const result = (await runCode(code)) as OkResponse
 
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('/example/index')
 	})
 
-	it('can not use node:fs module per default', async () => {
-		const { createRuntime } = await quickJS()
-
-		const { evalCode } = await createRuntime()
-
+	it('cannot use node:fs module by default', async () => {
 		const code = `
-    import { writeFileSync } from 'node:fs'
+			import { writeFileSync } from 'node:fs'
 
-    writeFileSync('test.txt', 'text content')
+			writeFileSync('test.txt', 'text content')
 
-    export default 'ok'
-    `
+			export default 'ok'
+		`
 
-		const result = (await evalCode(code)) as ErrorResponse
+		const result = (await runCode(code)) as ErrorResponse
 
 		expect(result.ok).toBeFalse()
 		expect(result.error).toMatchObject({
@@ -59,95 +59,77 @@ describe('node_modules', () => {
 	})
 
 	it('can use node:fs module when allowFs is set to true', async () => {
-		const { createRuntime } = await quickJS()
-
-		const { evalCode } = await createRuntime({ allowFs: true })
-
 		const code = `
-    import { readFileSync, writeFileSync } from 'node:fs'
+			import { readFileSync, writeFileSync } from 'node:fs'
 
-    writeFileSync('test.txt', 'text content')
+			writeFileSync('test.txt', 'text content')
 
-    const content = readFileSync('test.txt')
+			const content = readFileSync('test.txt', 'utf-8')
 
-    export default content
-    `
+			export default content
+		`
 
-		const result = (await evalCode(code)) as OkResponse
-
-		console.log(result)
+		const result = (await runCode(code, { allowFs: true })) as OkResponse
 
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('text content')
 	})
 
 	it('can use a custom module', async () => {
-		const { createRuntime } = await quickJS()
+		const code = `
+			import { customModuleFunction } from 'custom'
 
-		const { evalCode } = await createRuntime({
+			export default customModuleFunction()
+		`
+
+		const result = (await runCode(code, {
 			allowFs: true,
 			nodeModules: {
 				custom: {
-					'index.js': `export const customModuleFunction = ()=>'Hello from custom module function'`,
+					'index.js': `export const customModuleFunction = () => 'Hello from custom module function'`,
 				},
 			},
-		})
-
-		const code = `
-    import { customModuleFunction } from 'custom'
-
-    export default customModuleFunction()
-    `
-
-		const result = (await evalCode(code)) as OkResponse
+		})) as OkResponse
 
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('Hello from custom module function')
 	})
 
 	it('can use relative imports with js extension', async () => {
-		const { createRuntime } = await quickJS()
+		const code = `
+			import { relativeImportFunction } from './custom.js'
 
-		const { evalCode } = await createRuntime({
+			export default relativeImportFunction()
+		`
+
+		const result = (await runCode(code, {
 			allowFs: true,
 			mountFs: {
 				src: {
-					'custom.js': `export const relativeImportFunction = ()=>'Hello from relative import function'`,
+					'custom.js': `export const relativeImportFunction = () => 'Hello from relative import function'`,
 				},
 			},
-		})
-
-		const code = `
-    import { relativeImportFunction } from './custom.js'
-
-    export default relativeImportFunction()
-    `
-
-		const result = (await evalCode(code)) as OkResponse
+		})) as OkResponse
 
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('Hello from relative import function')
 	})
 
 	it('can use relative imports without js extension', async () => {
-		const { createRuntime } = await quickJS()
+		const code = `
+			import { relativeImportFunction } from './custom'
 
-		const { evalCode } = await createRuntime({
+			export default relativeImportFunction()
+		`
+
+		const result = (await runCode(code, {
 			allowFs: true,
 			mountFs: {
 				src: {
-					'custom.js': `export const relativeImportFunction = ()=>'Hello from relative import function'`,
+					'custom.js': `export const relativeImportFunction = () => 'Hello from relative import function'`,
 				},
 			},
-		})
-
-		const code = `
-    import { relativeImportFunction } from './custom'
-
-    export default relativeImportFunction()
-    `
-
-		const result = (await evalCode(code)) as OkResponse
+		})) as OkResponse
 
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('Hello from relative import function')
