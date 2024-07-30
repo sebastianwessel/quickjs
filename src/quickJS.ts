@@ -1,5 +1,5 @@
-import { newQuickJSWASMModuleFromVariant, shouldInterruptAfterDeadline } from 'quickjs-emscripten-core'
-import { Arena } from './sync/index.js'
+import { QuickJSAsyncWASMModule, newQuickJSAsyncWASMModuleFromVariant, shouldInterruptAfterDeadline } from 'quickjs-emscripten-core'
+import { AsyncArena } from './sync/index.js'
 
 import { provideConsole } from './provideConsole.js'
 import { provideEnv } from './provideEnv.js'
@@ -18,17 +18,26 @@ import { getModuleLoader } from './getModuleLoader.js'
 import { getTypescriptSupport } from './getTypescriptSupport.js'
 import { modulePathNormalizer } from './modulePathNormalizer.js'
 import type { OkResponseCheck } from './types/OkResponseCheck.js'
+import { RuntimeValueTransformer } from './runtimeValueTransformer.js'
+import { patchCustomEval } from './patchCustomEval.js'
+import { patchCustomGlobals } from './patchCustomGlobals.js'
 
 /**
  * Loads and creates a QuickJS instance
  * @param wasmVariantName name of the variant
  * @returns
  */
-export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-release-sync') => {
-	const module = await newQuickJSWASMModuleFromVariant(import(wasmVariantName))
+export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-release-asyncify') => {
+	const module: QuickJSAsyncWASMModule = await newQuickJSAsyncWASMModuleFromVariant(import(wasmVariantName))
 
 	const createRuntime = async (runtimeOptions: RuntimeOptions = {}, existingFs?: IFs): Promise<InitResponseType> => {
 		const vm = module.newContext()
+
+		const transformer = new RuntimeValueTransformer(vm)
+		patchCustomEval(vm, transformer)
+		if (Object.keys(runtimeOptions.globals ?? {}).length) {
+			patchCustomGlobals(vm, transformer, runtimeOptions.globals as Record<string, unknown>)
+		}
 
 		const fs = existingFs ?? createVirtualFileSystem(runtimeOptions).fs
 
@@ -38,10 +47,9 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 		vm.runtime.setModuleLoader(getModuleLoader(fs, runtimeOptions), modulePathNormalizer)
 
 		const handle = vm.unwrapResult(
-			vm.evalCode(
-				`
-      import 'node:buffer'
-      import 'node:util'
+			await vm.evalCodeAsync(`
+				import 'node:buffer'
+      	import 'node:util'
       `,
 				undefined,
 				{ type: 'module' },
@@ -49,14 +57,14 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 		)
 		handle.dispose()
 
-		const arena = new Arena(vm, { isMarshalable: true })
+		const arena = new AsyncArena(vm, { isMarshalable: true })
 
 		provideFs(arena, runtimeOptions, fs)
 		provideConsole(arena, runtimeOptions)
 		const { dispose: disposeEnvironment } = provideEnv(arena, runtimeOptions)
-		provideHttp(arena, runtimeOptions, { fs: runtimeOptions.allowFs ? fs : undefined })
+		provideHttp(arena, { ...runtimeOptions }, { fs: runtimeOptions.allowFs ? fs : undefined })
 
-		await arena.evalCode(`
+		await arena.evalCodeAsync(`
           import 'node:util'
           import 'node:buffer'
           ${runtimeOptions.enableTestUtils ? "import 'test'" : ''}
@@ -128,7 +136,7 @@ export const quickJS = async (wasmVariantName = '@jitl/quickjs-ng-wasmfile-relea
 
 			try {
 				const jsCode = transpileFile(code)
-				const evalResult = arena.evalCode(jsCode, filename, {
+				const evalResult = arena.evalCodeAsync(jsCode, filename, {
 					strict: true,
 					strip: true,
 					backtraceBarrier: true,

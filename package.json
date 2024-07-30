@@ -1,6 +1,6 @@
 {
-	"name": "@sebastianwessel/quickjs",
-	"version": "1.3.0",
+	"name": "@langtail/quickjs",
+	"version": "1.3.1",
 	"description": "A typescript package to execute JavaScript and TypeScript code in a webassembly quickjs sandbox",
 	"type": "module",
 	"engines": {
@@ -47,7 +47,7 @@
 		"lint": "bunx @biomejs/biome check",
 		"lint:fix": "bunx @biomejs/biome check --write",
 		"postpublish": "npx jsr publish",
-		"example:basic": "bun example/basic/server.ts",
+		"example:basic": "bun example/basic/index.ts",
 		"example:server": "bun example/server/server.ts",
 		"example:tests": "bun example/run-tests/index.ts",
 		"example:module": "bun example/custom-module/index.ts"
@@ -73,6 +73,7 @@
 		"@types/bun": "^1.1.6",
 		"@types/node": "^20.14.10",
 		"autocannon": "^7.15.0",
+		"bun": "^1.1.20",
 		"chai": "^5.1.1",
 		"hono": "^4.4.13",
 		"poolifier-web-worker": "^0.4.14",
@@ -81,7 +82,7 @@
 		"typescript": "^5.5.3"
 	},
 	"dependencies": {
-		"@jitl/quickjs-ng-wasmfile-release-sync": "^0.29.2",
+		"@jitl/quickjs-ng-wasmfile-release-asyncify": "^0.29.2",
 		"memfs": "^4.9.3",
 		"quickjs-emscripten-core": "^0.29.2",
 		"rate-limiter-flexible": "^5.0.3"

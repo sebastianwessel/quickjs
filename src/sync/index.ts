@@ -375,8 +375,8 @@ export class AsyncArena extends Arena {
 	/**
 	 * Evaluate JS code in the VM and get the result as an object on the host side. It also converts and re-throws error objects when an error is thrown during evaluation.
 	 */
-	async evalCodeAsync<T = any>(code: string): Promise<T> {
-		const handle = await this.asyncContext.evalCodeAsync(code)
+	async evalCodeAsync<T = any>(code: string, ...args): Promise<T> {
+		const handle = await this.asyncContext.evalCodeAsync(code, ...args)
 		return this._unwrapResultAndUnmarshal(handle)
 	}
 }

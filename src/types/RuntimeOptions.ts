@@ -3,6 +3,10 @@ import type { default as TS } from 'typescript'
 
 export type RuntimeOptions = {
 	/**
+	 * An optional object describing global entities which should be transferred into QJS env.
+	 */
+	globals?: Record<string, unknown>
+	/**
 	 * The maximum time in seconds a script can run.
 	 * Unset or set to 0 for unlimited execution time.
 	 */

@@ -22,8 +22,18 @@ class MyThreadWorker extends ThreadWorker<InputData, ResponseData> {
 			this.runtime = createRuntime
 		}
 
+		const someExampleData = {
+			a: 1,
+			b: 2
+		}
+
 		const { evalCode } = await this.runtime({
-			executionTimeout: 10,
+			globals: {
+				test: (cb) => {
+					return cb(someExampleData)
+				}
+			},
+			executionTimeout: 100,
 			allowFs: true,
 			allowFetch: true,
 			enableTestUtils: true,
