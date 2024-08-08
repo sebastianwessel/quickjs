@@ -1,6 +1,6 @@
 {
 	"name": "@langtail/quickjs",
-	"version": "1.3.2",
+	"version": "1.3.3",
 	"description": "A typescript package to execute JavaScript and TypeScript code in a webassembly quickjs sandbox",
 	"type": "module",
 	"engines": {
