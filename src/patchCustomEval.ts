@@ -1,6 +1,6 @@
 import { QuickJSContext } from "quickjs-emscripten-core"
-import { RuntimeValueTransformer } from "./runtimeValueTransformer"
-import { exposeToCtxGlobal } from "./utils"
+import { RuntimeValueTransformer } from "./runtimeValueTransformer.js"
+import { exposeToCtxGlobal } from "./utils.js"
 
 function customEval(code: string): never {
 	console.log('User tried to execute following code within eval():', code)

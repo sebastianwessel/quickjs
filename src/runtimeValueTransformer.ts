@@ -1,5 +1,5 @@
 import type { QuickJSContext, QuickJSDeferredPromise, QuickJSHandle, VmCallResult } from 'quickjs-emscripten'
-import { getProps, isObject } from './utils'
+import { getProps, isObject } from './utils.js'
 
 export class RuntimeValueTransformer {
   private _ctx: QuickJSContext
