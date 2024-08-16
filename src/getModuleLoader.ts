@@ -2,7 +2,7 @@ import type { IFs } from 'memfs'
 import type { JSModuleLoaderAsync } from 'quickjs-emscripten-core'
 
 import { join } from 'node:path'
-// import validate from 'validate-npm-package-name'
+import validate from 'validate-npm-package-name'
 
 import type { RuntimeOptions } from './types/RuntimeOptions.js'
 
@@ -50,8 +50,12 @@ function tryBase64(pkgName: string) {
 	return { error: new Error(`Module '${pkgName}' not installed or unavailable`) }
 }
 
-export const getModuleLoader = (fs: IFs, _runtimeOptions: RuntimeOptions) => {
-	// const cachedModules: Map<string, string> = new Map()
+async function defaultEsmShModuleFetcher(pkgName: string) {
+	return (await fetch(`https://esm.sh/${pkgName}`)).text()
+}
+
+export const getModuleLoader = (fs: IFs, runtimeOptions: RuntimeOptions) => {
+	const cachedModules: Map<string, string> = new Map()
 
 	const moduleLoader: JSModuleLoaderAsync = async (inputName, _context) => {
 		const localResolve = tryLocal(inputName, fs)
@@ -62,15 +66,15 @@ export const getModuleLoader = (fs: IFs, _runtimeOptions: RuntimeOptions) => {
 		const base64Resolve = tryBase64(pkgName)
 		if (!base64Resolve.error) return base64Resolve
 
-		// Let's try esm.sh in case we are out of other options
-		// if (validate(pkgName)) {
-		// 	if (!cachedModules.has(pkgName)) {
-		// 		let pkgContent = await (await fetch(`https://esm.sh/${pkgName}`)).text()
-		// 		cachedModules.set(pkgName, pkgContent)
-		// 	}
+		if (runtimeOptions.fetchModules && validate(pkgName)) {
+			if (!cachedModules.has(pkgName)) {
+				const fetcher = runtimeOptions.moduleFetcher ?? defaultEsmShModuleFetcher
+				let pkgContent = await fetcher(pkgName)
+				cachedModules.set(pkgName, pkgContent)
+			}
 			
-		// 	return cachedModules.get(pkgName) as string
-		// }
+			return cachedModules.get(pkgName) as string
+		}
 
 		return { error: new Error(`Module '${inputName}' not installed or available`) }
 	}

@@ -1,7 +1,21 @@
 import type { NestedDirectoryJSON } from 'memfs'
 import type { default as TS } from 'typescript'
 
+type fetchFilterFn = (request: Parameters<typeof fetch>[0]) => boolean
+
 export type RuntimeOptions = {
+	/**
+	 * Either array of whitelisted domains or more generic function which filters by the whole Request | URL | string (first param of fetch())
+	 */
+	fetchFilter?: string[] | fetchFilterFn
+	/**
+	 * Custom module fetcher
+	 */
+	moduleFetcher?: (pkgName: string) => Promise<string>
+	/**
+	 * True to enable fetching using either default esm.sh fetcher or by privided moduleFetcher
+	 */
+	fetchModules?: boolean
 	/**
 	 * An optional object describing global entities which should be transferred into QJS env.
 	 */

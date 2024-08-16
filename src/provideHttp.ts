@@ -4,6 +4,24 @@ import type { Arena } from './sync/index.js'
 
 import type { RuntimeOptions } from './types/RuntimeOptions.js'
 
+function getDomain(urlContainer: Parameters<typeof fetch>[0]) {
+  const domain = urlContainer instanceof Request ? urlContainer.url : String(urlContainer)
+  return (new URL(domain)).host
+}
+
+function filterRequest(urlContainer: Parameters<typeof fetch>[0], domainsOrFn?: string[] | ((host: Parameters<typeof fetch>[0]) => boolean)) {
+  if (Array.isArray(domainsOrFn)) {
+    const host = getDomain(urlContainer)
+    return domainsOrFn.includes(host)
+  }
+  
+  if (typeof domainsOrFn === 'function') {
+    return domainsOrFn(urlContainer)
+  }
+  
+  return true
+}
+
 /**
  * Provide http related functions
  */
@@ -19,7 +37,11 @@ export const provideHttp = (arena: Arena, options: RuntimeOptions, input?: { fs?
 	let fetchFunction: typeof fetch = injectUnsupported('fetch')
 
 	if (options.allowFetch) {
-		fetchFunction = options.fetchAdapter ? options.fetchAdapter : getDefaultFetchAdapter({ fs: input?.fs })
+		const fetchFunctionRaw = options.fetchAdapter ? options.fetchAdapter : getDefaultFetchAdapter({ fs: input?.fs })
+    fetchFunction = (...args: Parameters<typeof fetch>) => {
+      if (filterRequest(args[0], options.fetchFilter)) return fetchFunctionRaw(...args)
+      throw new Error('Request is denied')
+    }
 	}
 
 	arena.expose({
