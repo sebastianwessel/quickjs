@@ -9,10 +9,9 @@ import { getSerializer } from './serializer/index.js'
  *
  * @param ctx The sandbox context
  * @param handle The QuickJS handle to serialize
- * @param allowInteraction Set to true to allow objects and functions exposed to host, which rely on the sandbox
  * @returns
  */
-export const handleToNative = (ctx: VMContext, handle: QuickJSHandle, allowInteraction = false) => {
+export const handleToNative = (ctx: VMContext, handle: QuickJSHandle) => {
 	const ty = ctx.typeof(handle)
 
 	if (ty === 'undefined') {
@@ -36,11 +35,11 @@ export const handleToNative = (ctx: VMContext, handle: QuickJSHandle, allowInter
 	if (asPromiseState.type && !asPromiseState.notAPromise) {
 		return ctx.resolvePromise(handle).then(val => {
 			if (val.error) {
-				const error = handleToNative(ctx, val.error, allowInteraction)
+				const error = handleToNative(ctx, val.error)
 				val.error.dispose()
 				return Promise.reject(error)
 			}
-			const value = handleToNative(ctx, val.value, allowInteraction)
+			const value = handleToNative(ctx, val.value)
 			val.value.dispose()
 			return Promise.resolve(value)
 		})
@@ -49,7 +48,7 @@ export const handleToNative = (ctx: VMContext, handle: QuickJSHandle, allowInter
 	const setProperties = (obj: Object | Function, h: QuickJSHandle) => {
 		ctx
 			.newFunction('', (key, value) => {
-				const keyName = handleToNative(ctx, key, allowInteraction)
+				const keyName = handleToNative(ctx, key)
 				if (typeof keyName !== 'string' && typeof keyName !== 'number' && typeof keyName !== 'symbol') {
 					return
 				}
@@ -73,7 +72,7 @@ export const handleToNative = (ctx: VMContext, handle: QuickJSHandle, allowInter
 						return desc
 					}
 
-					desc[key] = handleToNative(ctx, h, allowInteraction)
+					desc[key] = handleToNative(ctx, h)
 
 					h.dispose()
 
@@ -99,11 +98,6 @@ export const handleToNative = (ctx: VMContext, handle: QuickJSHandle, allowInter
 	}
 
 	if (ty === 'function') {
-		if (!allowInteraction) {
-			throw new TypeError(
-				'Serialization of functions is disabled. Add a custom serializer or set allowInteraction to true',
-			)
-		}
 		const func = () =>
 			function (this: any, ...args: any[]) {
 				const scope = new Scope()
@@ -121,7 +115,6 @@ export const handleToNative = (ctx: VMContext, handle: QuickJSHandle, allowInter
 							handle,
 							...argHandles,
 						),
-						allowInteraction,
 					)
 					Object.defineProperties(this, Object.getOwnPropertyDescriptors(instance))
 					scope.dispose()
@@ -131,7 +124,7 @@ export const handleToNative = (ctx: VMContext, handle: QuickJSHandle, allowInter
 
 				const resultHandle = scope.manage(ctx.unwrapResult(ctx.callFunction(handle, thisHandle, ...argHandles)))
 
-				const res = handleToNative(ctx, resultHandle, allowInteraction)
+				const res = handleToNative(ctx, resultHandle)
 				scope.dispose()
 
 				return res

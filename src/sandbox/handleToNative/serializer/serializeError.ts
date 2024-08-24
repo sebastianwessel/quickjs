@@ -9,7 +9,7 @@ export const serializeError: Serializer = (ctx: VMContext, handle: QuickJSHandle
 
 	ctx
 		.newFunction('serializeError', (value, name) => {
-			const v = handleToNative(ctx, value, true)
+			const v = handleToNative(ctx, value)
 			const n = handleToNative(ctx, name)
 			Object.defineProperties(d, v)
 			d.name = n
