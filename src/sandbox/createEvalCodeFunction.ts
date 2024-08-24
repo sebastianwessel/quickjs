@@ -3,7 +3,9 @@ import { createTimeInterval } from '../createTimeInterval.js'
 import type { CodeFunctionInput } from '../types/CodeFunctionInput.js'
 import type { OkResponse } from '../types/OkResponse.js'
 import type { SandboxEvalCode } from '../types/SandboxEvalCode.js'
+import { getMaxIntervalAmount } from './getMaxIntervalAmount.js'
 import { getMaxTimeout } from './getMaxTimeout.js'
+import { getMaxTimeoutAmount } from './getMaxTimeoutAmount.js'
 import { handleEvalError } from './handleEvalError.js'
 import { handleToNative } from './handleToNative/handleToNative.js'
 import { provideTimingFunctions } from './provide/provideTimingFunctions.js'
@@ -29,7 +31,10 @@ export const createEvalCodeFunction = (input: CodeFunctionInput, scope: Scope): 
 
 		const eventLoopinterval = createTimeInterval(() => ctx.runtime.executePendingJobs(), 0)
 
-		const { dispose: disposeTimer } = provideTimingFunctions(ctx, scope)
+		const { dispose: disposeTimer } = provideTimingFunctions(ctx, {
+			maxTimeoutCount: getMaxTimeoutAmount(sandboxOptions),
+			maxIntervalCount: getMaxIntervalAmount(sandboxOptions),
+		})
 
 		const disposeStep = () => {
 			eventLoopinterval?.clear()
@@ -48,7 +53,7 @@ export const createEvalCodeFunction = (input: CodeFunctionInput, scope: Scope): 
 
 			const handle = scope.manage(ctx.unwrapResult(evalResult))
 
-			const native = handleToNative(ctx, handle, evalOptions?.allowInteraction)
+			const native = handleToNative(ctx, handle)
 
 			const result = await Promise.race([
 				(async () => {
