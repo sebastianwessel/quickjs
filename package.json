@@ -41,7 +41,7 @@
 		"test:dev": "bun test --watch",
 		"lint": "bunx @biomejs/biome check",
 		"lint:fix": "bunx @biomejs/biome check --write",
-		"postpublish": "npx jsr publish",
+		"postpublish": "bunx jsr publish",
 		"example:basic": "bun example/basic/index.ts",
 		"example:server": "bun example/server/server.ts",
 		"example:tests": "bun example/run-tests/index.ts",
@@ -49,7 +49,7 @@
 		"example:typescript": "bun example/typescript/index.ts",
 		"example:module": "bun example/custom-module/index.ts",
 		"knip": "knip",
-		"release": "npm run build && np"
+		"release": "bun run build && bun run lint:fix && np"
 	},
 	"author": {
 		"name": "Sebastian Wessel",
