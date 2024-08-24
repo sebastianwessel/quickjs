@@ -7,7 +7,7 @@ import { type SandboxOptions, loadQuickJs } from '../../src/index.js'
 const { runSandboxed } = await loadQuickJs()
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const customModuleHostLocation = join(__dirname, './custom.js')
+const customModuleHostLocation = join(__dirname, './custom-module.js')
 
 const options: SandboxOptions = {
 	nodeModules: {
@@ -19,22 +19,37 @@ const options: SandboxOptions = {
 	},
 	mountFs: {
 		src: {
-			'custom.js': `export const relativeImportFunction = ()=>'Hello from relative import function'`,
+			'custom-relative.js': `
+        import { test } from './lib/sub-import.js'
+        export const relativeImportFunction = ()=>test()
+      `,
+			lib: {
+				'sub-import.js': `export const test = ()=>'Hello from relative import function'`,
+			},
 		},
+		'text.txt': 'Some text file',
 	},
+	allowFs: true,
 }
 
 const code = `
+import { readFileSync } from 'node:fs'
 import { customFn } from 'custom-module'
-import { relativeImportFunction } from './custom.js'
+
+// the current code is virtual the file /src/index.js.
+// relative imports are relative to the current file location
+import { relativeImportFunction } from './custom-relative.js'
 
 const customModule = customFn()
 console.log('customModule:', customModule)
 
 const relativeImport = relativeImportFunction()
 console.log('relativeImport:', relativeImport)
+
+// node:fs is relative to cwd which is / = the root of the file system
+const fileContent = readFileSync('text.txt', 'utf8')
   
-export default { customModule, relativeImport }
+export default { customModule, relativeImport, fileContent, cwd: process.cwd() }
 `
 
 const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
