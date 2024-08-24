@@ -26,10 +26,27 @@ const fn = async ()=>{
 
   return f.text()
 }
+
+const result = await fn()
+
+globalThis.step1 = result
   
-export default await fn()
+export default result
 `
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
+const code2 = `
+
+export default 'step 2' + step1
+`
+
+const result = await runSandboxed(async ({ evalCode }) => {
+	// run first call
+	const result = await evalCode(code, undefined, options)
+
+	console.log('step 1', result)
+
+	// run second call
+	return evalCode(code2, undefined, options)
+}, options)
 
 console.log(result) // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
