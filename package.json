@@ -6,6 +6,9 @@
 	"engines": {
 		"node": ">=18.0.0"
 	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"keywords": [
 		"typescript",
 		"quickjs",
@@ -44,7 +47,8 @@
 		"example:tests": "bun example/run-tests/index.ts",
 		"example:module": "bun example/custom-module/index.ts",
 		"example:timer": "bun example/timer/index.ts",
-		"knip": "knip"
+		"knip": "knip",
+		"release": "npm run build && np"
 	},
 	"author": {
 		"name": "Sebastian Wessel",
@@ -70,6 +74,7 @@
 		"chai": "^5.1.1",
 		"hono": "^4.5.8",
 		"knip": "^5.27.3",
+		"np": "^10.0.7",
 		"poolifier-web-worker": "^0.4.20",
 		"tshy": "^3.0.2",
 		"typescript": "^5.5.4"
