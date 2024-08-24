@@ -67,7 +67,7 @@ describe('node:fs - file', () => {
 		expect(result.data).toBe(true)
 	})
 
-	it.skip('can read and write file asynchronously', async () => {
+	it('can read and write file asynchronously', async () => {
 		const code = `
 			import { writeFile, readFile } from 'node:fs/promises'
 
