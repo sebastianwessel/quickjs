@@ -181,23 +181,21 @@ export const lstat = (path) => new Promise((resolve, reject) => {
 })
 
 export const mkdir = (path, options) => new Promise((resolve, reject) => {
-    __fs.mkdir(pathResolve(path), options, (err) => {
-        if (err) {
-            reject(err)
-        } else {
-            resolve()
-        }
-    })
+    try {
+      const res = __fs.mkdirSync(pathResolve(path), options)
+      resolve(res)
+    } catch(err) {
+      reject(err)
+    }
 })
 
 export const mkdtemp = (prefix, options) => new Promise((resolve, reject) => {
-    __fs.mkdtemp(prefix, options, (err, folder) => {
-        if (err) {
-            reject(err)
-        } else {
-            resolve(folder)
-        }
-    })
+    try {
+      const res = __fs.mkdtempSync(prefix, options)
+      resolve(res)
+    } catch(err) {
+      reject(err)
+    }
 })
 
 export const open = (path, flags, mode) => new Promise((resolve, reject) => {
@@ -211,13 +209,12 @@ export const open = (path, flags, mode) => new Promise((resolve, reject) => {
 })
 
 export const readdir = (path, options) => new Promise((resolve, reject) => {
-    __fs.readdir(pathResolve(path), options, (err, files) => {
-        if (err) {
-            reject(err)
-        } else {
-            resolve(files)
-        }
-    })
+    try {
+      const res = __fs.readdirSync(pathResolve(path), options)
+      resolve(res)
+    } catch(err) {
+      reject(err)
+    }
 })
 
 export const read = (fd, buffer, offset, length, position) => new Promise((resolve, reject) => {
@@ -231,13 +228,12 @@ export const read = (fd, buffer, offset, length, position) => new Promise((resol
 })
 
 export const readFile = (path, options) => new Promise((resolve, reject) => {
-    __fs.readFile(pathResolve(path), options, (err, data) => {
-        if (err) {
-            reject(err)
-        } else {
-            resolve(data)
-        }
-    })
+    try {
+      const res = __fs.readFileSync(pathResolve(path), options)
+      resolve(res)
+    } catch (err) {
+      resolve(err)
+    }
 })
 
 export const readlink = (path, options) => new Promise((resolve, reject) => {
@@ -271,13 +267,12 @@ export const rename = (oldPath, newPath) => new Promise((resolve, reject) => {
 })
 
 export const rmdir = (path) => new Promise((resolve, reject) => {
-    __fs.rmdir(pathResolve(path), (err) => {
-        if (err) {
-            reject(err)
-        } else {
-            resolve()
-        }
-    })
+    try {
+      const res = __fs.rmdirSync(pathResolve(path))
+      resolve(res)
+    } catch(err) {
+      reject(err)
+    }
 })
 
 export const stat = (path) => new Promise((resolve, reject) => {
@@ -342,7 +337,8 @@ export const write = (fd, buffer, offset, length, position) => new Promise((reso
 
 export const writeFile = (file, data, options) => new Promise((resolve, reject) => {
   try{
-    return resolve(__fs.writeFileSync(pathResolve(file), data, options))
+    const res = __fs.writeFileSync(pathResolve(file), data, options)
+    return resolve(res)
   }catch(err) {
     return reject(err)
   }
