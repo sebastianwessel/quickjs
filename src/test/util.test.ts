@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'bun:test'
 import { loadQuickJs } from '../loadQuickJs.js'
 import type { OkResponse } from '../types/OkResponse.js'
 
-describe.skip('node:util - base', () => {
+describe('node:util - base', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 
 	beforeAll(async () => {
@@ -18,13 +18,11 @@ describe.skip('node:util - base', () => {
 	it('promisify works correctly', async () => {
 		const code = `
 			function callbackFunction(arg, callback) {
-				setTimeout(() => {
-					if (arg === 'error') {
-						callback(new Error('Test error'))
-					} else {
-						callback(null, 'Test success')
-					}
-				}, 100)
+        if (arg === 'error') {
+          callback(new Error('Test error'))
+        } else {
+          callback(null, 'Test success')
+        }
 			}
 
 			import { promisify } from 'node:util'

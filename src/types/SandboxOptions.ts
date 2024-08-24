@@ -103,4 +103,20 @@ export type SandboxOptions = {
 	 * The Typescript compiler options for transpiling files from typescript to JavaScript
 	 */
 	transformCompilerOptions?: TS.CompilerOptions
+	/**
+	 * As the timeout function is injected from host to client, in theory the client could create a massive amount of timeouts, which are executed by the host.
+	 * This might impact the host.
+	 * Because of this, the maximum concurrent running timeouts is limited by this option.
+	 *
+	 * @default 100
+	 */
+	maxTimeoutCount?: number
+	/**
+	 * As the interval function is injected from host to client, in theory the client could create a massive amount of intervals, which are executed by the host.
+	 * This might impact the host.
+	 * Because of this, the maximum concurrent running intervals is limited by this option.
+	 *
+	 * @default 100
+	 */
+	maxIntervalCount?: number
 }

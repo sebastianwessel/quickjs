@@ -17,7 +17,8 @@ describe('core - timeout', () => {
 
 	it('terminates execution when global timeout is reached', async () => {
 		const code = `
-      export default await new Promise((resolve) => setTimeout(() => resolve('DONE'), 4_000))
+    while(true){}  
+    export default 'ok'
     `
 
 		const result = await runCode(code, { executionTimeout: 1 })
@@ -27,7 +28,8 @@ describe('core - timeout', () => {
 
 	it('terminates execution when evalCode timeout is reached', async () => {
 		const code = `
-      export default await new Promise((resolve) => setTimeout(() => resolve('DONE'), 4_000))
+    while(true){}  
+    export default 'ok'
     `
 
 		const result = await runCode(code, { executionTimeout: 1 })

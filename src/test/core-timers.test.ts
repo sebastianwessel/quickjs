@@ -11,7 +11,7 @@ describe('core - timers', () => {
 
 	const runCode = async (code: string): Promise<OkResponse> => {
 		return await runtime.runSandboxed(async ({ evalCode }) => {
-			return (await evalCode(code, undefined, { allowInteraction: false })) as OkResponse
+			return (await evalCode(code)) as OkResponse
 		})
 	}
 
@@ -28,14 +28,18 @@ describe('core - timers', () => {
 		expect(result.data).toBe('timeout reached')
 	})
 
-	it.skip('clearTimeout works correctly', async () => {
+	it('clearTimeout works correctly', async () => {
 		const code = `
-      export default await new Promise((resolve) => {
+      export default await new Promise((resolve,reject) => {
         const timeout = setTimeout(() => {
-          resolve('timeout reached')
-        }, 60_000)
+          reject('timeout reached')
+        }, 100)
+
         clearTimeout(timeout)
-        resolve('timeout cleared')
+
+        setTimeout(()=>{
+         resolve('timeout cleared')
+        }, 500)
       })
     `
 
@@ -44,7 +48,7 @@ describe('core - timers', () => {
 		expect(result.data).toBe('timeout cleared')
 	})
 
-	it.skip('setInterval works correctly', async () => {
+	it('setInterval works correctly', async () => {
 		const code = `
       export default await new Promise((resolve) => {
         let count = 0
@@ -63,7 +67,7 @@ describe('core - timers', () => {
 		expect(result.data).toBe('interval reached')
 	})
 
-	it.skip('clearInterval works correctly', async () => {
+	it('clearInterval works correctly', async () => {
 		const code = `
       export default await new Promise((resolve) => {
         let count = 0
