@@ -43,6 +43,7 @@
 		"example:server": "bun example/server/server.ts",
 		"example:tests": "bun example/run-tests/index.ts",
 		"example:module": "bun example/custom-module/index.ts",
+		"example:timer": "bun example/timer/index.ts",
 		"knip": "knip"
 	},
 	"author": {
@@ -60,27 +61,27 @@
 	"license": "ISC",
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
-		"@hono/swagger-ui": "^0.3.0",
-		"@hono/zod-openapi": "^0.14.9",
+		"@hono/swagger-ui": "^0.4.0",
+		"@hono/zod-openapi": "^0.15.3",
 		"@types/autocannon": "^7.12.5",
-		"@types/bun": "^1.1.6",
-		"@types/node": "^20.14.11",
+		"@types/bun": "^1.1.7",
+		"@types/node": "^22.5.0",
 		"autocannon": "^7.15.0",
 		"chai": "^5.1.1",
-		"hono": "^4.5.0",
-		"knip": "^5.26.0",
-		"poolifier-web-worker": "^0.4.16",
-		"tshy": "^1.18.0",
-		"typescript": "^5.5.3"
+		"hono": "^4.5.8",
+		"knip": "^5.27.3",
+		"poolifier-web-worker": "^0.4.20",
+		"tshy": "^3.0.2",
+		"typescript": "^5.5.4"
 	},
 	"dependencies": {
 		"@jitl/quickjs-ng-wasmfile-release-sync": "^0.29.2",
-		"memfs": "^4.9.3",
+		"memfs": "^4.11.1",
 		"quickjs-emscripten-core": "^0.29.2",
 		"rate-limiter-flexible": "^5.0.3"
 	},
 	"peerDependencies": {
-		"typescript": ">= 5.5.3"
+		"typescript": ">= 5.5.4"
 	},
 	"peerDependenciesMeta": {
 		"typescript": {
@@ -91,12 +92,10 @@
 		"./package.json": "./package.json",
 		".": {
 			"import": {
-				"source": "./src/index.ts",
 				"types": "./dist/esm/index.d.ts",
 				"default": "./dist/esm/index.js"
 			},
 			"require": {
-				"source": "./src/index.ts",
 				"types": "./dist/commonjs/index.d.ts",
 				"default": "./dist/commonjs/index.js"
 			}
