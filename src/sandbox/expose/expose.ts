@@ -54,7 +54,7 @@ export const getHandle = (scope: Scope, ctx: VMContext, name: string, input: unk
 			return ctx.newSymbolFor(input)
 		case 'function':
 			return ctx.newFunction(name, function (...args) {
-				const that = handleToNative(ctx, this, true)
+				const that = handleToNative(ctx, this)
 				if (this) {
 					this.dispose()
 				}
@@ -73,7 +73,7 @@ export const getHandle = (scope: Scope, ctx: VMContext, name: string, input: unk
 
 				const rawParam: any[] = []
 				for (const param of args) {
-					rawParam.push(handleToNative(ctx, param, true))
+					rawParam.push(handleToNative(ctx, param))
 					param.dispose
 				}
 

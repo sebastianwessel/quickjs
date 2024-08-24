@@ -11,10 +11,6 @@ export type SandboxEvalCode = (
 			executionTimeout?: number
 			maxStackSize?: number
 			memoryLimit?: number
-			/**
-			 * Allow unsafe serialization from guest to host
-			 */
-			allowInteraction?: boolean
 		}
 	>,
 ) => Promise<OkResponse | ErrorResponse>
