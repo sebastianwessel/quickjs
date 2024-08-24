@@ -66,7 +66,7 @@ describe('node:fs - directory', () => {
 		expect(result.data).toBe(true)
 	})
 
-	it.skip('can create and read a directory asynchronously', async () => {
+	it('can create and read a directory asynchronously', async () => {
 		const code = `
 			import { mkdir, readdir } from 'node:fs/promises'
 
@@ -81,7 +81,7 @@ describe('node:fs - directory', () => {
 		expect(result.data).toBe(true)
 	})
 
-	it.skip('can create and remove a directory asynchronously', async () => {
+	it('can create and remove a directory asynchronously', async () => {
 		const code = `
 			import { mkdir, rmdir, readdir } from 'node:fs/promises'
 
@@ -97,7 +97,7 @@ describe('node:fs - directory', () => {
 		expect(result.data).toBe(true)
 	})
 
-	it.skip('can create a temporary directory asynchronously', async () => {
+	it('can create a temporary directory asynchronously', async () => {
 		const code = `
 			import { mkdtemp } from 'node:fs/promises'
 
