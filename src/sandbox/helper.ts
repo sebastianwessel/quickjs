@@ -15,7 +15,7 @@ export const call = (
 		return callHandle
 	} catch (error) {
 		console.error(error)
-		const e = new Error((error as Error).message ?? 'Function call failed in serialisation')
+		const e = new Error((error as Error).message ?? 'Function call failed in serialization')
 		e.cause = error
 		throw e
 	}

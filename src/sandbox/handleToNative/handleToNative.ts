@@ -11,7 +11,7 @@ import { getSerializer } from './serializer/index.js'
  * @param handle The QuickJS handle to serialize
  * @returns
  */
-export const handleToNative = (ctx: VMContext, handle: QuickJSHandle, rootScope: Scope) => {
+export const handleToNative = (ctx: VMContext, handle: QuickJSHandle, rootScope?: Scope) => {
 	const ty = ctx.typeof(handle)
 
 	if (ty === 'undefined') {
@@ -101,6 +101,9 @@ export const handleToNative = (ctx: VMContext, handle: QuickJSHandle, rootScope:
 	if (ty === 'function') {
 		const func = () => {
 			// make a copy
+			if (!rootScope) {
+				throw new Error('Missing root scope')
+			}
 			const cpHandle = rootScope.manage(handle.dup())
 
 			return function (this: any, ...args: any[]) {
@@ -127,12 +130,16 @@ export const handleToNative = (ctx: VMContext, handle: QuickJSHandle, rootScope:
 					return this
 				}
 
-				const resultHandle = scope.manage(ctx.unwrapResult(ctx.callFunction(cpHandle, thisHandle, ...argHandles)))
+				try {
+					const resultHandle = scope.manage(ctx.unwrapResult(ctx.callFunction(cpHandle, thisHandle, ...argHandles)))
 
-				const res = handleToNative(ctx, resultHandle, rootScope)
-				scope.dispose()
-
-				return res
+					const res = handleToNative(ctx, resultHandle, rootScope)
+					return res
+				} catch (error) {
+					throw error as Error
+				} finally {
+					scope.dispose()
+				}
 			}
 		}
 
@@ -142,6 +149,14 @@ export const handleToNative = (ctx: VMContext, handle: QuickJSHandle, rootScope:
 	}
 
 	if (ty === 'object') {
+		const isNull = call(ctx, 'internal/serializer/isNull.js', 'a => a === null', undefined, handle).consume(r =>
+			ctx.dump(r),
+		)
+
+		if (isNull) {
+			return null
+		}
+
 		const obj = call(ctx, 'internal/serializer/isArray.js', 'Array.isArray', undefined, handle).consume(r =>
 			ctx.dump(r),
 		)
