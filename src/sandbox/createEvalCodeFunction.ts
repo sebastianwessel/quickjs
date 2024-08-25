@@ -53,7 +53,7 @@ export const createEvalCodeFunction = (input: CodeFunctionInput, scope: Scope): 
 
 			const handle = scope.manage(ctx.unwrapResult(evalResult))
 
-			const native = handleToNative(ctx, handle)
+			const native = handleToNative(ctx, handle, scope)
 
 			const result = await Promise.race([
 				(async () => {
