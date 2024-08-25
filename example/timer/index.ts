@@ -28,6 +28,6 @@ export default await new Promise((resolve) => setTimeout(() => resolve('ok'), t)
 
 const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
 
-console.log(result) // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
+console.log(result)
 
 await new Promise(() => {})
