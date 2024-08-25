@@ -11,7 +11,7 @@ import { getSerializer } from './serializer/index.js'
  * @param handle The QuickJS handle to serialize
  * @returns
  */
-export const handleToNative = (ctx: VMContext, handle: QuickJSHandle) => {
+export const handleToNative = (ctx: VMContext, handle: QuickJSHandle, rootScope: Scope) => {
 	const ty = ctx.typeof(handle)
 
 	if (ty === 'undefined') {
@@ -35,20 +35,21 @@ export const handleToNative = (ctx: VMContext, handle: QuickJSHandle) => {
 	if (asPromiseState.type && !asPromiseState.notAPromise) {
 		return ctx.resolvePromise(handle).then(val => {
 			if (val.error) {
-				const error = handleToNative(ctx, val.error)
+				const error = handleToNative(ctx, val.error, rootScope)
 				val.error.dispose()
 				return Promise.reject(error)
 			}
-			const value = handleToNative(ctx, val.value)
+			const value = handleToNative(ctx, val.value, rootScope)
 			val.value.dispose()
 			return Promise.resolve(value)
 		})
 	}
 
+	// biome-ignore lint/complexity/noBannedTypes: <explanation>
 	const setProperties = (obj: Object | Function, h: QuickJSHandle) => {
 		ctx
 			.newFunction('', (key, value) => {
-				const keyName = handleToNative(ctx, key)
+				const keyName = handleToNative(ctx, key, rootScope)
 				if (typeof keyName !== 'string' && typeof keyName !== 'number' && typeof keyName !== 'symbol') {
 					return
 				}
@@ -72,7 +73,7 @@ export const handleToNative = (ctx: VMContext, handle: QuickJSHandle) => {
 						return desc
 					}
 
-					desc[key] = handleToNative(ctx, h)
+					desc[key] = handleToNative(ctx, h, rootScope)
 
 					h.dispose()
 
@@ -98,8 +99,11 @@ export const handleToNative = (ctx: VMContext, handle: QuickJSHandle) => {
 	}
 
 	if (ty === 'function') {
-		const func = () =>
-			function (this: any, ...args: any[]) {
+		const func = () => {
+			// make a copy
+			const cpHandle = rootScope.manage(handle.dup())
+
+			return function (this: any, ...args: any[]) {
 				const scope = new Scope()
 				const thisHandle = getHandle(scope, ctx, '', this)
 				const argHandles = args.map(a => getHandle(scope, ctx, '', a))
@@ -112,9 +116,10 @@ export const handleToNative = (ctx: VMContext, handle: QuickJSHandle) => {
 							'internal/serializer/newClass.js',
 							'(Cls, ...args) => new Cls(...args)',
 							thisHandle,
-							handle,
+							cpHandle,
 							...argHandles,
 						),
+						rootScope,
 					)
 					Object.defineProperties(this, Object.getOwnPropertyDescriptors(instance))
 					scope.dispose()
@@ -122,16 +127,16 @@ export const handleToNative = (ctx: VMContext, handle: QuickJSHandle) => {
 					return this
 				}
 
-				const resultHandle = scope.manage(ctx.unwrapResult(ctx.callFunction(handle, thisHandle, ...argHandles)))
+				const resultHandle = scope.manage(ctx.unwrapResult(ctx.callFunction(cpHandle, thisHandle, ...argHandles)))
 
-				const res = handleToNative(ctx, resultHandle)
+				const res = handleToNative(ctx, resultHandle, rootScope)
 				scope.dispose()
 
 				return res
 			}
+		}
 
 		const f = func()
-
 		setProperties(f, handle)
 		return f
 	}
