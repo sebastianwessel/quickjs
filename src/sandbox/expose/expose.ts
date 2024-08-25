@@ -40,8 +40,6 @@ export const getHandle = (scope: Scope, ctx: VMContext, name: string, input: unk
 	}
 
 	switch (typeof input) {
-		case 'undefined':
-			return ctx.undefined
 		case 'number':
 			return ctx.newNumber(input)
 		case 'string':
@@ -54,12 +52,12 @@ export const getHandle = (scope: Scope, ctx: VMContext, name: string, input: unk
 			return ctx.newSymbolFor(input)
 		case 'function':
 			return ctx.newFunction(name, function (...args) {
-				const that = handleToNative(ctx, this)
+				const s = new Scope()
+
+				const that = handleToNative(ctx, this, s)
 				if (this) {
 					this.dispose()
 				}
-
-				const s = new Scope()
 
 				if (isES2015Class(input) && isObject(that)) {
 					const result = new input(...args)
@@ -68,20 +66,21 @@ export const getHandle = (scope: Scope, ctx: VMContext, name: string, input: unk
 					}
 					s.dispose()
 
-					return this
+					return this as any
 				}
 
 				const rawParam: any[] = []
 				for (const param of args) {
-					rawParam.push(handleToNative(ctx, param))
-					param.dispose
+					const p = s.manage(param)
+					rawParam.push(handleToNative(ctx, p, s))
 				}
 
-				const handle = getHandle(s, ctx, '', input.apply(that, rawParam))
-
-				s.dispose()
-
-				return handle
+				try {
+					const handle = getHandle(s, ctx, '', input.apply(that, rawParam))
+					return handle
+				} finally {
+					s.dispose()
+				}
 			})
 	}
 	if (typeof input === 'object' || input === null) {
@@ -102,6 +101,7 @@ export const getHandle = (scope: Scope, ctx: VMContext, name: string, input: unk
 	throw new Error(`unsupported data type in ${name} ${typeof input}`)
 }
 
+// biome-ignore lint/complexity/noBannedTypes: <explanation>
 const setProperties = (ctx: VMContext, scope: Scope, input: object | Function, parent: QuickJSHandle) => {
 	const descs = ctx.newObject()
 
