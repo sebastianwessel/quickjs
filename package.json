@@ -1,114 +1,128 @@
 {
-	"name": "@sebastianwessel/quickjs",
-	"version": "1.4.0",
-	"description": "A typescript package to execute JavaScript and TypeScript code in a webassembly quickjs sandbox",
-	"type": "module",
-	"engines": {
-		"node": ">=18.0.0"
-	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"keywords": [
-		"typescript",
-		"quickjs",
-		"runtime",
-		"wasm",
-		"webassembly",
-		"bun",
-		"hono",
-		"example",
-		"worker",
-		"pool",
-		"package",
-		"library"
-	],
-	"files": ["dist"],
-	"tshy": {
-		"exclude": ["src/**/*.test.ts", "vendor"],
-		"dialects": ["esm", "commonjs"],
-		"exports": {
-			"./package.json": "./package.json",
-			".": "./src/index.ts"
-		}
-	},
-	"scripts": {
-		"start": "bun run --watch example/server/server.ts",
-		"build": "bun run build:vendor && tshy && bun run build:copy",
-		"build:vendor": "bun vendor.ts",
-		"build:copy": "cp -r ./src/modules/build/ ./dist/esm/modules/build && cp -r ./src/modules/build/ ./dist/commonjs/modules/build",
-		"test": "bun test",
-		"test:dev": "bun test --watch",
-		"lint": "bunx @biomejs/biome check",
-		"lint:fix": "bunx @biomejs/biome check --write",
-		"postpublish": "bunx jsr publish",
-		"example:basic": "bun example/basic/index.ts",
-		"example:function": "bun example/function-call/index.ts",
-		"example:server": "bun example/server/server.ts",
-		"example:tests": "bun example/run-tests/index.ts",
-		"example:timer": "bun example/timer/index.ts",
-		"example:typescript": "bun example/typescript/index.ts",
-		"example:module": "bun example/custom-module/index.ts",
-		"knip": "knip",
-		"release": "bun run build && bun run lint:fix && np"
-	},
-	"author": {
-		"name": "Sebastian Wessel",
-		"url": "https://sebastianwessel.de"
-	},
-	"homepage": "https://github.com/sebastianwessel/quickjs#readme",
-	"bugs": {
-		"url": "https://github.com/sebastianwessel/quickjs/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/sebastianwessel/quickjs.git"
-	},
-	"license": "ISC",
-	"devDependencies": {
-		"@biomejs/biome": "^1.8.3",
-		"@hono/swagger-ui": "^0.4.1",
-		"@hono/zod-openapi": "^0.16.0",
-		"@types/autocannon": "^7.12.5",
-		"@types/bun": "^1.1.8",
-		"@types/node": "^22.5.0",
-		"autocannon": "^7.15.0",
-		"chai": "^5.1.1",
-		"hono": "^4.5.8",
-		"knip": "^5.27.3",
-		"np": "^10.0.7",
-		"poolifier-web-worker": "^0.4.20",
-		"tshy": "^3.0.2",
-		"typescript": "^5.5.4"
-	},
-	"dependencies": {
-		"@jitl/quickjs-ng-wasmfile-release-sync": "^0.29.2",
-		"memfs": "^4.11.1",
-		"quickjs-emscripten-core": "^0.29.2",
-		"rate-limiter-flexible": "^5.0.3"
-	},
-	"peerDependencies": {
-		"typescript": ">= 5.5.4"
-	},
-	"peerDependenciesMeta": {
-		"typescript": {
-			"optional": true
-		}
-	},
-	"exports": {
-		"./package.json": "./package.json",
-		".": {
-			"import": {
-				"types": "./dist/esm/index.d.ts",
-				"default": "./dist/esm/index.js"
-			},
-			"require": {
-				"types": "./dist/commonjs/index.d.ts",
-				"default": "./dist/commonjs/index.js"
-			}
-		}
-	},
-	"main": "./dist/commonjs/index.js",
-	"types": "./dist/commonjs/index.d.ts",
-	"module": "./dist/esm/index.js"
+  "name": "@sebastianwessel/quickjs",
+  "version": "1.4.0",
+  "description": "A typescript package to execute JavaScript and TypeScript code in a webassembly quickjs sandbox",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "typescript",
+    "quickjs",
+    "runtime",
+    "wasm",
+    "webassembly",
+    "bun",
+    "hono",
+    "example",
+    "worker",
+    "pool",
+    "package",
+    "library"
+  ],
+  "files": [
+    "dist"
+  ],
+  "tshy": {
+    "exclude": [
+      "src/**/*.test.ts",
+      "vendor"
+    ],
+    "dialects": [
+      "esm",
+      "commonjs"
+    ],
+    "exports": {
+      "./package.json": "./package.json",
+      ".": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "start": "bun run --watch example/server/server.ts",
+    "build": "bun run build:vendor && tshy && bun run build:copy",
+    "build:vendor": "bun vendor.ts",
+    "build:copy": "cp -r ./src/modules/build/ ./dist/esm/modules/build && cp -r ./src/modules/build/ ./dist/commonjs/modules/build",
+    "test": "bun test",
+    "test:dev": "bun test --watch",
+    "lint": "bunx @biomejs/biome check",
+    "lint:fix": "bunx @biomejs/biome check --write",
+    "postpublish": "bunx jsr publish",
+    "example:basic": "bun example/basic/index.ts",
+    "example:function": "bun example/function-call/index.ts",
+    "example:server": "bun example/server/server.ts",
+    "example:tests": "bun example/run-tests/index.ts",
+    "example:timer": "bun example/timer/index.ts",
+    "example:typescript": "bun example/typescript/index.ts",
+    "example:module": "bun example/custom-module/index.ts",
+    "knip": "knip",
+    "release": "bun run build && bun run lint:fix && np",
+    "docs:dev": "vitepress dev website",
+    "docs:build": "vitepress build website",
+    "docs:preview": "vitepress preview website"
+  },
+  "author": {
+    "name": "Sebastian Wessel",
+    "url": "https://sebastianwessel.de"
+  },
+  "homepage": "https://github.com/sebastianwessel/quickjs#readme",
+  "bugs": {
+    "url": "https://github.com/sebastianwessel/quickjs/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sebastianwessel/quickjs.git"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.3",
+    "@hono/swagger-ui": "^0.4.1",
+    "@hono/zod-openapi": "^0.16.0",
+    "@types/autocannon": "^7.12.5",
+    "@types/bun": "^1.1.8",
+    "@types/node": "^22.5.1",
+    "autocannon": "^7.15.0",
+    "chai": "^5.1.1",
+    "hono": "^4.5.9",
+    "knip": "^5.27.5",
+    "np": "^10.0.7",
+    "poolifier-web-worker": "^0.4.25",
+    "tshy": "^3.0.2",
+    "typescript": "^5.5.4",
+    "vitepress": "^1.3.4",
+    "vitepress-sidebar": "^1.25.0",
+    "vue": "^3.4.38"
+  },
+  "dependencies": {
+    "@jitl/quickjs-ng-wasmfile-release-sync": "^0.29.2",
+    "memfs": "^4.11.1",
+    "quickjs-emscripten-core": "^0.29.2",
+    "rate-limiter-flexible": "^5.0.3"
+  },
+  "peerDependencies": {
+    "typescript": ">= 5.5.4"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/index.d.ts",
+        "default": "./dist/commonjs/index.js"
+      }
+    }
+  },
+  "main": "./dist/commonjs/index.js",
+  "types": "./dist/commonjs/index.d.ts",
+  "module": "./dist/esm/index.js"
 }
