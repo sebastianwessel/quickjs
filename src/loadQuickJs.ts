@@ -13,6 +13,11 @@ import type { LoadQuickJsOptions } from './types/LoadQuickJsOptions.js'
 import type { SandboxFunction } from './types/SandboxFunction.js'
 import type { SandboxOptions } from './types/SandboxOptions.js'
 
+/**
+ * Loads the QuickJS module and returns a sandbox execution function.
+ * @param loadOptions - Options for loading the QuickJS module. Defaults to '@jitl/quickjs-wasmfile-release-sync'.
+ * @returns An object containing the runSandboxed function and the loaded module.
+ */
 export const loadQuickJs = async (loadOptions: LoadQuickJsOptions = '@jitl/quickjs-wasmfile-release-sync') => {
 	const module = await loadWasmModule(loadOptions)
 
