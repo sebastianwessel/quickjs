@@ -1,19 +1,18 @@
-import { quickJS } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from '../../src/index.js'
 
 // General setup like loading and init of the QuickJS wasm
 // It is a ressource intensive job and should be done only once if possible
-const { createRuntime } = await quickJS()
+const { runSandboxed } = await loadQuickJs()
 
-// Create a runtime instance each time a js code should be executed
-const { evalCode } = await createRuntime({
+const options: SandboxOptions = {
 	allowFetch: true, // inject fetch and allow the code to fetch data
 	allowFs: true, // mount a virtual file system and provide node:fs module
 	env: {
 		MY_ENV_VAR: 'env var value',
 	},
-})
+}
 
-const result = await evalCode(`
+const code = `
 import { join } from 'path'
 
 const fn = async ()=>{
@@ -27,8 +26,27 @@ const fn = async ()=>{
 
   return f.text()
 }
+
+const result = await fn()
+
+globalThis.step1 = result
   
-export default await fn()
-`)
+export default result
+`
+
+const code2 = `
+
+export default 'step 2' + step1
+`
+
+const result = await runSandboxed(async ({ evalCode }) => {
+	// run first call
+	const result = await evalCode(code, undefined, options)
+
+	console.log('step 1', result)
+
+	// run second call
+	return evalCode(code2, undefined, options)
+}, options)
 
 console.log(result) // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }

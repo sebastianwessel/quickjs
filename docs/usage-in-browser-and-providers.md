@@ -15,19 +15,19 @@ Using `fetch`is possible, but there are the same restrictions as in any other br
 <!-- Import from a ES Module CDN -->
 <script type="module">
 
-  import { quickJS } from "https://esm.sh/@sebastianwessel/quickjs@1.3.0"
+  import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@latest"
 
-  const {createRuntime} = await quickJS('https://esm.sh/@jitl/quickjs-wasmfile-release-sync')
+  const { runSandboxed } = await loadQuickJs('https://esm.sh/@jitl/quickjs-wasmfile-release-sync')
 
-  const { evalCode } = await createRuntime({
+  const options = {
     allowFetch: true,
     fetchAdapter: (...params)=>fetch(...params)
     env: {
       MY_ENV_VAR: 'env var value',
     },
-  })
+  }
 
-  console.log(await evalCode("export default 1+1"))
+  console.log( await runSandboxed(async ({ evalCode }) => evalCode("export default 1+1")))
 </script>
 ```
 

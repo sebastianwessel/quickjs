@@ -12,23 +12,20 @@ It is recommended, to always return a value, for better validation on the host s
 In the sandbox, the executed code "lives" in `/src/index.js`. If custom files are added via configuration, source files should be placed below `/src`. Nested directories are supported.
 
 ```typescript
-import { quickJS } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
 
-// General setup like loading and init of the QuickJS wasm
-// It is a ressource intensive job and should be done only once if possible 
-const { createRuntime } = await quickJS()
+const { runSandboxed } = await loadQuickJs()
 
-// Create a runtime instance (sandbox)
-const { evalCode } = await createRuntime({
+const options:SandboxOptions = {
   allowFetch: true, // inject fetch and allow the code to fetch data
   allowFs: true, // mount a virtual file system and provide node:fs module
   env: {
     MY_ENV_VAR: 'env var value'
   },
-})
+}
 
 
-const result = await evalCode(`
+const code = `
 import { join } as path from 'path'
 
 const fn = async ()=>{
@@ -44,7 +41,8 @@ const fn = async ()=>{
 }
   
 export default await fn()
-`)
+`
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
 
 console.log(result) // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
 ```
@@ -59,17 +57,16 @@ There are use cases, where the given JavaScript code should not be executed, but
 To only test the code, without executing the code, the function `validateCode` should be used.
 
 ```typescript
-import { quickJS } from '@sebastianwessel/quickjs'
+import { loadQuickJs } from '@sebastianwessel/quickjs'
 
-/const { createRuntime } = await quickJS()
-const { validateCode } = await createRuntime()
+const { runSandboxed } = await loadQuickJs()
 
 const code = `
   const value ='missing string end
   export default value
 `
 
-const result = await validateCode(code)
+const result = await runSandboxed(async ({ validateCode }) => validateCode(code))
 
 console.log(result)
 //{
@@ -106,8 +103,7 @@ import { quickJS } from '@sebastianwessel/quickjs'
 
 const { createRuntime } = await quickJS()
 
-// Create a runtime instance (sandbox)
-const { evalCode } = await createRuntime({
+const options:SandboxOptions = {
   transformTypescript: true,
   mountFs: {
     src: {
@@ -117,7 +113,7 @@ const { evalCode } = await createRuntime({
                   }`,
     },
   },
-})
+}
 
 
 const result = await evalCode(`

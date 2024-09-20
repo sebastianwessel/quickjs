@@ -1,12 +1,21 @@
-import { describe, expect, it } from 'bun:test'
-import { quickJS } from '../quickJS.js'
+import { beforeAll, describe, expect, it } from 'bun:test'
+import { loadQuickJs } from '../loadQuickJs.js'
 import type { OkResponse } from '../types/OkResponse.js'
 
 describe('core - timers', () => {
-	it('setTimeout works correctly', async () => {
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime()
+	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 
+	beforeAll(async () => {
+		runtime = await loadQuickJs()
+	})
+
+	const runCode = async (code: string): Promise<OkResponse> => {
+		return await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		})
+	}
+
+	it('setTimeout works correctly', async () => {
 		const code = `
       export default await new Promise((resolve) => {
         setTimeout(() => {
@@ -15,33 +24,31 @@ describe('core - timers', () => {
       })
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const result = await runCode(code)
 		expect(result.data).toBe('timeout reached')
 	})
 
 	it('clearTimeout works correctly', async () => {
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime()
-
 		const code = `
-      export default await new Promise((resolve) => {
+      export default await new Promise((resolve,reject) => {
         const timeout = setTimeout(() => {
-          resolve('timeout reached')
-        }, 60_000)
+          reject('timeout reached')
+        }, 100)
+
         clearTimeout(timeout)
-        resolve('timeout cleared')
+
+        setTimeout(()=>{
+         resolve('timeout cleared')
+        }, 500)
       })
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('timeout cleared')
 	})
 
 	it('setInterval works correctly', async () => {
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime()
-
 		const code = `
       export default await new Promise((resolve) => {
         let count = 0
@@ -55,15 +62,12 @@ describe('core - timers', () => {
       })
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('interval reached')
 	})
 
 	it('clearInterval works correctly', async () => {
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime()
-
 		const code = `
       export default await new Promise((resolve) => {
         let count = 0
@@ -77,10 +81,10 @@ describe('core - timers', () => {
       })
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
 		// The exact count can vary depending on timing precision,
-		// but it should be around 3 if intervals are 100ms and we clear after 350ms.
+		// but it should be around 3 if intervals are 100ms and we clear after 500ms.
 		expect(result.data).toBeGreaterThanOrEqual(3)
 		expect(result.data).toBeLessThanOrEqual(5)
 	})

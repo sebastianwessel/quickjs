@@ -14,14 +14,14 @@ To provide a custom file system, a nested structure is used. The structure is mo
 ### Example
 
 ```typescript
-const { evalCode } = await createRuntime({
+const options:SandboxOptions = {
   mountFs: {
     src: {
       'custom.js': `export const relativeImportFunction = ()=>'Hello from relative import function'`,
     },
     'fileInRoot.txt': 'Some text content'
   },
-});
+};
 ```
 
 In this example, a JavaScript file is added to the virtual file system at `/src/custom.js`, and a text file is added to the root `/fileInRoot.txt`.

@@ -1,14 +1,23 @@
-import { describe, expect, it } from 'bun:test'
-import { quickJS } from '../quickJS.js'
+import { beforeAll, describe, expect, it } from 'bun:test'
+import { loadQuickJs } from '../loadQuickJs.js'
 import type { OkResponse } from '../types/OkResponse.js'
 
 type AssetCheck = { success: boolean; error: Error | string }
 
 describe('node:assert', () => {
-	it('assert.ok should pass for truthy values', async () => {
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime()
+	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 
+	beforeAll(async () => {
+		runtime = await loadQuickJs()
+	})
+
+	const runCode = async (code: string): Promise<OkResponse<AssetCheck>> => {
+		return await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse<AssetCheck>
+		})
+	}
+
+	it('assert.ok should pass for truthy values', async () => {
 		const code = `
 			import assert from 'node:assert'
 
@@ -23,14 +32,11 @@ describe('node:assert', () => {
 			export default result
 		`
 
-		const result = (await evalCode(code)) as OkResponse<AssetCheck>
+		const result = await runCode(code)
 		expect(result.data.success).toBeTrue()
 	})
 
 	it('assert.ok should fail for falsy values', async () => {
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime()
-
 		const code = `
 			import assert from 'node:assert'
 
@@ -45,15 +51,12 @@ describe('node:assert', () => {
 			export default result
 		`
 
-		const result = (await evalCode(code)) as OkResponse<AssetCheck>
+		const result = await runCode(code)
 		expect(result.data.success).toBeFalse()
 		expect(result.data.error).toBe('False should be falsy')
 	})
 
 	it('assert.equal should pass for equal values', async () => {
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime()
-
 		const code = `
 			import assert from 'node:assert'
 
@@ -68,14 +71,11 @@ describe('node:assert', () => {
 			export default result
 		`
 
-		const result = (await evalCode(code)) as OkResponse<AssetCheck>
+		const result = await runCode(code)
 		expect(result.data.success).toBeTrue()
 	})
 
 	it('assert.equal should fail for non-equal values', async () => {
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime()
-
 		const code = `
 			import assert from 'node:assert'
 
@@ -90,15 +90,12 @@ describe('node:assert', () => {
 			export default result
 		`
 
-		const result = (await evalCode(code)) as OkResponse<AssetCheck>
+		const result = await runCode(code)
 		expect(result.data.success).toBeFalse()
 		expect(result.data.error).toBe('1 should not equal 2')
 	})
 
 	it('assert.deepEqual should pass for deeply equal objects', async () => {
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime()
-
 		const code = `
 			import assert from 'node:assert'
 
@@ -113,14 +110,11 @@ describe('node:assert', () => {
 			export default result
 		`
 
-		const result = (await evalCode(code)) as OkResponse<AssetCheck>
+		const result = await runCode(code)
 		expect(result.data.success).toBeTrue()
 	})
 
 	it('assert.deepEqual should fail for non-deeply equal objects', async () => {
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime()
-
 		const code = `
 			import assert from 'node:assert'
 
@@ -135,15 +129,12 @@ describe('node:assert', () => {
 			export default result
 		`
 
-		const result = (await evalCode(code)) as OkResponse<AssetCheck>
+		const result = await runCode(code)
 		expect(result.data.success).toBeFalse()
 		expect(result.data.error).toBe('Objects should not be deeply equal')
 	})
 
 	it('assert.strictEqual should pass for strictly equal values', async () => {
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime()
-
 		const code = `
 			import assert from 'node:assert'
 
@@ -158,14 +149,11 @@ describe('node:assert', () => {
 			export default result
 		`
 
-		const result = (await evalCode(code)) as OkResponse<AssetCheck>
+		const result = await runCode(code)
 		expect(result.data.success).toBeTrue()
 	})
 
 	it('assert.strictEqual should fail for non-strictly equal values', async () => {
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime()
-
 		const code = `
 			import assert from 'node:assert'
 
@@ -180,7 +168,7 @@ describe('node:assert', () => {
 			export default result
 		`
 
-		const result = (await evalCode(code)) as OkResponse<AssetCheck>
+		const result = await runCode(code)
 		expect(result.data.success).toBeFalse()
 		expect(result.data.error).toBe('1 should not strictly equal "1"')
 	})

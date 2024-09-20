@@ -1,19 +1,28 @@
-import { describe, expect, it, mock } from 'bun:test'
-import { quickJS } from '../quickJS.js'
+import { beforeAll, describe, expect, it, mock } from 'bun:test'
+import { loadQuickJs } from '../loadQuickJs.js'
 import type { OkResponse } from '../types/OkResponse.js'
+import type { SandboxOptions } from '../types/SandboxOptions.js'
 
 describe('core - console', () => {
+	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
+
+	beforeAll(async () => {
+		runtime = await loadQuickJs()
+	})
+
 	it('console.log works correctly', async () => {
 		const logSpy = mock()
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime({ console: { log: logSpy } })
 
 		const code = `
       console.log('Test log')
       export default 'logged'
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const options: SandboxOptions = { console: { log: logSpy } }
+		const result = await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		}, options)
+
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('logged')
 		expect(logSpy).toHaveBeenCalledWith('Test log')
@@ -21,15 +30,17 @@ describe('core - console', () => {
 
 	it('console.error works correctly', async () => {
 		const errorSpy = mock()
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime({ console: { error: errorSpy } })
 
 		const code = `
       console.error('Test error')
       export default 'errored'
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const options: SandboxOptions = { console: { error: errorSpy } }
+		const result = await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		}, options)
+
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('errored')
 		expect(errorSpy).toHaveBeenCalledWith('Test error')
@@ -37,15 +48,17 @@ describe('core - console', () => {
 
 	it('console.warn works correctly', async () => {
 		const warnSpy = mock()
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime({ console: { warn: warnSpy } })
 
 		const code = `
       console.warn('Test warn')
       export default 'warned'
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const options: SandboxOptions = { console: { warn: warnSpy } }
+		const result = await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		}, options)
+
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('warned')
 		expect(warnSpy).toHaveBeenCalledWith('Test warn')
@@ -53,15 +66,17 @@ describe('core - console', () => {
 
 	it('console.info works correctly', async () => {
 		const infoSpy = mock()
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime({ console: { info: infoSpy } })
 
 		const code = `
       console.info('Test info')
       export default 'infoed'
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const options: SandboxOptions = { console: { info: infoSpy } }
+		const result = await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		}, options)
+
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('infoed')
 		expect(infoSpy).toHaveBeenCalledWith('Test info')
@@ -69,15 +84,17 @@ describe('core - console', () => {
 
 	it('console.debug works correctly', async () => {
 		const debugSpy = mock()
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime({ console: { debug: debugSpy } })
 
 		const code = `
       console.debug('Test debug')
       export default 'debugged'
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const options: SandboxOptions = { console: { debug: debugSpy } }
+		const result = await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		}, options)
+
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('debugged')
 		expect(debugSpy).toHaveBeenCalledWith('Test debug')
@@ -85,15 +102,17 @@ describe('core - console', () => {
 
 	it('console.trace works correctly', async () => {
 		const traceSpy = mock()
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime({ console: { trace: traceSpy } })
 
 		const code = `
       console.trace('Test trace')
       export default 'traced'
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const options: SandboxOptions = { console: { trace: traceSpy } }
+		const result = await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		}, options)
+
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('traced')
 		expect(traceSpy).toHaveBeenCalled()
@@ -101,15 +120,17 @@ describe('core - console', () => {
 
 	it('console.assert works correctly', async () => {
 		const assertSpy = mock()
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime({ console: { assert: assertSpy } })
 
 		const code = `
       console.assert(false, 'Test assert')
       export default 'asserted'
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const options: SandboxOptions = { console: { assert: assertSpy } }
+		const result = await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		}, options)
+
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('asserted')
 		expect(assertSpy).toHaveBeenCalledWith(false, 'Test assert')
@@ -117,8 +138,6 @@ describe('core - console', () => {
 
 	it('console.count works correctly', async () => {
 		const countSpy = mock()
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime({ console: { count: countSpy } })
 
 		const code = `
       console.count('Test count')
@@ -126,7 +145,11 @@ describe('core - console', () => {
       export default 'counted'
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const options: SandboxOptions = { console: { count: countSpy } }
+		const result = await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		}, options)
+
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('counted')
 		expect(countSpy).toHaveBeenCalledTimes(2)
@@ -134,15 +157,17 @@ describe('core - console', () => {
 
 	it('console.dir works correctly', async () => {
 		const dirSpy = mock()
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime({ console: { dir: dirSpy } })
 
 		const code = `
       console.dir({ key: 'value' })
       export default 'dir'
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const options: SandboxOptions = { console: { dir: dirSpy } }
+		const result = await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		}, options)
+
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('dir')
 		expect(dirSpy).toHaveBeenCalledWith({ key: 'value' })
@@ -151,8 +176,6 @@ describe('core - console', () => {
 	it('console.group works correctly', async () => {
 		const groupSpy = mock()
 		const groupEndSpy = mock()
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime({ console: { group: groupSpy, groupEnd: groupEndSpy } })
 
 		const code = `
       console.group('Test group')
@@ -161,7 +184,11 @@ describe('core - console', () => {
       export default 'grouped'
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const options: SandboxOptions = { console: { group: groupSpy, groupEnd: groupEndSpy } }
+		const result = await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		}, options)
+
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('grouped')
 		expect(groupSpy).toHaveBeenCalledWith('Test group')
@@ -170,18 +197,19 @@ describe('core - console', () => {
 
 	it('console.table works correctly', async () => {
 		const tableSpy = mock()
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime({ console: { table: tableSpy } })
 
 		const code = `
       console.table([{ a: 1, b: 'Y' }, { a: 'Z', b: 2 }])
       export default 'tabled'
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const options: SandboxOptions = { console: { table: tableSpy } }
+		const result = await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		}, options)
+
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('tabled')
-
 		expect(tableSpy).toHaveBeenCalledWith([
 			{ a: 1, b: 'Y' },
 			{ a: 'Z', b: 2 },
@@ -191,8 +219,6 @@ describe('core - console', () => {
 	it('console.time and console.timeEnd work correctly', async () => {
 		const timeSpy = mock()
 		const timeEndSpy = mock()
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime({ console: { time: timeSpy, timeEnd: timeEndSpy } })
 
 		const code = `
       console.time('Test timer')
@@ -200,7 +226,11 @@ describe('core - console', () => {
       export default 'timed'
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const options: SandboxOptions = { console: { time: timeSpy, timeEnd: timeEndSpy } }
+		const result = await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		}, options)
+
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('timed')
 		expect(timeSpy).toHaveBeenCalledWith('Test timer')
@@ -209,15 +239,17 @@ describe('core - console', () => {
 
 	it('console.clear works correctly', async () => {
 		const clearSpy = mock()
-		const { createRuntime } = await quickJS()
-		const { evalCode } = await createRuntime({ console: { clear: clearSpy } })
 
 		const code = `
       console.clear()
       export default 'cleared'
     `
 
-		const result = (await evalCode(code)) as OkResponse
+		const options: SandboxOptions = { console: { clear: clearSpy } }
+		const result = await runtime.runSandboxed(async ({ evalCode }) => {
+			return (await evalCode(code)) as OkResponse
+		}, options)
+
 		expect(result.ok).toBeTrue()
 		expect(result.data).toBe('cleared')
 		expect(clearSpy).toHaveBeenCalled()
