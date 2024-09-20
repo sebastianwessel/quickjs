@@ -1,17 +1,17 @@
 ---
 title: Running tests in the sandbox
-description: A guide for using the TestRunner library to write and run tests for JavaScript code with Chai's `expect` syntax.
+description: A guide for using the test library to write and run tests for JavaScript code with Chai's `expect` syntax.
 ---
 
 
-The TestRunner is a lightweight testing library that allows you to write and run tests for JavaScript code with ease. It provides a simple interface for defining test suites, tests, and hooks with support for asynchronous code and configurable timeouts. The library also includes Chai's `expect` function for assertions.
+The test is a lightweight testing library that allows you to write and run tests for JavaScript code with ease. It provides a simple interface for defining test suites, tests, and hooks with support for asynchronous code and configurable timeouts. The library also includes Chai's `expect` function for assertions.
 
 ### Importing the Library
 
-To use the TestRunner library in your tests, you need to import it. You also need to ensure that the result of `runTests` is exported.
+To use the test library in your tests, you need to import it. You also need to ensure that the result of `runTests` is exported.
 
 ```javascript
-import 'testRunner'
+import 'test'
 ```
 
 ### Writing Tests
@@ -75,7 +75,7 @@ describe('Test Suite with Hooks', () => {
 
 #### Asynchronous Tests and Hooks
 
-The TestRunner supports asynchronous tests and hooks. Simply return a promise or use async/await in your test or hook functions.
+The test supports asynchronous tests and hooks. Simply return a promise or use async/await in your test or hook functions.
 
 ```javascript
 describe('Asynchronous Test Suite', () => {
@@ -94,7 +94,7 @@ describe('Asynchronous Test Suite', () => {
 
 ### Using Chai's `expect`
 
-The TestRunner includes Chai's `expect` function for writing assertions in your tests. The `expect` function is part of Chai's BDD (Behavior-Driven Development) interface. You can learn more about Chai's `expect` function and its usage at the [Chai documentation](https://www.chaijs.com/api/bdd/).
+The test includes Chai's `expect` function for writing assertions in your tests. The `expect` function is part of Chai's BDD (Behavior-Driven Development) interface. You can learn more about Chai's `expect` function and its usage at the [Chai documentation](https://www.chaijs.com/api/bdd/).
 
 #### Examples of `expect` Usage
 
@@ -135,7 +135,7 @@ it('should assert array contents', () => {
 To run the tests, you need to call `runTests` and export the result. You can specify a custom timeout for tests and hooks by passing the timeout value in milliseconds as an argument to `runTests`.
 
 ```javascript
-import 'testRunner'
+import 'test'
 
 describe('Sample Test Suite', () => {
   it('should pass this test', () => {
@@ -155,7 +155,7 @@ export default await runTests();
 You can set a custom timeout for all tests and hooks in the suite by passing the timeout value to `runTests`.
 
 ```javascript
-import 'testRunner'
+import 'test'
 
 describe('Sample Test Suite with Custom Timeout', () => {
   it('should pass this test', () => {
@@ -172,10 +172,10 @@ export default await runTests(10000); // Set timeout to 10 seconds
 
 ### Example Usage
 
-Here is an example demonstrating the complete setup and usage of the TestRunner library.
+Here is an example demonstrating the complete setup and usage of the test library.
 
 ```javascript
-import 'testRunner'
+import 'test'
 
 describe('Example Test Suite', () => {
   beforeAll(() => {
@@ -218,4 +218,4 @@ export default await runTests();
 
 ### Conclusion
 
-The TestRunner library provides a straightforward way to define and run tests for your JavaScript code. With support for asynchronous operations, configurable timeouts, and Chai's `expect` function for assertions, you can ensure that your tests are robust and reliable. Happy testing!
+The test library provides a straightforward way to define and run tests for your JavaScript code. With support for asynchronous operations, configurable timeouts, and Chai's `expect` function for assertions, you can ensure that your tests are robust and reliable. Happy testing!
