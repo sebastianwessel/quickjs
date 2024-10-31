@@ -55,7 +55,7 @@ const { evalCode } = await createRuntime({
 
 
 const result = await evalCode(`
-import { join } as path from 'path'
+import { join } from 'path'
 
 const fn = async ()=>{
   console.log(join('src','dist')) // logs "src/dist" on host system
