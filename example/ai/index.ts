@@ -5,7 +5,9 @@ import { type SandboxOptions, loadQuickJs } from '../../src/index.js'
 const USER_INSTRUCTION = 'I need the content of the title tag from https://purista.dev'
 
 // Set the LLM - here, Ollama with model Qwen 2.5 7b is used
+// biome-ignore lint/complexity/useLiteralKeys: <explanation>
 const OPENAI_API_KEY = process.env['OPENAI_API_KEY'] ?? ''
+// biome-ignore lint/complexity/useLiteralKeys: <explanation>
 const OPENAI_API_BASE = process.env['OPENAI_API_BASE'] ?? 'http://localhost:11434/v1'
 const MODEL = 'qwen2.5-coder:7b' //'gpt-4o'
 
