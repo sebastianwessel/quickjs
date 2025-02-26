@@ -1,9 +1,9 @@
 {
 	"compilerOptions": {
 		"outDir": "dist",
-		"lib": ["ES2020", "DOM", "esnext.disposable"],
 		"target": "ES2022",
-		"module": "node16",
+		"module": "es2022",
+		"moduleResolution": "node",
 		"moduleDetection": "force",
 		"allowJs": true,
 
