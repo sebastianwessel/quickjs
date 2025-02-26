@@ -1,13 +1,15 @@
 .tshy
 .vscode
 .env
+.zed
 node_modules
 docs
-examples
+example
 src
 vendor
 bun*
 biome*
+website
 *.ts
 **/*.test.*
 
