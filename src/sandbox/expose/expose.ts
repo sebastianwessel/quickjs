@@ -84,7 +84,13 @@ export const getHandle = (scope: Scope, ctx: VMContext, name: string, input: unk
 			})
 	}
 	if (typeof input === 'object' || input === null) {
+		if (input instanceof Date) {
+			const x = ctx.evalCode(`new Date(${input.getTime()})`)
+			return x.unwrap()
+		}
+
 		const prototype = Object.getPrototypeOf(input)
+
 		const prototypeHandle =
 			prototype && prototype !== Object.prototype && prototype !== Array.prototype
 				? getHandle(scope, ctx, '', prototype)

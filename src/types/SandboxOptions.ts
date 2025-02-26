@@ -95,6 +95,11 @@ export type SandboxOptions = {
 	 */
 	dangerousSync?: Record<string, unknown>
 	/**
+	 * The Typescript lib to import
+	 * @default typescript
+	 */
+	typescriptImportFile?: string
+	/**
 	 * Transpile all typescript files to javascript file in mountFs
 	 * Requires dependency typescript to be installed
 	 */

@@ -13,7 +13,7 @@ export default function marshalCustom(
 		handle = c(target, ctx)
 		if (handle) break
 	}
-	return handle ? preMarshal(target, handle) ?? handle : undefined
+	return handle ? (preMarshal(target, handle) ?? handle) : undefined
 }
 
 export function symbol(target: unknown, ctx: QuickJSContext): QuickJSHandle | undefined {

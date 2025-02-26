@@ -41,7 +41,11 @@ export const loadQuickJs = async (loadOptions: LoadQuickJsOptions = '@jitl/quick
 		const fs = setupFileSystem(sandboxOptions)
 
 		// TypeScript Support:
-		const { transpileVirtualFs, transpileFile } = await getTypescriptSupport(sandboxOptions.transformTypescript)
+		const { transpileVirtualFs, transpileFile } = await getTypescriptSupport(
+			sandboxOptions.transformTypescript,
+			sandboxOptions.typescriptImportFile,
+			sandboxOptions.transformCompilerOptions,
+		)
 		// if typescript support is enabled, transpile all ts files in file system
 		transpileVirtualFs(fs)
 

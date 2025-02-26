@@ -153,7 +153,7 @@ export function wrapHandle(
 }
 
 export function unwrap<T>(obj: T, key: string | symbol): T {
-	return isObject(obj) ? ((obj as any)[key] as T) ?? obj : obj
+	return isObject(obj) ? (((obj as any)[key] as T) ?? obj) : obj
 }
 
 export function unwrapHandle(ctx: QuickJSContext, handle: QuickJSHandle, key: QuickJSHandle): [QuickJSHandle, boolean] {

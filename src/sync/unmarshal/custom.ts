@@ -13,7 +13,7 @@ export default function unmarshalCustom(
 		obj = c(handle, ctx)
 		if (obj) break
 	}
-	return obj ? preUnmarshal(obj, handle) ?? obj : undefined
+	return obj ? (preUnmarshal(obj, handle) ?? obj) : undefined
 }
 
 export function symbol(handle: QuickJSHandle, ctx: QuickJSContext): symbol | undefined {
