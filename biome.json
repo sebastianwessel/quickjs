@@ -4,7 +4,7 @@
 		"enabled": true
 	},
 	"files": {
-		"ignore": ["dist", "node_modules", ".tshy", "**/build/**"]
+		"ignore": ["dist", "node_modules", ".tshy", "**/build/**", "cookieconsent2.js"]
 	},
 	"linter": {
 		"enabled": true,
