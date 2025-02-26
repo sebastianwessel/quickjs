@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@sebastianwessel/quickjs in browser exmple</title>
+    <title>@sebastianwessel/quickjs in browser example</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
@@ -79,7 +79,7 @@ export default await fn('Hello World')</textarea>
         import { quickJS } from "https://esm.sh/@sebastianwessel/quickjs@1.3.0"
         import "https://esm.sh/typescript"
 
-        const {createRuntime} = await quickJS('https://esm.sh/@jitl/quickjs-wasmfile-release-sync')
+        const { runSandboxed } = await loadQuickJs('https://esm.sh/@jitl/quickjs-wasmfile-release-sync')
 
         const fetchAdapter = async (url,param)=> {
             const res = await fetch(url,{...param,mode:"no-cors"})
@@ -109,7 +109,7 @@ export default await fn('Hello World')</textarea>
             outputElement.innerHTML=''
             consoleElement.innerHTML=''
 
-            const { evalCode } = await createRuntime({
+            const options = {
               allowFetch: true, // inject fetch and allow the code to fetch data
               allowFs: true, // mount a virtual file system and provide node:fs module
               transformTypescript: true, // typescript support
@@ -123,10 +123,14 @@ export default await fn('Hello World')</textarea>
                 warn: (message)=>logMessage('warn text-yellow-500', message),
                 error: (message)=>logMessage('error text-red-500', message),
               }
-            })
+            }
             
             try {
-                const res = await evalCode(code);
+                const res = runSandboxed(async ({ evalCode }) => {
+
+                  return evalCode(code, undefined, options)
+                })
+
                 outputElement.innerHTML = JSON.stringify(res,null,2).replaceAll('\\n','<br>')
             } catch (e) {
                 console.error(e);
