@@ -1,7 +1,7 @@
 ---
 title: Fetch in Guest System
 description: Information about the usage of fetch inside of the QuickJS runtime, security advices and best pratices
-order: 70
+order: 60
 ---
 
 # Fetch in Guest System

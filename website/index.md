@@ -1,6 +1,9 @@
 ---
+
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
+title: QuickJS Sandbox - Execute JavaScript and TypeScript code safe and secure
+
 
 hero:
   name: "QuickJS Sandbox"
@@ -24,9 +27,9 @@ features:
     details: Execute custom code which is provided by users.
     link: /use-cases/user-generated-code
     icon: 👨
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-    link: /use-cases/user-generated-code
-    icon: 📈
+  - title: Unit Tests
+    details: Run simple unit tests
+    link: /use-cases/running-tests
+    icon: 🛠️
 ---
 

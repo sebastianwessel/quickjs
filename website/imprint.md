@@ -29,4 +29,4 @@ Finkenweg 4B,
 63755 Alzenau
 Germany
 
-[mail@purista.dev](mailto:mail@purista.dev)
+[mail@sebastianwessel.de](mailto:mail@sebastianwessel.de)

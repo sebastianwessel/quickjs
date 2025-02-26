@@ -12,21 +12,20 @@ export default defineConfig({
 		['script', { src: '/quickjs/cookieconsent2.js' }],
 		['script', { src: '/quickjs/cookieconsent-init2.js' }],
 
-    ['link', {rel:"apple-touch-icon", sizes:"180x180", href:"/quickjs/apple-touch-icon.png"}],
-    ['link', {rel:"icon", type:"image/png", sizes:"32x32", href:"/quickjs/favicon-32x32.png"}],
-    ['link', {rel:"icon", type:"image/png", sizes:"16x16", href:"/quickjs/favicon-16x16.png"}],
-    ['link', {rel:"manifest", href:"/quickjs/site.webmanifest"}],
-    ['link', {rel:"mask-icon", href:"/quickjs/safari-pinned-tab.svg", color:"#5bbad5"}],
-    ['meta', {name:"msapplication-TileColor", content:"#da532c"}],
-    ['meta', {name:"theme-color", content:"#ffffff"}],
+		['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/quickjs/apple-touch-icon.png' }],
+		['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/quickjs/favicon-32x32.png' }],
+		['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/quickjs/favicon-16x16.png' }],
+		['link', { rel: 'manifest', href: '/quickjs/site.webmanifest' }],
+		['link', { rel: 'mask-icon', href: '/quickjs/safari-pinned-tab.svg', color: '#5bbad5' }],
+		['meta', { name: 'msapplication-TileColor', content: '#da532c' }],
+		['meta', { name: 'theme-color', content: '#ffffff' }],
 
-    ['meta', { property: 'og:type', content: 'website' }],
+		['meta', { property: 'og:type', content: 'website' }],
 		['meta', { property: 'twitter:card', content: 'summary_large_image' }],
 		['meta', { property: 'twitter:site', content: '@swessel78' }],
 		['meta', { property: 'twitter:creator', content: '@swessel78' }],
-
 	],
-	description: 'A typescript package to execute JavaScript and TypeScript code in a webassembly QuickJS sandbox',
+	description: 'A typescript package to execute JavaScript and TypeScript code in a WebAssembly QuickJS sandbox.',
 	sitemap: {
 		hostname,
 	},
@@ -42,10 +41,10 @@ export default defineConfig({
 			'meta',
 			{
 				property: 'og:description',
-				content: pageData.frontmatter.description ?? 'QuickJS sandboy in JavaScript/Typescript',
+				content: pageData.frontmatter.description ?? 'QuickJS sandbox in JavaScript/Typescript',
 			},
 		])
-		
+
 		if (pageData.frontmatter.image) {
 			head.push(['meta', { property: 'og:image', content: new URL(pageData.frontmatter.image, hostname).toString() }])
 		} else {
@@ -111,7 +110,7 @@ export default defineConfig({
 					useFolderTitleFromIndexFile: true,
 					useFolderLinkFromIndexFile: true,
 					sortMenusByFrontmatterOrder: true,
-					includeRootIndexFile: true,
+					includeRootIndexFile: false,
 					includeEmptyFolder: true,
 					capitalizeEachWords: true,
 					collapseDepth: 1,

@@ -1,7 +1,7 @@
 ---
-title: Running tests in the sandbox
+title: Test Runner
 description: A guide for using the TestRunner library to write and run tests for JavaScript code with Chai's `expect` syntax.
-order: 50
+order: 80
 ---
 
 # Running tests in the sandbox

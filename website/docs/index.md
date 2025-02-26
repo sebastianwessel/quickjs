@@ -65,10 +65,21 @@ const fn = async ()=>{
 export default await fn()
 `
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
+const result = await runSandboxed(async ({ evalCode }) => {
+  return evalCode(code, undefined, options), options
+  })
 
-console.log(result) // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
+console.log(result)
+// { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
 ```
+
+### Cloudflare Workers
+
+Cloudflare workers have some limitations regarding bundling. The developers of the underlaying quickjs-emscripten library, already solved this.
+
+[github.com/justjake/quickjs-emscripten/tree/main/examples/cloudflare-workers](https://github.com/justjake/quickjs-emscripten/tree/main/examples/cloudflare-workers)
+
+This library will be aligned soon, to support cloudflare as well.
 
 ## Usage in Browser
 
@@ -87,16 +98,12 @@ Using `fetch`is possible, but there are the same restrictions as in any other br
   const { runSandboxed } = await loadQuickJs('https://esm.sh/@jitl/quickjs-wasmfile-release-sync')
 
   const options = {
+    // [...]
   }
 
-  console.log( await runSandboxed(async ({ evalCode }) => evalCode("export default 1+1")))
+  console.log( await runSandboxed(async ({ evalCode }) => {
+    return evalCode("export default 1+1")
+    })
+  )
 </script>
 ```
-
-## Cloudflare Workers
-
-Cloudflare workers have some limitations regarding bundling. The developers of the underlaying quickjs-emscripten library, already solved this.
-
-[github.com/justjake/quickjs-emscripten/tree/main/examples/cloudflare-workers](https://github.com/justjake/quickjs-emscripten/tree/main/examples/cloudflare-workers)
-
-This library will be aligned soon, to support cloudflare as well.
