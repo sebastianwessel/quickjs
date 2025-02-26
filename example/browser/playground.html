@@ -20,7 +20,7 @@
         <div class="flex-1">
             <textarea id="code" class="h-full w-full">import { readFileSync, writeFileSync } from 'node:fs'
 console.info('Starting...')
-const fn = async (value: string)=> {
+const fn = async (value)=> {
   console.debug(value)
   writeFileSync('./text.txt', value)
   return readFileSync('./text.txt')
@@ -76,13 +76,14 @@ export default await fn('Hello World')</textarea>
         }
       
 // =========== QuickJS =====================
-        import { quickJS } from "https://esm.sh/@sebastianwessel/quickjs@1.3.0"
+        import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@2.0.0-0"
         import "https://esm.sh/typescript"
 
         const { runSandboxed } = await loadQuickJs('https://esm.sh/@jitl/quickjs-wasmfile-release-sync')
 
         const fetchAdapter = async (url,param)=> {
-            const res = await fetch(url,{...param,mode:"no-cors"})
+            const res = await fetch(url,{...param})
+            console.log(res)
             return {
               status: res.status,
               ok: res.ok,
@@ -112,7 +113,6 @@ export default await fn('Hello World')</textarea>
             const options = {
               allowFetch: true, // inject fetch and allow the code to fetch data
               allowFs: true, // mount a virtual file system and provide node:fs module
-              transformTypescript: true, // typescript support
               fetchAdapter, // browser-fetch
               env: {
                 MY_ENV_VAR: 'env var value',
@@ -126,10 +126,9 @@ export default await fn('Hello World')</textarea>
             }
             
             try {
-                const res = runSandboxed(async ({ evalCode }) => {
-
-                  return evalCode(code, undefined, options)
-                })
+                const res = await runSandboxed(async ({ evalCode }) => {
+                  return evalCode(code)
+                },options)
 
                 outputElement.innerHTML = JSON.stringify(res,null,2).replaceAll('\\n','<br>')
             } catch (e) {
