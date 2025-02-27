@@ -43,6 +43,7 @@
 		"lint:fix": "bunx @biomejs/biome check --write",
 		"postpublish": "bunx jsr publish",
 		"example:ai": "bun example/ai/index.ts",
+		"example:async": "bun example/async/index.ts",
 		"example:basic": "bun example/basic/index.ts",
 		"example:function": "bun example/function-call/index.ts",
 		"example:server": "bun example/server/server.ts",
