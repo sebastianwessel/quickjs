@@ -143,7 +143,7 @@ export default defineConfig({
 		footer: {
 			message: 'Made from developers for developers with ❤️',
 			copyright:
-				'<a href="/quickjs/credits.html">Credits</a> | <a href="javascript:cc.showSettings()">Cookie preferences</a> | <a href="/quickjs/imprint.html">Imprint</a>',
+				'<a href="/quickjs/docs/credits.html">Credits</a> | <a href="javascript:cc.showSettings()">Cookie preferences</a> | <a href="/quickjs/imprint.html">Imprint</a>',
 		},
 	},
 })

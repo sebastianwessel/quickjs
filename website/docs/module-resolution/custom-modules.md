@@ -1,47 +1,20 @@
 ---
-title: Using Modules
+title: Custom Modules
 description: Learn, how you can provide your own custom node modules to the QuickJS runtime
-order: 40
+order: 4040
 ---
 
-# Using Modules
-
-JavaScript and Typescript code often relies on modules, which provide functionality. In general, it is possible to use modules in a regular manner by using the `import` statement.
-
-This library comes with a set of modules, which are intend to be Node.js API compatible as much as possible. But there is no 100% compatibility. Especially, not the full set of modules is available. Please see [Node Compatibility](./node-compatibility.md) for more information.
-
-## Module Loader
-
-The standard runtime does not support module loading in an asynchronous manner. This means, in the module loader, asynchronous functions like `fetch` are not available.
-
-This means, usage of dynamic imports during the runtime - eg. from [esm.sh](https://esm.sh/) or similar - are not possible.
-
-Furthermore, the standard module loader is a simple implementation, which reads the modules, which needed to be loaded into the virtual file system..
-
-### Limitations
-
-- Modules do not have access to native functions.
-- Modules must be plain JavaScript.
-- Relative imports within one module are not supported (though they can still import other modules).
-- `package.json` file is not used:
-  - Finding the root file via a package.json is not supported.
-  - Module (sub-)dependencies are not automatically installed/handled
-  - Modules with multiple exports in `package.json` must be handled manually
-- Only a small subset of Node.js core modules is available, so not every module will work out of the box.
-
-All this means, modules must be present upfront. Also, the module file structure must be simple.
-
-## Custom Node Modules
+# Custom Node Modules
 
 This library allows the use of custom Node.js packages within the QuickJS runtime. Node modules are loaded into a virtual file system, which is then exposed to the client system. This ensures complete isolation from the underlying host system.
 
-### Preparing a Custom Module
+## Preparing a Custom Module
 
 To work around some of these limitations, the custom Node.js module should be a single ESM file, including all dependencies (except Node.js core modules).
 
 Tools like [Bun](https://bun.sh) and [esbuild](https://esbuild.github.io) make this process easy for many modules.
 
-#### Bun
+### Bun
 
 Bun is used in the development of this library. Working examples are available in the repository.
 
@@ -76,7 +49,7 @@ Build the custom module file with `bun ./build.ts`. The generated file should be
 
 For more information, visit the [official Bun website](https://bun.sh/docs/bundler).
 
-#### Esbuild
+### Esbuild
 
 Using esbuild works similarly to Bun. An entry file is required, and a config file is recommended.
 
@@ -97,7 +70,7 @@ Build the custom module file with `node ./build.mjs`. The generated file should 
 
 For more information, visit the [official esbuild website](https://esbuild.github.io/getting-started/).
 
-### Using a Custom Module
+## Using a Custom Module
 
 A virtual file system is used to provide Node.js modules to the client system. To provide custom modules, a nested structure is used.
 

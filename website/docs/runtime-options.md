@@ -4,97 +4,108 @@ description: The QuickJS sandbox provides a wide range of options to align the r
 order: 40
 ---
 
-## Type Definition
+# QuickJS Sandbox Options
 
-```typescript
-type RuntimeOptions = {
-  /**
-   * The maximum time in seconds a script can run.
-   * Unset or set to 0 for unlimited execution time.
-   */
-  executionTimeout?: number;
+The **QuickJS Sandbox** provides a secure, configurable environment for executing JavaScript and TypeScript code. The sandbox supports both **synchronous** and **asynchronous** WebAssembly execution, with various options for resource limits, virtual file systems, networking, logging, and more.
 
-  /**
-   * Mount a virtual file system
-   * @link https://github.com/streamich/memfs
-   */
-  mountFs?: DirectoryJSON;
+## ⚙️ Base Options
 
-  /**
-   * Mount custom node_modules in a virtual file system
-   * @link https://github.com/streamich/memfs
-   */
-  nodeModules?: DirectoryJSON;
+These options apply to both synchronous and asynchronous sandbox instances.
 
-  /**
-   * Enable file capabilities
-   * If enabled, the package node:fs becomes available
-   */
-  allowFs?: boolean;
+### ⏳ Execution Limits
 
-  /**
-   * Allow code to make http(s) calls.
-   * When enabled, the global fetch will be available
-   */
-  allowFetch?: boolean;
+| Option | Type | Description |
+|--------|------|-------------|
+| `executionTimeout` | `number` | Maximum script execution time (in seconds). Set to `0` for unlimited. |
+| `maxStackSize` | `number` | Maximum stack size (in bytes). Set to `0` to disable the limit. |
+| `memoryLimit` | `number` | Maximum memory allocation. Set to `-1` to remove the limit. |
 
-  /**
-  * The custom fetch adapter provided as host function in the QuickJS runtime
-  */
-  fetchAdapter?: typeof fetch
+### 📂 Virtual File System
 
-  /**
-   * Includes test framework
-   * If enabled, the packages chai and mocha become available
-   * They are registered global
-   */
-  enableTestUtils?: boolean;
+| Option | Type | Description |
+|--------|------|-------------|
+| `mountFs` | `NestedDirectoryJSON | IFs` | Mounts a virtual file system using [memfs](https://github.com/streamich/memfs). |
+| `nodeModules` | `NestedDirectoryJSON` | Mounts custom `node_modules` in the virtual file system. |
 
-  /**
-   * Per default, the console log inside of QuickJS is passed to the host console log.
-   * Here, you can customize the handling and provide your own logging methods.
-   */
-  console?: {
-    log?: (message?: unknown, ...optionalParams: unknown[]) => void;
-    error?: (message?: unknown, ...optionalParams: unknown[]) => void;
-    warn?: (message?: unknown, ...optionalParams: unknown[]) => void;
-    info?: (message?: unknown, ...optionalParams: unknown[]) => void;
-    debug?: (message?: unknown, ...optionalParams: unknown[]) => void;
-    trace?: (message?: unknown, ...optionalParams: unknown[]) => void;
-    assert?: (condition?: boolean, ...data: unknown[]) => void;
-    count?: (label?: string) => void;
-    countReset?: (label?: string) => void;
-    dir?: (item?: unknown, options?: object) => void;
-    dirxml?: (...data: unknown[]) => void;
-    group?: (...label: unknown[]) => void;
-    groupCollapsed?: (...label: unknown[]) => void;
-    groupEnd?: () => void;
-    table?: (tabularData?: unknown, properties?: string[]) => void;
-    time?: (label?: string) => void;
-    timeEnd?: (label?: string) => void;
-    timeLog?: (label?: string, ...data: unknown[]) => void;
-    clear?: () => void;
-  };
+### 📄 File System Access
 
-  /**
-   * Key-value list of ENV vars, which should be available in QuickJS
-   *
-   * @example
-   * ```js
-   * // in config
-   * {
-   *   env: {
-   *     My_ENV: 'my var'
-   *   }
-   * }
-   *
-   * // inside of QuickJS
-   * console.log(env.My_ENV) // outputs: my var
-   * ```
-   */
-  env?: Record<string, unknown>;
+| Option | Type | Description |
+|--------|------|-------------|
+| `allowFs` | `boolean` | Enables file system access (`node:fs`). |
+
+### 🌐 Networking
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `allowFetch` | `boolean` | Enables `fetch` for making HTTP(S) calls. |
+| `fetchAdapter` | `typeof fetch` | Custom fetch adapter provided as a host function. |
+
+### 🛠️ Testing Utilities
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `enableTestUtils` | `boolean` | Enables test frameworks (`chai` & `mocha`). |
+
+### 📢 Console Customization
+
+You can override console methods for custom logging behavior.
+
+```ts
+console: {
+  log?: (message?: unknown, ...params: unknown[]) => void;
+  error?: (message?: unknown, ...params: unknown[]) => void;
+  warn?: (message?: unknown, ...params: unknown[]) => void;
+  info?: (message?: unknown, ...params: unknown[]) => void;
+  debug?: (message?: unknown, ...params: unknown[]) => void;
 }
 ```
+
+### 🛑 Environment & Syncing
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `env` | `Record<string, unknown>` | Defines environment variables available inside QuickJS. |
+| `dangerousSync` | `Record<string, unknown>` | Syncs data between host & guest (⚠️ can be modified by guest). |
+
+### 📝 TypeScript Support
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `typescriptImportFile` | `string` | TypeScript library to import (default: `typescript`). |
+| `transformTypescript` | `boolean` | Transpiles TypeScript files to JavaScript in `mountFs`. |
+| `transformCompilerOptions` | `TS.CompilerOptions` | TypeScript compiler options. |
+
+### ⏲️ Timer Limits
+
+To prevent abuse, the number of running `setTimeout` and `setInterval` calls is restricted.
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `maxTimeoutCount` | `number` | Max concurrent timeouts (default: `100`). |
+| `maxIntervalCount` | `number` | Max concurrent intervals (default: `100`). |
+
+---
+
+## 🏗️ Module Handling
+
+Both **synchronous** and **asynchronous** QuickJS sandboxes allow customizing module loading.
+
+### 📦 Synchronous Module Options (`SandboxOptions`)
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `getModuleLoader` | `(fs: IFs, options: RuntimeOptions) => JSModuleLoader` | Custom module loader. |
+| `modulePathNormalizer` | `JSModuleNormalizer` | Transforms module paths before loading. |
+
+### 🌍 Asynchronous Module Options (`SandboxAsyncOptions`)
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `getModuleLoader` | `(fs: IFs, options: RuntimeOptions) => JSModuleLoaderAsync` | Custom module loader. |
+| `modulePathNormalizer` | `JSModuleNormalizerAsync` | Transforms module paths before loading. |
+
+🔗 **More info:** See [github.com/justjake/quickjs-emscripten](https://github.com/justjake/quickjs-emscripten?tab=readme-ov-file#asyncify) for details on asynchronous execution.
+
 
 ## Example Usage
 
@@ -145,5 +156,3 @@ const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefin
 
 console.log(result); // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
 ```
-
-This example demonstrates how to set up and use the `createRuntime` method with various runtime options, including environment variables, file system access, and HTTP fetch capabilities. Custom console methods are also provided to tailor the logging output.

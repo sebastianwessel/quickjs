@@ -160,7 +160,7 @@ console.log(resultSandbox)
 
 ## Adding Memory
 
-In our usecase, it might be a good idea to have some kind of memory. This allows the user to implement debouncing functionality.
+In our use case, it might be a good idea to have some kind of memory. This allows the user to implement debouncing functionality.
 
 A function which is executed in the QuickJS sandbox should be seen as a stateless function, similar to a serverless function in some cloud environment.
 This means the host is responsible to handle the state management. This can be done with some kind of database to persist the state.
@@ -188,3 +188,5 @@ const options: SandboxOptions = {
 ```
 
 In the guest system, these functions are available in the `env`
+
+## Conclusion

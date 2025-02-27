@@ -59,7 +59,7 @@ The import can be changed in the [Runtime Options](./runtime-options.md) via the
 
 ## Compiler Options
 
-For most usecases, the default compiler options should fit the requirements.
+For most use cases, the default compiler options should fit the requirements.
 
 ```ts
 const compilerOptions: TS.CompilerOptions = {

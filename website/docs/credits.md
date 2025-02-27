@@ -1,11 +1,18 @@
+---
+title: Credits
+description: Credits to other projects
+order: 90000
+---
+
 # Credits
 
-This lib is based on:
+This lib is mainly based on:
 
+- [QuickJS](https://bellard.org/quickjs/)
 - [quickjs-emscripten](https://github.com/justjake/quickjs-emscripten)
-- [quickjs-emscripten-sync](https://github.com/reearth/quickjs-emscripten-sync)
 - [memfs](https://github.com/streamich/memfs)
 - [Chai](https://www.chaijs.com)
+- [node-rate-limiter-flexible](github.com/animir/node-rate-limiter-flexible)
 
 Tools used:
 

@@ -8,20 +8,21 @@ hero:
   name: "Use Cases"
   text: "A closer look at how QuickJS can be used in different scenarios."
   tagline: Choose a use case to learn more.
+  image: /logo.png
   
 
 features:
-  - title: AI Generated Code
+  - title: Execute AI Generated Code
     details: Execute AI generated code in a sandboxed environment.
     link: /use-cases/ai-generated-code
     icon: 🤖
-  - title: User Provided Code
+  - title: Execute User Provided Code
     details: Execute custom code which is provided by users.
     link: /use-cases/user-generated-code
     icon: 👨
-  - title: Running Tests
-    details: Run simple unit tests
-    link: /use-cases/running-tests
-    icon: 🛠️
+  - title: Serverside Rendering
+    details: Render HTML in a secure sandbox
+    link: /use-cases/serverside-rendering
+    icon: 👨‍🎨
 ---
 

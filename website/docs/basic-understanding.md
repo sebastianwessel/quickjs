@@ -14,7 +14,7 @@ As the QuickJS sandbox is running via WebAssembly, the JavaScript eventloop gets
 
 ## Synchronous Execution
 
-### Blocking the JavaScript Event Loop
+### 🚫 Blocking the JavaScript Event Loop
 
 When the `evalCode` method is called on the host, the event loop of the host system is blocked until the method returns.
 
@@ -44,14 +44,16 @@ const result = await runSandboxed(async ({ evalCode }) => evalCode(code))
 
 You might expect that this code does not block the host system, but it does, even with `await evalCode`. The host system must wait for the guest system to return a value. In this example, the value is never returned because of the endless while-loop.
 
-### Setting Execution Timeouts
+### ⏳ Setting Execution Timeouts
 
 **❗ Set Execution Timeouts if Possible**  
 It is highly recommended to set a default timeout value to avoid blocking the host system indefinitely. The execution timeout can be set in the options of `createRuntime` and `evalCode`. The smaller value between the two functions will be chosen. Setting the `executionTimeout` to `0` or `undefined` disables the execution timeout.
 
 Timeout values are in seconds for better readability.
 
-### Workers and Threads
+**Please see: [Runtime Options - Execution Limits](./runtime-options.md)**
+
+### 👷 Workers and Threads
 
 It is **highly recommended** to run the guest system in separate workers or threads rather than the main thread. This approach has several critical benefits:
 

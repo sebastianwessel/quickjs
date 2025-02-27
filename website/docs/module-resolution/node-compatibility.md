@@ -20,7 +20,7 @@ This library tries to provide basic support for most common used Node.js modules
 | `dgram`          | ❌        | Provides implementation of UDP datagram sockets               |
 | `dns`            | ❌         | Provides DNS lookups and name resolution functions            |
 | `domain`         | ❌         | Simplified handling of uncaught exceptions                    |
-| `events`         | ❌         | Provides an event-driven programming model                    |
+| `events`         | ✅         | Provides an event-driven programming model                    |
 | `fs`             | ✅        | Provides an API for interacting with the file system          |
 | `http`           | ❌        | Provides HTTP server and client functionality                 |
 | `http2`          | ❌        | Provides HTTP/2 server and client functionality               |
@@ -218,3 +218,7 @@ Here are the supported `util.types` methods:
 | isUint32Array          | ✅        |
 | isWeakMap              | ✅        |
 | isWeakSet              | ✅        |
+
+## node:events
+
+A copy of [eventemitter3](https://github.com/primus/eventemitter3) is used.

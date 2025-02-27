@@ -12,10 +12,10 @@ hero:
   image: /logo.png
   actions:
     - theme: brand
-      text: Documentation
+      text: 📒 Documentation
       link: /docs
     - theme: alt
-      text: Use Cases
+      text: 🔥 Use Cases
       link: /use-cases
 
 features:
@@ -27,9 +27,9 @@ features:
     details: Execute custom code which is provided by users.
     link: /use-cases/user-generated-code
     icon: 👨
-  - title: Unit Tests
-    details: Run simple unit tests
-    link: /use-cases/running-tests
-    icon: 🛠️
+  - title: Serverside Rendering
+    details: Render HTML in a secure sandbox
+    link: /use-cases/serverside-rendering
+    icon: 👨‍🎨
 ---
 
