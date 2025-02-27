@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { type NestedDirectoryJSON, memfs } from 'memfs'
 import assertModule from './modules/assert.js'
 import bufferModule from './modules/buffer.js'
+import eventModule from './modules/events.js'
 import fsModule from './modules/fs.js'
 import fsPromisesModule from './modules/fs_promises.js'
 import moduleModule from './modules/module.js'
@@ -48,35 +49,36 @@ export const createVirtualFileSystem = (runtimeOptions: RuntimeOptions = {}) => 
 				assert: {
 					'index.js': assertModule,
 				},
+
 				async_hooks: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module async_hooks not implemented')",
 				},
 				buffer: {
 					'index.js': bufferModule,
 				},
 				child_process: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module child_process not implemented')",
 				},
 				cluster: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module cluster not implemented')",
 				},
 				console: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module console not implemented')",
 				},
 				crypto: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module crypto not implemented')",
 				},
 				dgram: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module dgram not implemented')",
 				},
 				dns: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module dns not implemented')",
 				},
 				domain: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module domain not implemented')",
 				},
 				events: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': eventModule,
 				},
 				fs: {
 					'index.js': fsModule,
@@ -85,31 +87,31 @@ export const createVirtualFileSystem = (runtimeOptions: RuntimeOptions = {}) => 
 					},
 				},
 				http: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module http not implemented')",
 				},
 				http2: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module http2 not implemented')",
 				},
 				https: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module https not implemented')",
 				},
 				inspector: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module inspector not implemented')",
 				},
 				module: {
 					'index.js': moduleModule,
 				},
 				net: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module net not implemented')",
 				},
 				os: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module os not implemented')",
 				},
 				path: {
 					'index.js': pathModule,
 				},
 				perf_hooks: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module perf_hooks not implemented')",
 				},
 				process: {
 					'index.js': processModule,
@@ -121,13 +123,13 @@ export const createVirtualFileSystem = (runtimeOptions: RuntimeOptions = {}) => 
 					'index.js': queryStringModule,
 				},
 				readline: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module readline not implemented')",
 				},
 				repl: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module repl not implemented')",
 				},
 				stream: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module stream not implemented')",
 				},
 				string_decoder: {
 					'index.js': stringDecoderModule,
@@ -139,13 +141,13 @@ export const createVirtualFileSystem = (runtimeOptions: RuntimeOptions = {}) => 
 					},
 				},
 				tls: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module tls not implemented')",
 				},
 				trace_events: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module trace_events not implemented')",
 				},
 				tty: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module tty not implemented')",
 				},
 				url: {
 					'index.js': urlModule,
@@ -154,16 +156,16 @@ export const createVirtualFileSystem = (runtimeOptions: RuntimeOptions = {}) => 
 					'index.js': utilModule,
 				},
 				v8: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module v8 not implemented')",
 				},
 				vm: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module vm not implemented')",
 				},
 				worker_threads: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module worker_threads not implemented')",
 				},
 				zlib: {
-					'index.js': "throw new Error('Not implemented')",
+					'index.js': "throw new Error('module zlib not implemented')",
 				},
 			},
 		},
