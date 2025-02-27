@@ -1,7 +1,7 @@
-import type { SandboxOptions } from '../types/SandboxOptions.js'
+import type { SandboxBaseOptions } from '../types/SandboxOptions.js'
 
 export const getMaxTimeout = (
-	runtimeOptions: SandboxOptions,
+	runtimeOptions: SandboxBaseOptions,
 	evalOptions?: { executionTimeout?: number },
 ): number | undefined => {
 	let maxTimeout: number | undefined

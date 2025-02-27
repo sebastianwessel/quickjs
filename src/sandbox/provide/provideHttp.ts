@@ -1,15 +1,14 @@
 import type { IFs } from 'memfs'
-import type { Scope } from 'quickjs-emscripten-core'
+import type { QuickJSAsyncContext, QuickJSContext, Scope } from 'quickjs-emscripten-core'
 import { getDefaultFetchAdapter } from '../../adapter/fetch.js'
 import type { RuntimeOptions } from '../../types/RuntimeOptions.js'
-import type { VMContext } from '../../types/VMContext.js'
 import { expose } from '../expose/expose.js'
 
 /**
  * Provide http related functions
  */
 export const provideHttp = (
-	ctx: VMContext,
+	ctx: QuickJSContext | QuickJSAsyncContext,
 	scope: Scope,
 	options: RuntimeOptions,
 	input?: { fs?: IFs | undefined },

@@ -1,10 +1,14 @@
-import { type QuickJSHandle, Scope } from 'quickjs-emscripten-core'
-import type { VMContext } from '../../types/VMContext.js'
+import { type QuickJSAsyncContext, type QuickJSContext, type QuickJSHandle, Scope } from 'quickjs-emscripten-core'
 import { handleToNative } from '../handleToNative/handleToNative.js'
 import { isES2015Class } from './isES2015Class.js'
 import { isObject } from './isObject.js'
 
-export const getHandle = (scope: Scope, ctx: VMContext, name: string, input: unknown): QuickJSHandle => {
+export const getHandle = (
+	scope: Scope,
+	ctx: QuickJSContext | QuickJSAsyncContext,
+	name: string,
+	input: unknown,
+): QuickJSHandle => {
 	// null
 	if (input === null) {
 		return ctx.null
@@ -107,8 +111,13 @@ export const getHandle = (scope: Scope, ctx: VMContext, name: string, input: unk
 	throw new Error(`unsupported data type in ${name} ${typeof input}`)
 }
 
-// biome-ignore lint/complexity/noBannedTypes: <explanation>
-const setProperties = (ctx: VMContext, scope: Scope, input: object | Function, parent: QuickJSHandle) => {
+const setProperties = (
+	ctx: QuickJSContext | QuickJSAsyncContext,
+	scope: Scope,
+	// biome-ignore lint/complexity/noBannedTypes: <explanation>
+	input: object | Function,
+	parent: QuickJSHandle,
+) => {
 	const descs = ctx.newObject()
 
 	const setEntry = (key: string | number | symbol, desc: PropertyDescriptor) => {
@@ -150,12 +159,23 @@ const setProperties = (ctx: VMContext, scope: Scope, input: object | Function, p
 	descs.dispose()
 }
 
-const addProp = (scope: Scope, ctx: VMContext, parent: QuickJSHandle, name: string, value) => {
+const addProp = (
+	scope: Scope,
+	ctx: QuickJSContext | QuickJSAsyncContext,
+	parent: QuickJSHandle,
+	name: string,
+	value,
+) => {
 	const handle = scope.manage(getHandle(scope, ctx, name, value))
 	ctx.setProp(parent, name, handle)
 }
 
-export const expose = (ctx: VMContext, _parentScope: Scope, input: Record<string, unknown>, parent?: QuickJSHandle) => {
+export const expose = (
+	ctx: QuickJSContext | QuickJSAsyncContext,
+	_parentScope: Scope,
+	input: Record<string, unknown>,
+	parent?: QuickJSHandle,
+) => {
 	const scope = new Scope()
 	for (const [key, value] of Object.entries(input)) {
 		addProp(scope, ctx, parent ?? ctx.global, key, value)

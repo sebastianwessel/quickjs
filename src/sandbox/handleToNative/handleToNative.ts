@@ -1,5 +1,10 @@
-import { type JSPromiseState, type QuickJSHandle, Scope } from 'quickjs-emscripten-core'
-import type { VMContext } from '../../types/VMContext.js'
+import {
+	type JSPromiseState,
+	type QuickJSAsyncContext,
+	type QuickJSContext,
+	type QuickJSHandle,
+	Scope,
+} from 'quickjs-emscripten-core'
 import { getHandle } from '../expose/expose.js'
 import { call } from '../helper.js'
 import { getSerializer } from './serializer/index.js'
@@ -11,7 +16,7 @@ import { getSerializer } from './serializer/index.js'
  * @param handle The QuickJS handle to serialize
  * @returns
  */
-export const handleToNative = (ctx: VMContext, handle: QuickJSHandle, rootScope?: Scope) => {
+export const handleToNative = (ctx: QuickJSContext | QuickJSAsyncContext, handle: QuickJSHandle, rootScope?: Scope) => {
 	const ty = ctx.typeof(handle)
 
 	if (ty === 'undefined') {

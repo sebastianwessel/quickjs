@@ -1,8 +1,7 @@
-import type { QuickJSHandle } from 'quickjs-emscripten-core'
-import type { VMContext } from '../types/VMContext.js'
+import type { QuickJSAsyncContext, QuickJSContext, QuickJSHandle } from 'quickjs-emscripten-core'
 
 export const call = (
-	ctx: VMContext,
+	ctx: QuickJSContext | QuickJSAsyncContext,
 	fileName: string,
 	code: string,
 	that: QuickJSHandle | undefined,

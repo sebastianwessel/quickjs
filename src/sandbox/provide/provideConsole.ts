@@ -1,12 +1,11 @@
-import type { Scope } from 'quickjs-emscripten-core'
+import type { QuickJSAsyncContext, QuickJSContext, Scope } from 'quickjs-emscripten-core'
 import type { RuntimeOptions } from '../../types/RuntimeOptions.js'
-import type { VMContext } from '../../types/VMContext.js'
 import { expose } from '../expose/expose.js'
 
 /**
  * Provide all Node.js console methods
  */
-export const provideConsole = (ctx: VMContext, scope: Scope, options: RuntimeOptions) => {
+export const provideConsole = (ctx: QuickJSContext | QuickJSAsyncContext, scope: Scope, options: RuntimeOptions) => {
 	const logger = {
 		log: (...params) => console.log(...params),
 		error: (...params) => console.error(...params),

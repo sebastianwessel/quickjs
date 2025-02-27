@@ -1,10 +1,14 @@
 import type { IFs } from 'memfs'
-import type { Scope } from 'quickjs-emscripten-core'
+import type { QuickJSAsyncContext, QuickJSContext, Scope } from 'quickjs-emscripten-core'
 import type { RuntimeOptions } from '../../types/RuntimeOptions.js'
-import type { VMContext } from '../../types/VMContext.js'
 import { expose } from '../expose/expose.js'
 
-export const provideFs = (ctx: VMContext, scope: Scope, runtimeOptions: RuntimeOptions, fs: IFs) => {
+export const provideFs = (
+	ctx: QuickJSContext | QuickJSAsyncContext,
+	scope: Scope,
+	runtimeOptions: RuntimeOptions,
+	fs: IFs,
+) => {
 	const disabledFn = <P extends unknown[], R>(..._params: P): R => {
 		throw new Error('File access is disabled')
 	}

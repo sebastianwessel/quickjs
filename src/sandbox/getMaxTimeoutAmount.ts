@@ -1,6 +1,6 @@
-import type { SandboxOptions } from '../index.js'
+import type { SandboxBaseOptions } from '../index.js'
 
-export const getMaxTimeoutAmount = (runtimeOptions: SandboxOptions) => {
+export const getMaxTimeoutAmount = (runtimeOptions: SandboxBaseOptions) => {
 	if (!runtimeOptions.maxTimeoutCount || runtimeOptions.maxTimeoutCount <= 0) {
 		return 10
 	}

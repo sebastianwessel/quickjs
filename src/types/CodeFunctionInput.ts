@@ -1,8 +1,14 @@
-import type { SandboxOptions } from './SandboxOptions.js'
-import type { VMContext } from './VMContext.js'
+import type { QuickJSAsyncContext, QuickJSContext } from 'quickjs-emscripten-core'
+import type { SandboxAsyncOptions, SandboxOptions } from './SandboxOptions.js'
 
 export type CodeFunctionInput = {
-	ctx: VMContext
+	ctx: QuickJSContext
 	sandboxOptions: SandboxOptions
+	transpileFile: (input: string) => string
+}
+
+export type CodeFunctionAsyncInput = {
+	ctx: QuickJSAsyncContext
+	sandboxOptions: SandboxAsyncOptions
 	transpileFile: (input: string) => string
 }

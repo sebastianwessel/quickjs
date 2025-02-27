@@ -1,4 +1,3 @@
-import type { QuickJSHandle } from 'quickjs-emscripten-core'
-import type { VMContext } from './VMContext.js'
+import type { QuickJSContext, QuickJSHandle } from 'quickjs-emscripten-core'
 
-export type Serializer = (ctx: VMContext, handle: QuickJSHandle) => any
+export type Serializer = (ctx: QuickJSContext, handle: QuickJSHandle) => any

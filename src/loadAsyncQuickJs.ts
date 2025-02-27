@@ -1,25 +1,27 @@
 import { Scope } from 'quickjs-emscripten-core'
 import { getTypescriptSupport } from './getTypescriptSupport.js'
 import { modulePathNormalizer } from './modulePathNormalizer.js'
-import { getModuleLoader } from './sandbox/syncVersion/getModuleLoader.js'
+import { getAsyncModuleLoader } from './sandbox/asyncVersion/getAsyncModuleLoader.js'
 
+import { executeAsyncSandboxFunction } from './sandbox/asyncVersion/executeAsyncSandboxFunction.js'
+import { prepareAsyncNodeCompatibility } from './sandbox/asyncVersion/prepareAsyncNodeCompatibility.js'
+import { prepareAsyncSandbox } from './sandbox/asyncVersion/prepareAsyncSandbox.js'
+import { loadAsyncWasmModule } from './sandbox/loadAsyncWasmModule.js'
 import { setupFileSystem } from './sandbox/setupFileSystem.js'
-import { executeSandboxFunction } from './sandbox/syncVersion/executeSandboxFunction.js'
-import { prepareNodeCompatibility } from './sandbox/syncVersion/prepareNodeCompatibility.js'
-import { prepareSandbox } from './sandbox/syncVersion/prepareSandbox.js'
-import type { LoadQuickJsOptions } from './types/LoadQuickJsOptions.js'
+import type { LoadAsyncQuickJsOptions } from './types/LoadQuickJsOptions.js'
 
-import { loadWasmModule } from './sandbox/syncVersion/loadWasmModule.js'
-import type { SandboxFunction } from './types/SandboxFunction.js'
-import type { SandboxOptions } from './types/SandboxOptions.js'
+import type { AsyncSandboxFunction } from './types/SandboxFunction.js'
+import type { SandboxAsyncOptions } from './types/SandboxOptions.js'
 
 /**
- * Loads the QuickJS module and returns a sandbox execution function.
- * @param loadOptions - Options for loading the QuickJS module. Defaults to '@jitl/quickjs-ng-wasmfile-release-sync'.
+ * Loads the QuickJS async module and returns a sandbox execution function.
+ * @param loadOptions - Options for loading the QuickJS module. Defaults to '@jitl/quickjs-ng-wasmfile-release-asyncify'.
  * @returns An object containing the runSandboxed function and the loaded module.
  */
-export const loadQuickJs = async (loadOptions: LoadQuickJsOptions = '@jitl/quickjs-ng-wasmfile-release-sync') => {
-	const module = await loadWasmModule(loadOptions)
+export const loadAsyncQuickJs = async (
+	loadOptions: LoadAsyncQuickJsOptions = '@jitl/quickjs-ng-wasmfile-release-asyncify',
+) => {
+	const module = await loadAsyncWasmModule(loadOptions)
 
 	/**
 	 * Provides a new sandbox and executes the given function.
@@ -30,8 +32,8 @@ export const loadQuickJs = async (loadOptions: LoadQuickJsOptions = '@jitl/quick
 	 * @returns
 	 */
 	const runSandboxed = async <T>(
-		sandboxedFunction: SandboxFunction<T>,
-		sandboxOptions: SandboxOptions = {},
+		sandboxedFunction: AsyncSandboxFunction<T>,
+		sandboxOptions: SandboxAsyncOptions = {},
 	): Promise<T> => {
 		const scope = new Scope()
 
@@ -52,18 +54,18 @@ export const loadQuickJs = async (loadOptions: LoadQuickJsOptions = '@jitl/quick
 		// JS Module Loader
 		const moduleLoader = sandboxOptions.getModuleLoader
 			? sandboxOptions.getModuleLoader(fs, sandboxOptions)
-			: getModuleLoader(fs, sandboxOptions)
+			: getAsyncModuleLoader(fs, sandboxOptions)
 		ctx.runtime.setModuleLoader(moduleLoader, modulePathNormalizer)
 
 		// Register Globals to be more Node.js compatible
-		prepareNodeCompatibility(ctx, sandboxOptions)
+		await prepareAsyncNodeCompatibility(ctx, sandboxOptions)
 
 		// Prepare the Sandbox
 		// Expose Data and Functions to Client
-		prepareSandbox(ctx, scope, sandboxOptions, fs)
+		prepareAsyncSandbox(ctx, scope, sandboxOptions, fs)
 
 		// Run the given Function
-		const result = await executeSandboxFunction({
+		const result = await executeAsyncSandboxFunction({
 			ctx,
 			fs,
 			scope,

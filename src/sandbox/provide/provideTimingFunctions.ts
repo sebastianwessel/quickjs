@@ -1,8 +1,7 @@
-import { Scope } from 'quickjs-emscripten-core'
-import type { VMContext } from '../../types/VMContext.js'
+import { type QuickJSAsyncContext, type QuickJSContext, Scope } from 'quickjs-emscripten-core'
 
 export const provideTimingFunctions = (
-	ctx: VMContext,
+	ctx: QuickJSContext | QuickJSAsyncContext,
 	max: {
 		maxTimeoutCount: number
 		maxIntervalCount: number

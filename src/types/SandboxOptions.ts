@@ -1,7 +1,10 @@
 import type { IFs, NestedDirectoryJSON } from 'memfs'
+import type { JSModuleLoader, JSModuleLoaderAsync } from 'quickjs-emscripten-core'
 import type { default as TS } from 'typescript'
+import type { Prettify } from './Prettify.js'
+import type { RuntimeOptions } from './RuntimeOptions.js'
 
-export type SandboxOptions = {
+export type SandboxBaseOptions = {
 	/**
 	 * The maximum time in seconds a script can run.
 	 * Unset or set to 0 for unlimited execution time.
@@ -125,3 +128,33 @@ export type SandboxOptions = {
 	 */
 	maxIntervalCount?: number
 }
+
+/**
+ * The sandbox options for regular sync QuickJS webassembly
+ */
+export type SandboxOptions = Prettify<
+	SandboxBaseOptions & {
+		/**
+		 * A function which returns a custom module loader
+		 * @param fs
+		 * @param _runtimeOptions
+		 * @returns JSModuleLoader
+		 */
+		getModuleLoader?: (fs: IFs, _runtimeOptions: RuntimeOptions) => JSModuleLoader
+	}
+>
+
+/**
+ * The sandbox options for async QuickJS webassembly
+ */
+export type SandboxAsyncOptions = Prettify<
+	SandboxBaseOptions & {
+		/**
+		 * A function which returns a custom module loader
+		 * @param fs
+		 * @param _runtimeOptions
+		 * @returns JSModuleLoaderAsync
+		 */
+		getModuleLoader?: (fs: IFs, _runtimeOptions: RuntimeOptions) => JSModuleLoaderAsync
+	}
+>

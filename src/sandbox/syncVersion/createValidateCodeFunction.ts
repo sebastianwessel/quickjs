@@ -1,7 +1,7 @@
-import type { CodeFunctionInput } from '../types/CodeFunctionInput.js'
-import type { OkResponseCheck } from '../types/OkResponseCheck.js'
-import type { SandboxValidateCode } from '../types/SandboxValidateCode.js'
-import { handleEvalError } from './handleEvalError.js'
+import type { CodeFunctionInput } from '../../types/CodeFunctionInput.js'
+import type { OkResponseCheck } from '../../types/OkResponseCheck.js'
+import type { SandboxValidateCode } from '../../types/SandboxValidateCode.js'
+import { handleEvalError } from '../handleEvalError.js'
 
 export const createValidateCodeFunction = (input: CodeFunctionInput): SandboxValidateCode => {
 	const { ctx } = input

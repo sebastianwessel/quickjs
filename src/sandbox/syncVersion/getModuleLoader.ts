@@ -3,7 +3,7 @@ import type { JSModuleLoader } from 'quickjs-emscripten-core'
 
 import { join } from 'node:path'
 
-import type { RuntimeOptions } from './types/RuntimeOptions.js'
+import type { RuntimeOptions } from '../../types/RuntimeOptions.js'
 
 export const getModuleLoader = (fs: IFs, _runtimeOptions: RuntimeOptions) => {
 	const moduleLoader: JSModuleLoader = (inputName, _context) => {

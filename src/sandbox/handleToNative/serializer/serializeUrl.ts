@@ -1,10 +1,9 @@
-import type { QuickJSHandle } from 'quickjs-emscripten-core'
+import type { QuickJSAsyncContext, QuickJSContext, QuickJSHandle } from 'quickjs-emscripten-core'
 import type { Serializer } from '../../../types/Serializer.js'
-import type { VMContext } from '../../../types/VMContext.js'
 import { call } from '../../helper.js'
 import { handleToNative } from '../handleToNative.js'
 
-export const serializeUrl: Serializer = (ctx: VMContext, handle: QuickJSHandle) => {
+export const serializeUrl: Serializer = (ctx: QuickJSContext | QuickJSAsyncContext, handle: QuickJSHandle) => {
 	let d: URL | undefined
 	ctx
 		.newFunction('', value => {

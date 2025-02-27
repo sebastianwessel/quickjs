@@ -53,26 +53,28 @@
  * @module
  */
 
-export * from './types/RuntimeOptions.js'
-export * from './types/ErrorResponse.js'
-export * from './types/OkResponse.js'
-export * from './adapter/fetch.js'
-export * from './createVirtualFileSystem.js'
-export * from './types/OkResponseCheck.js'
-export * from './getTypescriptSupport.js'
-export * from './modulePathNormalizer.js'
 export * from './loadQuickJs.js'
+export * from './loadAsyncQuickJs.js'
+
+export * from './adapter/fetch.js'
+
+export * from './createVirtualFileSystem.js'
+export * from './modulePathNormalizer.js'
+export * from './getTypescriptSupport.js'
+
 export * from './types/CodeFunctionInput.js'
-export * from './types/DisposeFunction.js'
+export * from './types/ErrorResponse.js'
 export * from './types/LoadQuickJsOptions.js'
+export * from './types/OkResponse.js'
+export * from './types/OkResponseCheck.js'
+export * from './types/Prettify.js'
+export * from './types/RuntimeOptions.js'
 export * from './types/SandboxEvalCode.js'
 export * from './types/SandboxFunction.js'
 export * from './types/SandboxOptions.js'
 export * from './types/SandboxValidateCode.js'
-export * from './types/VMContext.js'
-export * from './types/WasmModule.js'
-export * from './types/Prettify.js'
 export * from './types/Serializer.js'
+
 export * from './sandbox/handleToNative/serializer/index.js'
 export * from './sandbox/handleToNative/handleToNative.js'
 export * from './sandbox/expose/expose.js'
