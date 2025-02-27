@@ -12,7 +12,8 @@
 			"cookieconsent2.js",
 			"**/cache/**",
 			"cookieconsent-init2.js",
-			"cookieconsent.css"
+			"cookieconsent.css",
+			"docs"
 		]
 	},
 	"linter": {
