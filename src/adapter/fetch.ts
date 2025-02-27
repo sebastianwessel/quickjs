@@ -75,7 +75,7 @@ const mapResponse = (res: Response) => ({
 	body: res.body,
 	arrayBuffer: () => res.arrayBuffer(),
 	clone: () => res.clone(),
-	bytes: res.bytes,
+	//bytes: res.bytes,
 })
 
 /**
