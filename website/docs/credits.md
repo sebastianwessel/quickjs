@@ -12,7 +12,7 @@ This lib is mainly based on:
 - [quickjs-emscripten](https://github.com/justjake/quickjs-emscripten)
 - [memfs](https://github.com/streamich/memfs)
 - [Chai](https://www.chaijs.com)
-- [node-rate-limiter-flexible](github.com/animir/node-rate-limiter-flexible)
+- [node-rate-limiter-flexible](https://github.com/animir/node-rate-limiter-flexible)
 
 Tools used:
 

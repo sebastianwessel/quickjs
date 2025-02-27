@@ -1,93 +1,112 @@
 ---
-title: User Generated Code
+title: User-Generated Code
 description: Use QuickJS to run code which is provided by unknown users
+image: /use-case-user.jpg
 order: 20
 ---
 
-# User Generated Code
+# Executing User-Generated Code Safely
 
-As soon as you need to allow the user to create or update JavaScript code that is then executed within your application, there are many things that need to be considered.
+Allowing users to create and execute JavaScript code inside your application can unlock powerful customization and automation capabilities. However, it also introduces **security risks**, **performance concerns**, and **sandboxing challenges**.  
 
-The easiest, but also most dangerous, way is to use the native JavaScript `eval` function. Aside from any security concerns (i.e., the user's intention to harm your system), the most dangerous aspect lies at the core of JavaScript itself. Since it is mainly single-threaded, and `eval` is executed within the same thread and event loop as the rest of the system, any user can accidentally harm the entire system.
+The **wrong approach** (such as using JavaScript’s built-in `eval`) can **expose your system to serious vulnerabilities**, including infinite loops, crashes, and unauthorized access to sensitive data.  
 
-## Showcase scenario
+In this article, we'll walk through a **safe and efficient way** to execute user-generated JavaScript code using **QuickJS**, a lightweight JavaScript engine that enables sandboxed execution.  
 
-In this showcase, we assume that we have a system with JSON logs, and we want to allow the user to create a small JavaScript code snippet that decides whether an alert should be sent.
+## 🚨 Why Not Use `eval`?  
 
-In our showcase, we expect the JSON logs to have a known, fixed structure. Furthermore, the function that should be implemented by the user has fixed input parameters and a fixed, expected output. The user can only modify the body of the function through a user-friendly, browser-based UI.
+Using `eval` for user-generated code may seem like the easiest solution, but it's also the **most dangerous**:  
 
-As a logical result, the user should be able to write TypeScript code, as it not only helps during development but also improves the user experience with features like autocomplete, suggestions, and code highlighting.
+❌ **Security Risks** – Users could execute malicious code, access system resources, or modify global variables.  
+❌ **Performance Issues** – JavaScript is **single-threaded**; if a user writes an infinite loop, it will block execution entirely.  
+❌ **Lack of Isolation** – `eval` runs **inside your main thread**, meaning **any bug or infinite loop can crash your entire application**.  
 
-Given our scenario, we will focus on the backend part and begin by setting up QuickJS.
+A **better solution** is to run user-generated code inside a **secure, sandboxed environment** where it cannot interfere with the host system.  
 
-## Configuration
+## 📌 Use Case: JSON Log Processing  
 
-First of all, we need to ensure that the `typescript` package is available at runtime. It should be listed in the `dependencies` section in the `package.json` file.
+Let’s consider a **real-world scenario**:  
 
-Our code base, which will be executed inside of the QuickJS sandbox, will have the following shape:
+✅ We have a **JSON log file** that records system events.  
+✅ Users should be able to **write their own logic** to decide whether an **alert should be triggered**.  
+✅ The code should be **executed safely**, without the risk of interfering with the host system.  
+✅ Users should be able to **write TypeScript**, benefiting from **autocomplete, type checking, and code suggestions**.  
+
+We'll use **QuickJS** to sandbox and safely execute the user’s logic.  
+
+## 🔧 Setting Up the Sandbox  
+
+### 1️⃣ **Project Structure**  
+
+We'll structure our project as follows:  
 
 ```bash
-|- log.jsonl // a file containing a JSON log entry per line
+|- log.jsonl       # JSON logs (one entry per line)
 |- src
-    |- custom.ts // the file containing the custom user code
-    |- types.js // some Typescript types
-    |- index.ts // the code passed into evalCode method
+    |- custom.ts   # User-created code
+    |- types.ts    # Type definitions
+    |- index.ts    # Main execution file
 ```
 
-The files within the guest system:
+### 2️⃣ **Example Data (Log File & Type Definitions)**  
 
-::: code-group
+#### 📝 `log.jsonl`
 
-```jsonl [log.jsonl]
+```jsonl
 {"message":"some log message","errorCode":0,"dateTime":"2025-02-26T07:35:10Z"}
 {"message":"an error message","errorCode":1,"dateTime":"2025-02-26T07:40:00Z"}
 ```
 
-```ts [src/types.ts]
+#### 📌 `src/types.ts` (Defining Log Format & Alert Function)
+
+```ts
 export type LogRow = {
   message: string
   errorCode: number
   dateTime: string
 }
 
-export type AlertDecisionFn = ( input: LogRow[] ) => boolean
+export type AlertDecisionFn = (input: LogRow[]) => boolean
 ```
 
-```ts [src/index.ts]
-import { readFileSync } from 'node:fs'
+#### 📝 `src/index.ts` (Main Execution)
 
+```ts
+import { readFileSync } from 'node:fs'
 import { shouldAlert } from './custom.js'
 import type { LogRow } from './types.js'
 
 const main = () => {
-
   const logFileContent = readFileSync('log.jsonl', 'utf-8')
-  const logs: LogRow[] = logFileContent.split('\\n').map(line => JSON.parse(line))
+  const logs: LogRow[] = logFileContent.split('\n').map(line => JSON.parse(line))
   
   return shouldAlert(logs)
- }
+}
 
 export default main()
 ```
 
-```ts [src/custom.ts]
+#### 🎨 `src/custom.ts` (User-Written Code)
+
+```ts
 import type { AlertDecisionFn } from './types.js'
 
 export const shouldAlert: AlertDecisionFn = (input) => {
-  // [...]
-  // The user generated code
+  // User-defined logic
   // return booleanResult
 }
 ```
 
-:::
+---
 
-We can map these files in the sandbox options in our host system, to mount them into the guest system.
+## ⚙️ Mounting Files in the Sandbox  
+
+We'll map these files into a **QuickJS sandbox**, allowing users to edit only `custom.ts`, while keeping the rest of the logic **untouched**.
 
 ```ts
 import { type SandboxOptions } from '../../src/index.js'
 
-const userGeneratedCode = 'return true'
+const userGeneratedCode = 'return true' // Example user input
 
 const logFileContent = `{"message":"some log message","errorCode":0,"dateTime":"2025-02-26T07:35:10Z"}
 {"message":"an error message","errorCode":1,"dateTime":"2025-02-26T07:40:00Z"}`
@@ -114,35 +133,29 @@ const options: SandboxOptions = {
     },
   },
 }
-
 ```
 
-This has the advantage, that we simply mount the JSON log data and the customized user code, while other parts of the logic are untouched.
+🔹 This setup **mounts the JSON log data and the user’s code** while keeping the **execution logic intact**.  
 
-## Executing the Code
+## 🚀 Running the User's Code  
 
-Here is the rest of the code in the host system, which runs the customized code with the provided JSON log data as input:
+Here’s how the **sandboxed execution** works:
 
 ```ts
-import { type SandboxOptions, loadQuickJs } from '../../src/index.js' // [!code ++]
-
-// [... configuration]
+import { type SandboxOptions, loadQuickJs } from '../../src/index.js'
 
 const { runSandboxed } = await loadQuickJs()
 
-// fixed code (guest: src/index.ts)
 const executionCode = `import { readFileSync } from 'node:fs'
-
 import { shouldAlert } from './custom.js'
 import type { LogRow } from './types.js'
 
 const main = () => {
-
   const logFileContent = readFileSync('log.jsonl', 'utf-8')
   const logs: LogRow[] = logFileContent.split('\\n').map(line => JSON.parse(line))
   
   return shouldAlert(logs)
- }
+}
 
 export default main()
 `
@@ -152,41 +165,56 @@ const resultSandbox = await runSandboxed(async ({ evalCode }) => {
 }, options)
 
 console.log(resultSandbox)
-// {
-//  ok: true,
-//  data: true,
-//}
+// Output:
+// { ok: true, data: true }
 ```
 
-## Adding Memory
+✅ **The user’s logic is executed safely**, and their function determines whether an alert should be triggered.  
 
-In our use case, it might be a good idea to have some kind of memory. This allows the user to implement debouncing functionality.
+## 🏗️ Adding Memory (State Management)  
 
-A function which is executed in the QuickJS sandbox should be seen as a stateless function, similar to a serverless function in some cloud environment.
-This means the host is responsible to handle the state management. This can be done with some kind of database to persist the state.
+To improve functionality, we can **add persistent memory**. This allows the function to track **previous alerts**, implementing **debouncing** or **rate limiting**.
 
-In this example, we will use a in-memory variable in our host, to keep things simple. This variable must be accessible by the guest for read and write operations.
+Since **QuickJS functions are stateless**, the **host system** should manage state.
 
-The data exchange between host and guest should be done via functions, provided in the `env` config parameter.
+### 💾 Storing State in Memory  
+
+We’ll store the **last alert time** in the host and expose functions for **reading and updating** it.
 
 ```ts
-let memory: Date = new Date(0) // [!code ++]
+let memory: Date = new Date(0) // Store last alert timestamp
 
 const options: SandboxOptions = {
   allowFetch: false,
   allowFs: true,
   transformTypescript: true,
-  env: { // [!code ++]
-    setLastAlert: (input: Date) => { // [!code ++]
-    console.log(input)
-      memory = input // [!code ++]
-    }, // [!code ++]
-    getLastAlert: () => memory, // [!code ++]
-  }, // [!code ++]
-  // [...]
+  env: {
+    setLastAlert: (input: Date) => { 
+      console.log('Setting last alert:', input)
+      memory = input 
+    },
+    getLastAlert: () => memory,
+  },
 }
 ```
 
-In the guest system, these functions are available in the `env`
+### 🛠️ Accessing State from the Guest  
 
-## Conclusion
+Inside the sandbox, the user can now call `env.getLastAlert()` and `env.setLastAlert(new Date())` to manage state.  
+
+## 🎯 Key Takeaways  
+
+✅ **QuickJS provides a safe, isolated sandbox** for executing user-generated JavaScript code.  
+✅ **No risk of crashes, infinite loops, or unauthorized system access.**  
+✅ **TypeScript support** allows users to write code with better tooling (autocomplete, suggestions).  
+✅ **Custom memory handling** can be used for debouncing or rate limiting logic.  
+
+With this setup, **user-generated JavaScript execution becomes secure, efficient, and highly customizable** — without compromising system stability. 🚀  
+
+## 🔗 Next Steps  
+
+👉 **Try it out:** Implement QuickJS in your own project.  
+👉 **Enhance security:** Add execution timeouts and memory limits.  
+👉 **Expand functionality:** Allow users to fetch external data securely.  
+
+QuickJS makes **sandboxing user-generated code easy and secure** — without the headaches of `eval`. 🎯  

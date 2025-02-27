@@ -3,7 +3,7 @@ import { generateSidebar } from 'vitepress-sidebar'
 
 const hostname = 'https://sebastianwessel.github.io'
 export default defineConfig({
-	outDir: '../docs2',
+	outDir: '../docs',
 	base: '/quickjs/',
 	lang: 'en-US',
 	title: 'QuickJS',
@@ -46,13 +46,16 @@ export default defineConfig({
 		])
 
 		if (pageData.frontmatter.image) {
-			head.push(['meta', { property: 'og:image', content: new URL(pageData.frontmatter.image, hostname).toString() }])
+			head.push([
+				'meta',
+				{ property: 'og:image', content: new URL(`/quickjs${pageData.frontmatter.image}`, hostname).toString() },
+			])
 		} else {
 			head.push([
 				'meta',
 				{
 					property: 'og:image',
-					content: `https://ogpreview-ten.vercel.app/api/og?title=${encodeURIComponent(pageData.frontmatter.title)}&description=${encodeURIComponent(pageData.frontmatter.description)}`,
+					content: 'https://github.com/sebastianwessel/quickjs/og.jpg',
 				},
 			])
 		}

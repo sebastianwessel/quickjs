@@ -1,79 +1,95 @@
 ---
 title: Execute AI Generated Code
 description: Use QuickJS to run ai generated code in a sandbox fast and secure
+image: /use-case-ai.jpg
 order: 10
 ---
 
-# Execute AI-Generated Code
+# Executing AI-Generated Code
 
-With the rise of AI-generated code, a whole new world of possibilities has opened up.
+With the rise of **AI-generated code**, we’re entering an exciting new era of automation, dynamic programming, and just-in-time execution.  
 
-The logical next step is to execute the generated code just in time. This brings up several important considerations:
+However, executing AI-generated code in real-time comes with significant challenges:  
 
-- Executing generated code requires a runtime environment.
-- The environment should be temporary.
-- The environment should be instantly available.
-- The generated code might not work as expected.
-- The generated code might contain potentially dangerous operations.
-- _[...]_
+✅ The execution environment should be **isolated and secure**.  
+✅ The environment should be **instantly available**—no delays.  
+✅ The generated code might be **faulty or incomplete**.  
+✅ The execution should prevent **potentially dangerous operations**.  
 
-Here, some kind of virtual environment is the most logical solution. In general, there are several options to choose from, each with its own pros and cons.
+A **virtual execution environment** is the best solution, allowing **sandboxed execution** while ensuring **safety and performance**.  
 
-## WebAssembly-Based QuickJS
+## 🏗️ Choosing the Right Execution Environment  
 
-Choosing an approach based on QuickJS running as WebAssembly has the benefit of requiring very little overhead. Additionally, this approach can be used both in the backend and the frontend. Moreover, the cold start time is very low compared to solutions that require booting Docker containers or similar environments.
+There are several options to execute AI-generated code, each with **trade-offs**:  
 
-The main drawback is that it does not provide a fully featured environment equivalent to a regular Node.js runtime. Furthermore, handling dependencies may not be straightforward, especially in fully autonomous scenarios.
+| Environment | Pros | Cons |
+|------------|------|------|
+| **Docker Containers** | Fully isolated, supports all Node.js features | Slow cold start, heavy setup |
+| **VM-based Sandboxes** | Strong security, full feature set | High resource usage |
+| **QuickJS (WebAssembly)** | Fast, lightweight, runs anywhere | Limited feature set, dependency handling |
 
-However, even with a limited set of functionalities, impressive use cases are possible.
+### 🔥 Why QuickJS?
 
-## Example
+A **WebAssembly-based QuickJS runtime** provides an **ultra-lightweight**, **cross-platform** environment that can run **in the backend or frontend**.  
 
-To illustrate the general idea, let's start by creating an LLM prompt.
+✅ **Low overhead**—No need to start a full Node.js process.  
+✅ **Instant availability**—Cold starts are **extremely fast**.  
+✅ **Built-in security**—Restricts execution, preventing unwanted operations.  
 
-### LLM Prompt
+🔹 **Drawback:** It does not offer full **Node.js API compatibility**. However, for many AI-generated scripts, it’s **more than enough**.  
 
-In the LLM prompt, we need to specify the user's intention as well as provide some guidelines for the expected output.
+## 🤖 Example: Running AI-Generated Code  
 
-Here is a simple prompt that includes a placeholder `%INSTRUCTION%` for the user's intention:
+Let’s walk through a **real-world example** where an **LLM generates JavaScript code**, which we **immediately execute** in a sandboxed environment.
+
+### 📝 Step 1: The AI Prompt  
+
+The **prompt** should clearly specify:  
+✅ The expected function structure  
+✅ Constraints (e.g., **ESM syntax**, **no external packages**)  
+✅ Rules for **safe execution**  
+
+#### 📌 **LLM Prompt Example**  
 
 ```md
-Your task is to implement a function in javascript for the user instruction.
+Your task is to implement a function in JavaScript for the user's instruction.
 
 <instruction>
 %INSTRUCTION%
 </instruction>
 
 Implementation details:
-- you are in a Node.JS environment
-- use ESM syntax with import statements
-- use only native node packages
-- never use external packages
-- the generated code must return the result with with default export
-- when a promise is returned via export default it must be explicit awaited
-- you can use the native fetch function
+- You are in a Node.js environment.
+- Use ESM syntax with `import` statements.
+- Use **only** native Node.js packages.
+- Never use external dependencies.
+- The generated code must return the result using `export default`.
+- If the function is `async`, use `await` before returning the result.
+- You **can** use the native `fetch` function.
 
 Example:
 \`\`\`ts
-async myFunction()=> {
-  const res = await fetch('https://example.com')
-  if(!res.ok) {
-    throw new Error('Failed to fetch example.com')
+async function myFunction() {
+  const res = await fetch('https://example.com');
+  if (!res.ok) {
+    throw new Error('Failed to fetch example.com');
   }
-  return res.json()
+  return res.json();
 }
 
-export default await myFunction()
+export default await myFunction();
 \`\`\`
 
-Return plain javascript code as plain text, without any thoughts or additional text. Return as plain text without backticks.
+Return only the JavaScript code **as plain text**—no explanations or additional formatting.
 ```
 
-Here is an example output, generated with _Qwen Coder 2.5 7b_, running local with Ollama.
+### 🎯 Example AI Response  
 
-The user instruction: _"I need the title tag from https://purista.dev"_
+Using **Qwen Coder 2.5 7B** (running locally with **Ollama**), we generate a function based on the instruction:  
 
-The generated code:
+💡 **User request:** _"Get the `<title>` tag from `https://purista.dev`."_  
+
+#### 📝 Generated Code
 
 ```js
 async function getTitleTag() {
@@ -90,22 +106,24 @@ async function getTitleTag() {
   }
 }
 
-export default await getTitleTag()
+export default await getTitleTag();
 ```
 
-### Executing The Code
+## ⚡ Step 2: Executing the AI-Generated Code  
 
-It is straight forward to pass the generated code into the QuickJS runtime.
+Once we have the generated function, we need to **execute it safely**.  
+
+### 🔹 Using QuickJS for Sandboxed Execution  
 
 ```ts
 import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
 
-const code = '...' // the AI generated code
+const code = '...' // The AI-generated JavaScript code
 
 const { runSandboxed } = await loadQuickJs()
 
 const options: SandboxOptions = {
-  allowFetch: true, // inject fetch and allow the code to fetch data
+  allowFetch: true, // Enable network requests
 }
 
 const result = await runSandboxed(async ({ evalCode }) => {
@@ -114,36 +132,77 @@ const result = await runSandboxed(async ({ evalCode }) => {
   console.log('evalCode result', evalResult)
   return evalResult
 })
-
 ```
 
-### Combining the steps
+✅ **AI-generated code now runs securely inside QuickJS**  
+✅ **The AI-generated function can fetch data, process input, and return output**  
 
-In a more realistic scenario, you would have the following steps:
+## 🔄 Step 3: Automating the Full Workflow  
 
-1. get the users input
-2. the AI code generation
-3. the code execution
-4. creation of a propper response, based on previous steps
+A **complete AI-powered execution pipeline** involves:  
 
-### Full example
+1️⃣ **User provides an instruction**  
+2️⃣ **AI generates JavaScript code**  
+3️⃣ **Code runs inside the QuickJS sandbox**  
+4️⃣ **The system validates & returns the output**  
 
-Here is the full showcase example. It can be found in the `example/ai` folder of the repository.
+Here’s how it looks in practice:  
 
-When you start experimenting, you might notice that sometimes the generated code does not fulfill the requirements, and the execution fails. Furthermore, you can see that there is already a simple regex in place, which ensures that any potential markdown backticks are removed before the code is executed, improving robustness.
+```ts
+async function executeAIInstruction(instruction: string) {
+  // 1️⃣ Generate AI code
+  const generatedCode = await generateAIJavaScript(instruction)
 
-A good improvement here would be to add a retry mechanism for the generation and execution steps. The error returned by the execution step could be used to regenerate the code with fixes.
+  // 2️⃣ Set up sandbox execution
+  const { runSandboxed } = await loadQuickJs()
+  const options: SandboxOptions = { allowFetch: true }
 
-Depending on the actual needs, you might need to choose a more powerful model for code generation, and/or adding some planning steps.
+  // 3️⃣ Execute generated code
+  return await runSandboxed(async ({ evalCode }) => evalCode(generatedCode, undefined, options))
+}
 
-<<< @/../example/ai/index.ts
+// Example Usage:
+const result = await executeAIInstruction("Get the <title> tag from https://purista.dev")
+console.log(result)
+```
 
-## Conclusion
+## 🔍 Observations & Improvements  
 
-As demonstrated in this example, the QuickJS library makes it easy to provide a sandboxed environment for executing AI-generated code without requiring a complex infrastructure.
+### ⚠️ Handling Errors in AI-Generated Code  
 
-From a security perspective, this approach is also highly advantageous, as the WebAssembly container inherently mitigates many potential security risks.
+🛑 **Problem:** AI-generated code is **not always perfect**—execution might fail.  
+✅ **Solution:** Implement **retry mechanisms** and **error analysis** to improve robustness.  
 
-Most importantly, with this approach, the result returned by the LLM is based on regular computation. This means that by adding information that is reproducible and verifiable, we prevent the LLM from making guesses or assumptions.
+### 🛠️ **Handling Formatting Issues**  
 
-This is the best way to prevent LLM hallucinations and make the system trustworthy.
+LLMs might return **unexpected formatting** (e.g., extra Markdown backticks).  
+🔹 **Solution:** Use a regex to clean up AI responses before execution.  
+
+```ts
+const cleanCode = rawOutput.replace(/```(js|ts)?/g, '').trim()
+```
+
+### 🔄 **Adding Code Validation**  
+
+Before execution, we can **pre-validate** the AI-generated code:  
+
+✅ **Check for dangerous operations (e.g., `process`, `require`, `fs`)**  
+✅ **Enforce a maximum execution time**  
+✅ **Restrict available APIs**  
+
+## 🎯 Key Takeaways  
+
+✅ **QuickJS allows fast & secure execution** of AI-generated code.  
+✅ **Sandboxing prevents security risks**, ensuring that untrusted code can’t harm the host system.  
+✅ **Combining AI generation with a WebAssembly runtime** enables **dynamic, real-time execution**.  
+✅ **Proper error handling & validation** can significantly improve reliability.  
+
+🚀 This approach is ideal for **automated workflows**, **intelligent assistants**, and **AI-powered automation**.  
+
+## 🔗 Next Steps  
+
+✅ **Try it out!** Experiment with QuickJS in your own project.  
+✅ **Enhance security** by restricting certain functions and adding execution limits.  
+✅ **Improve reliability** with retry mechanisms and error correction.  
+
+QuickJS **opens the door** to **safe, efficient, AI-driven code execution** — without the complexity of full-fledged containerized environments. 🎯  
