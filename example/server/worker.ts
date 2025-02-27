@@ -1,15 +1,17 @@
 import { ThreadWorker } from 'poolifier-web-worker'
-import { quickJS } from '../../src/quickJS.js'
-import type { InitResponseType } from '../../src/types/InitResponseType.js'
-import type { RuntimeOptions } from '../../src/types/RuntimeOptions.js'
+import { type SandboxOptions, loadQuickJs } from '../../src/index.js'
 import type { InputData, ResponseData } from './types.js'
 
 class MyThreadWorker extends ThreadWorker<InputData, ResponseData> {
-	runtime?: (options?: RuntimeOptions) => Promise<InitResponseType>
+	runtime?: Awaited<ReturnType<typeof loadQuickJs>>
 
 	constructor() {
 		super(async (data?: InputData) => await this.process(data), {
 			maxInactiveTime: 10_000,
+			killBehavior: 'HARD',
+			killHandler: () => {
+				this.runtime = undefined
+			},
 		})
 	}
 
@@ -18,11 +20,10 @@ class MyThreadWorker extends ThreadWorker<InputData, ResponseData> {
 			return { id: '', result: { ok: true, data: { ok: true } } }
 		}
 		if (!this.runtime) {
-			const { createRuntime } = await quickJS()
-			this.runtime = createRuntime
+			this.runtime = await loadQuickJs()
 		}
 
-		const { evalCode } = await this.runtime({
+		const options: SandboxOptions = {
 			executionTimeout: 10,
 			allowFs: true,
 			allowFetch: true,
@@ -37,15 +38,17 @@ class MyThreadWorker extends ThreadWorker<InputData, ResponseData> {
           }`,
 				},
 			},
-		})
-
-		const result = await evalCode(data.content)
-
-		if (!result.ok && result.error.name === 'ExecutionTimeout') {
-			this.runtime = undefined
 		}
 
-		return { id: data.id, result }
+		return await this.runtime.runSandboxed(async sandbox => {
+			const result = await sandbox.evalCode(data.content)
+
+			if (!result.ok && result.error.name === 'ExecutionTimeout') {
+				this.runtime = undefined
+			}
+
+			return { id: data.id, result }
+		}, options)
 	}
 }
 

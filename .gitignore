@@ -132,3 +132,5 @@ dist
 .tshy
 
 src/modules/build
+
+website/.vitepress/cache

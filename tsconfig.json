@@ -1,13 +1,12 @@
 {
 	"compilerOptions": {
 		"outDir": "dist",
-		"lib": ["ES2023"],
 		"target": "ES2022",
-		"module": "node16",
+		"module": "es2022",
+		"moduleResolution": "node",
 		"moduleDetection": "force",
 		"allowJs": true,
 
-		"moduleResolution": "bundler",
 		"allowImportingTsExtensions": false,
 		"verbatimModuleSyntax": false,
 		"noEmit": false,
@@ -27,5 +26,6 @@
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"declaration": true
-	}
+	},
+	"exclude": ["./dist/**"]
 }

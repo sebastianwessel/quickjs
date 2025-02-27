@@ -1,17 +1,15 @@
-import { join } from 'node:path'
-import { dirname } from 'node:path'
+import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { quickJS } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from '../../src/index.js'
 
 // General setup like loading and init of the QuickJS wasm
 // It is a ressource intensive job and should be done only once if possible
-const { createRuntime } = await quickJS()
+const { runSandboxed } = await loadQuickJs()
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const customModuleHostLocation = join(__dirname, './custom.js')
+const customModuleHostLocation = join(__dirname, './custom-module.js')
 
-// Create a runtime instance each time a js code should be executed
-const { evalCode } = await createRuntime({
+const options: SandboxOptions = {
 	nodeModules: {
 		// module name
 		'custom-module': {
@@ -21,22 +19,39 @@ const { evalCode } = await createRuntime({
 	},
 	mountFs: {
 		src: {
-			'custom.js': `export const relativeImportFunction = ()=>'Hello from relative import function'`,
+			'custom-relative.js': `
+        import { test } from './lib/sub-import.js'
+        export const relativeImportFunction = ()=>test()
+      `,
+			lib: {
+				'sub-import.js': `export const test = ()=>'Hello from relative import function'`,
+			},
 		},
+		'text.txt': 'Some text file',
 	},
-})
+	allowFs: true,
+}
 
-const result = await evalCode(`
+const code = `
+import { readFileSync } from 'node:fs'
 import { customFn } from 'custom-module'
-import { relativeImportFunction } from './custom.js'
+
+// the current code is virtual the file /src/index.js.
+// relative imports are relative to the current file location
+import { relativeImportFunction } from './custom-relative.js'
 
 const customModule = customFn()
 console.log('customModule:', customModule)
 
 const relativeImport = relativeImportFunction()
 console.log('relativeImport:', relativeImport)
+
+// node:fs is relative to cwd which is / = the root of the file system
+const fileContent = readFileSync('text.txt', 'utf8')
   
-export default { customModule, relativeImport }
-`)
+export default { customModule, relativeImport, fileContent, cwd: process.cwd() }
+`
+
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
 
 console.log(result) // { ok: true, data: 'Hello from the custom module' }

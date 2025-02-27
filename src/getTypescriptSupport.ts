@@ -15,7 +15,11 @@ export type TranspileVirtualFsOptions = {
  * Add support for handling typescript files and code.
  * Requires the optional dependency 'typescript'.
  */
-export const getTypescriptSupport = async (enabled = false, options?: TS.CompilerOptions) => {
+export const getTypescriptSupport = async (
+	enabled = false,
+	typescriptImportFile?: string,
+	options?: TS.CompilerOptions,
+) => {
 	if (!enabled) {
 		return {
 			transpileFile: (
@@ -37,7 +41,7 @@ export const getTypescriptSupport = async (enabled = false, options?: TS.Compile
 
 	let ts: typeof TS
 	try {
-		ts = await import('typescript')
+		ts = await import(typescriptImportFile ?? 'typescript')
 	} catch (error) {
 		throw new Error('Package "typescript" is missing')
 	}

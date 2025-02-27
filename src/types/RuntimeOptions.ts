@@ -1,4 +1,4 @@
-import type { NestedDirectoryJSON } from 'memfs'
+import type { IFs, NestedDirectoryJSON } from 'memfs'
 import type { default as TS } from 'typescript'
 
 export type RuntimeOptions = {
@@ -11,7 +11,7 @@ export type RuntimeOptions = {
 	 * Mount a virtual file system
 	 * @link https://github.com/streamich/memfs
 	 */
-	mountFs?: NestedDirectoryJSON
+	mountFs?: NestedDirectoryJSON | IFs
 	/**
 	 * Mount custom node_modules in a virtual file system
 	 * @link https://github.com/streamich/memfs
