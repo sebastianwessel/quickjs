@@ -5,36 +5,37 @@ import { type SandboxAsyncOptions, getAsyncModuleLoader, loadAsyncQuickJs } from
 const { runSandboxed } = await loadAsyncQuickJs()
 
 const modulePathNormalizer = async (baseName: string, requestedName: string) => {
+	// import from esm.sh
 	if (requestedName.startsWith('esm.sh')) {
 		return `https://${requestedName}`
 	}
 
+	// import from esm.sh
 	if (requestedName.startsWith('https://esm.sh')) {
 		return requestedName
 	}
 
+	// import within an esm.sh import
 	if (requestedName.startsWith('/')) {
 		return `https://esm.sh${requestedName}`
 	}
 
 	// relative import
 	if (requestedName.startsWith('.')) {
+		// relative import from esm.sh loaded module
 		if (baseName.startsWith('https://esm.sh')) {
 			return new URL(requestedName, baseName).toString()
 		}
 
+		// relative import from local import
 		const parts = baseName.split('/')
 		parts.pop()
 
 		return resolve(`/${parts.join('/')}`, requestedName)
 	}
 
-	// module import
+	// unify module import name
 	const moduleName = requestedName.replace('node:', '')
-
-	if (moduleName === 'stream') {
-		return 'https://esm.sh/readable-stream'
-	}
 
 	return join('/node_modules', moduleName)
 }
@@ -43,7 +44,7 @@ const getModuleLoader = (fs, runtimeOptions) => {
 	const defaultLoader = getAsyncModuleLoader(fs, runtimeOptions)
 
 	const loader = async (moduleName: string, context: QuickJSAsyncContext) => {
-		console.log(moduleName)
+		console.log('fetching module', moduleName)
 
 		if (!moduleName.startsWith('https://esm.sh')) {
 			return defaultLoader(moduleName, context)
