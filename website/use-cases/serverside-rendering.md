@@ -140,72 +140,7 @@ console.log(result)
 
 ### 📌 Full SSR Workflow with QuickJS  
 
-```ts
-import { join, resolve } from 'node:path'
-import type { QuickJSAsyncContext } from 'quickjs-emscripten-core'
-import { type SandboxAsyncOptions, getAsyncModuleLoader, loadAsyncQuickJs } from '@sebastianwessel/quickjs'
-
-const { runSandboxed } = await loadAsyncQuickJs()
-
-// Normalize module paths
-const modulePathNormalizer = async (baseName: string, requestedName: string) => {
-  if (requestedName.startsWith('esm.sh') || requestedName.startsWith('https://esm.sh')) {
-    return requestedName.startsWith('https://') ? requestedName : `https://${requestedName}`
-  }
-
-  if (requestedName.startsWith('/')) {
-    return `https://esm.sh${requestedName}`
-  }
-
-  if (requestedName.startsWith('.')) {
-    if (baseName.startsWith('https://esm.sh')) {
-      return new URL(requestedName, baseName).toString()
-    }
-    return resolve(`/${baseName.split('/').slice(0, -1).join('/')}`, requestedName)
-  }
-
-  const moduleName = requestedName.replace('node:', '')
-  return join('/node_modules', moduleName)
-}
-
-// Custom module loader
-const getModuleLoader = (fs, runtimeOptions) => {
-  const defaultLoader = getAsyncModuleLoader(fs, runtimeOptions)
-
-  return async (moduleName: string, context: QuickJSAsyncContext) => {
-    console.log('Fetching module:', moduleName)
-
-    if (!moduleName.startsWith('https://esm.sh')) {
-      return defaultLoader(moduleName, context)
-    }
-
-    const response = await fetch(moduleName)
-    if (!response.ok) {
-      throw new Error(`Failed to load module ${moduleName}`)
-    }
-
-    return await response.text()
-  }
-}
-
-const options: SandboxAsyncOptions = {
-  modulePathNormalizer,
-  getModuleLoader,
-}
-
-const code = `
-import * as React from 'esm.sh/react@15'
-import * as ReactDOMServer from 'esm.sh/react-dom@15/server'
-const e = React.createElement
-export default ReactDOMServer.renderToStaticMarkup(
-  e('div', null, e('strong', null, 'Hello world!'))
-)
-`
-
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
-
-console.log(result)
-```
+<<< @../../example/async/index.ts
 
 ## 🎯 Key Takeaways  
 

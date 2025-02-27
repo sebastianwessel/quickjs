@@ -190,6 +190,10 @@ Before execution, we can **pre-validate** the AI-generated code:
 ✅ **Enforce a maximum execution time**  
 ✅ **Restrict available APIs**  
 
+### 📌 Full AI Workflow with QuickJS  
+
+<<< @../../example/ai/index.ts
+
 ## 🎯 Key Takeaways  
 
 ✅ **QuickJS allows fast & secure execution** of AI-generated code.  
