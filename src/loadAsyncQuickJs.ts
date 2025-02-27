@@ -1,7 +1,7 @@
 import { Scope } from 'quickjs-emscripten-core'
 import { getTypescriptSupport } from './getTypescriptSupport.js'
-import { modulePathNormalizer } from './modulePathNormalizer.js'
 import { getAsyncModuleLoader } from './sandbox/asyncVersion/getAsyncModuleLoader.js'
+import { modulePathNormalizerAsync } from './sandbox/asyncVersion/modulePathNormalizerAsync.js'
 
 import { executeAsyncSandboxFunction } from './sandbox/asyncVersion/executeAsyncSandboxFunction.js'
 import { prepareAsyncNodeCompatibility } from './sandbox/asyncVersion/prepareAsyncNodeCompatibility.js'
@@ -55,7 +55,8 @@ export const loadAsyncQuickJs = async (
 		const moduleLoader = sandboxOptions.getModuleLoader
 			? sandboxOptions.getModuleLoader(fs, sandboxOptions)
 			: getAsyncModuleLoader(fs, sandboxOptions)
-		ctx.runtime.setModuleLoader(moduleLoader, modulePathNormalizer)
+
+		ctx.runtime.setModuleLoader(moduleLoader, sandboxOptions.modulePathNormalizer ?? modulePathNormalizerAsync)
 
 		// Register Globals to be more Node.js compatible
 		await prepareAsyncNodeCompatibility(ctx, sandboxOptions)

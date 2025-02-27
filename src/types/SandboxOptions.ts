@@ -1,5 +1,10 @@
 import type { IFs, NestedDirectoryJSON } from 'memfs'
-import type { JSModuleLoader, JSModuleLoaderAsync } from 'quickjs-emscripten-core'
+import type {
+	JSModuleLoader,
+	JSModuleLoaderAsync,
+	JSModuleNormalizer,
+	JSModuleNormalizerAsync,
+} from 'quickjs-emscripten-core'
 import type { default as TS } from 'typescript'
 import type { Prettify } from './Prettify.js'
 import type { RuntimeOptions } from './RuntimeOptions.js'
@@ -141,6 +146,13 @@ export type SandboxOptions = Prettify<
 		 * @returns JSModuleLoader
 		 */
 		getModuleLoader?: (fs: IFs, _runtimeOptions: RuntimeOptions) => JSModuleLoader
+		/**
+		 * A function to transform modules paths from imports before sent to the module loader
+		 * @param baseName
+		 * @param requestedName
+		 * @returns
+		 */
+		modulePathNormalizer?: JSModuleNormalizer
 	}
 >
 
@@ -156,5 +168,12 @@ export type SandboxAsyncOptions = Prettify<
 		 * @returns JSModuleLoaderAsync
 		 */
 		getModuleLoader?: (fs: IFs, _runtimeOptions: RuntimeOptions) => JSModuleLoaderAsync
+		/**
+		 * A function to transform modules paths from imports before sent to the module loader
+		 * @param baseName
+		 * @param requestedName
+		 * @returns
+		 */
+		modulePathNormalizer?: JSModuleNormalizerAsync
 	}
 >

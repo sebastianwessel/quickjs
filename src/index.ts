@@ -59,7 +59,6 @@ export * from './loadAsyncQuickJs.js'
 export * from './adapter/fetch.js'
 
 export * from './createVirtualFileSystem.js'
-export * from './modulePathNormalizer.js'
 export * from './getTypescriptSupport.js'
 
 export * from './types/CodeFunctionInput.js'
@@ -78,3 +77,9 @@ export * from './types/Serializer.js'
 export * from './sandbox/handleToNative/serializer/index.js'
 export * from './sandbox/handleToNative/handleToNative.js'
 export * from './sandbox/expose/expose.js'
+
+export * from './sandbox/syncVersion/getModuleLoader.js'
+export * from './sandbox/syncVersion/modulePathNormalizer.js'
+
+export * from './sandbox/asyncVersion/getAsyncModuleLoader.js'
+export * from './sandbox/asyncVersion/modulePathNormalizerAsync.js'

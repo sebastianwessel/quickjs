@@ -1,7 +1,7 @@
 import { Scope } from 'quickjs-emscripten-core'
 import { getTypescriptSupport } from './getTypescriptSupport.js'
-import { modulePathNormalizer } from './modulePathNormalizer.js'
 import { getModuleLoader } from './sandbox/syncVersion/getModuleLoader.js'
+import { modulePathNormalizer } from './sandbox/syncVersion/modulePathNormalizer.js'
 
 import { setupFileSystem } from './sandbox/setupFileSystem.js'
 import { executeSandboxFunction } from './sandbox/syncVersion/executeSandboxFunction.js'
@@ -53,7 +53,7 @@ export const loadQuickJs = async (loadOptions: LoadQuickJsOptions = '@jitl/quick
 		const moduleLoader = sandboxOptions.getModuleLoader
 			? sandboxOptions.getModuleLoader(fs, sandboxOptions)
 			: getModuleLoader(fs, sandboxOptions)
-		ctx.runtime.setModuleLoader(moduleLoader, modulePathNormalizer)
+		ctx.runtime.setModuleLoader(moduleLoader, sandboxOptions.modulePathNormalizer ?? modulePathNormalizer)
 
 		// Register Globals to be more Node.js compatible
 		prepareNodeCompatibility(ctx, sandboxOptions)
