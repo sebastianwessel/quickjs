@@ -13,7 +13,8 @@
 			"**/cache/**",
 			"cookieconsent-init2.js",
 			"cookieconsent.css",
-			"docs"
+			"docs",
+			".tshy-build"
 		]
 	},
 	"linter": {
