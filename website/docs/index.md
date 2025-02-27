@@ -28,6 +28,30 @@ yarn add @sebastianwessel/quickjs
 
 This package is also available at [jsr.io/@sebastianwessel/quickjs](https://jsr.io/@sebastianwessel/quickjs)
 
+### QuickJS Wasm Variant
+
+This library does not include the QuickJS wasm file. It must be installed separat.
+
+The most straight forward variant is `@jitl/quickjs-wasmfile-release-sync`
+
+::: code-group
+
+```sh [npm]
+npm install @jitl/quickjs-wasmfile-release-sync
+```
+
+```sh  [bun]
+bun add @jitl/quickjs-wasmfile-release-sync
+```
+
+```sh [yarn]
+yarn add @jitl/quickjs-wasmfile-release-sync
+```
+
+:::
+
+Please see [github.com/justjake/quickjs-emscripten](https://github.com/justjake/quickjs-emscripten/blob/main/doc/quickjs-emscripten-core/README.md) to find the variant which fits best for your needs.
+
 ## Backend Usage
 
 Here's a simple example of how to use the package:
@@ -107,3 +131,5 @@ Using `fetch`is possible, but there are the same restrictions as in any other br
   )
 </script>
 ```
+
+Please see the examples in the repository.
