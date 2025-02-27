@@ -1,13 +1,13 @@
 import { beforeAll, describe, expect, it, mock } from 'bun:test'
-import { loadQuickJs } from '../loadQuickJs.js'
-import type { OkResponse } from '../types/OkResponse.js'
-import type { SandboxOptions } from '../types/SandboxOptions.js'
+import { loadAsyncQuickJs } from '../../loadAsyncQuickJs.js'
+import type { OkResponse } from '../../types/OkResponse.js'
+import type { SandboxOptions } from '../../types/SandboxOptions.js'
 
-describe('core - console', () => {
-	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
+describe('async - core - console', () => {
+	let runtime: Awaited<ReturnType<typeof loadAsyncQuickJs>>
 
 	beforeAll(async () => {
-		runtime = await loadQuickJs()
+		runtime = await loadAsyncQuickJs()
 	})
 
 	it('console.log works correctly', async () => {

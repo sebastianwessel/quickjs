@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from 'bun:test'
-import { loadQuickJs } from '../loadQuickJs.js'
-import type { ErrorResponse } from '../types/ErrorResponse.js'
-import type { OkResponse } from '../types/OkResponse.js'
+import { loadQuickJs } from '../../loadQuickJs.js'
+import type { ErrorResponse } from '../../types/ErrorResponse.js'
+import type { OkResponse } from '../../types/OkResponse.js'
 
 describe('node_modules', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>

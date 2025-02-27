@@ -1,9 +1,9 @@
 import { beforeAll, describe, expect, it } from 'bun:test'
-import { loadQuickJs } from '../loadQuickJs.js'
-import type { OkResponse } from '../types/OkResponse.js'
+import { loadAsyncQuickJs } from '../../loadAsyncQuickJs.js'
+import type { OkResponse } from '../../types/OkResponse.js'
 
-describe('node:util - types', () => {
-	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
+describe('async - node:util - types', () => {
+	let runtime: Awaited<ReturnType<typeof loadAsyncQuickJs>>
 	const typesToTest = [
 		{ method: 'isAnyArrayBuffer', value: 'new ArrayBuffer(10)', expected: true },
 		{ method: 'isAnyArrayBuffer', value: 'new SharedArrayBuffer(10)', expected: true },
@@ -45,7 +45,7 @@ describe('node:util - types', () => {
 	]
 
 	beforeAll(async () => {
-		runtime = await loadQuickJs()
+		runtime = await loadAsyncQuickJs()
 	})
 
 	const runCode = async (code: string): Promise<OkResponse> => {

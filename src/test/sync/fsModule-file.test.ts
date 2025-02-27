@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from 'bun:test'
-import { loadQuickJs } from '../loadQuickJs.js'
-import type { OkResponse } from '../types/OkResponse.js'
+import { loadQuickJs } from '../../loadQuickJs.js'
+import type { OkResponse } from '../../types/OkResponse.js'
 
 describe('node:fs - file', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>

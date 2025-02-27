@@ -1,12 +1,12 @@
 import { beforeAll, describe, expect, it } from 'bun:test'
-import { loadQuickJs } from '../loadQuickJs.js'
-import type { OkResponse } from '../types/OkResponse.js'
+import { loadAsyncQuickJs } from '../../loadAsyncQuickJs.js'
+import type { OkResponse } from '../../types/OkResponse.js'
 
-describe('core - timers', () => {
-	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
+describe('async - core - timers', () => {
+	let runtime: Awaited<ReturnType<typeof loadAsyncQuickJs>>
 
 	beforeAll(async () => {
-		runtime = await loadQuickJs()
+		runtime = await loadAsyncQuickJs()
 	})
 
 	const runCode = async (code: string): Promise<OkResponse> => {
