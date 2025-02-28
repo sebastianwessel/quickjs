@@ -55,7 +55,7 @@ export default defineConfig({
 				'meta',
 				{
 					property: 'og:image',
-					content: 'https://sebastianwessel.github.io/quickjs/quickjs/og.jpg',
+					content: 'https://sebastianwessel.github.io/quickjs/og.jpg',
 				},
 			])
 		}
