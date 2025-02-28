@@ -23,22 +23,10 @@
 		"package",
 		"library"
 	],
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"tshy": {
-		"exclude": [
-			"src/**/*.test.ts",
-			"vendor",
-			"example",
-			"docs",
-			"vendor.ts",
-			"node_modules"
-		],
-		"dialects": [
-			"esm",
-			"commonjs"
-		],
+		"exclude": ["src/**/*.test.ts", "vendor", "example", "docs", "vendor.ts", "node_modules"],
+		"dialects": ["esm", "commonjs"],
 		"exports": {
 			"./package.json": "./package.json",
 			".": "./src/index.ts"
@@ -87,8 +75,8 @@
 		"@biomejs/biome": "^1.9.4",
 		"@hono/swagger-ui": "^0.5.0",
 		"@hono/zod-openapi": "^0.18.4",
-		"@jitl/quickjs-ng-wasmfile-release-sync": "^0.31.0",
 		"@jitl/quickjs-ng-wasmfile-release-asyncify": "^0.31.0",
+		"@jitl/quickjs-ng-wasmfile-release-sync": "^0.31.0",
 		"@types/autocannon": "^7.12.6",
 		"@types/node": "^22.13.5",
 		"autocannon": "^8.0.0",

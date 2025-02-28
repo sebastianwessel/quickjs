@@ -59,24 +59,25 @@ export type GetFetchAdapterOptions = {
  * @param res The original response
  * @returns The mapped response object
  */
-const mapResponse = (res: Response) => ({
-	status: res.status,
-	ok: res.ok,
-	statusText: res.statusText,
-	json: () => res.json(),
-	text: () => res.text(),
-	formData: () => res.formData(),
-	headers: res.headers,
-	type: res.type,
-	url: res.url,
-	blob: () => res.blob(),
-	bodyUsed: res.bodyUsed,
-	redirected: res.redirected,
-	body: res.body,
-	arrayBuffer: () => res.arrayBuffer(),
-	clone: () => res.clone(),
-	//bytes: res.bytes,
-})
+const mapResponse = (res: Response) =>
+	({
+		status: res.status,
+		ok: res.ok,
+		statusText: res.statusText,
+		json: () => res.json(),
+		text: () => res.text(),
+		formData: () => res.formData(),
+		headers: res.headers,
+		type: res.type,
+		url: res.url,
+		blob: () => res.blob(),
+		bodyUsed: res.bodyUsed,
+		redirected: res.redirected,
+		body: undefined,
+		arrayBuffer: () => res.arrayBuffer(),
+		clone: () => res.clone(),
+		bytes: res.bytes,
+	}) as unknown as ReturnType<typeof fetch>
 
 /**
  * Create a 403 forbidden response
