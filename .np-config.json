@@ -1,4 +1,4 @@
 {
 	"testScript": "test",
-	"contents": "dist"
+	"contents": "."
 }
