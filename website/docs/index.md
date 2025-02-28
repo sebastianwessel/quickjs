@@ -32,20 +32,20 @@ This package is also available at [jsr.io/@sebastianwessel/quickjs](https://jsr.
 
 This library does not include the QuickJS wasm file. It must be installed separat.
 
-The most straight forward variant is `@jitl/quickjs-wasmfile-release-sync`
+The most straight forward variant is `@jitl/quickjs-ng-wasmfile-release-sync`
 
 ::: code-group
 
 ```sh [npm]
-npm install @jitl/quickjs-wasmfile-release-sync
+npm install @jitl/quickjs-ng-wasmfile-release-sync
 ```
 
 ```sh  [bun]
-bun add @jitl/quickjs-wasmfile-release-sync
+bun add @jitl/quickjs-ng-wasmfile-release-sync
 ```
 
 ```sh [yarn]
-yarn add @jitl/quickjs-wasmfile-release-sync
+yarn add @jitl/quickjs-ng-wasmfile-release-sync
 ```
 
 :::
@@ -119,7 +119,7 @@ Using `fetch`is possible, but there are the same restrictions as in any other br
 
   import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@latest"
 
-  const { runSandboxed } = await loadQuickJs('https://esm.sh/@jitl/quickjs-wasmfile-release-sync')
+  const { runSandboxed } = await loadQuickJs('https://esm.sh/@jitl/quickjs-ng-wasmfile-release-sync')
 
   const options = {
     // [...]
