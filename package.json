@@ -23,22 +23,10 @@
 		"package",
 		"library"
 	],
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"tshy": {
-		"exclude": [
-			"src/**/*.test.ts",
-			"vendor",
-			"example",
-			"docs",
-			"vendor.ts",
-			"node_modules"
-		],
-		"dialects": [
-			"esm",
-			"commonjs"
-		],
+		"exclude": ["src/**/*.test.ts", "vendor", "example", "docs", "vendor.ts", "node_modules"],
+		"dialects": ["esm", "commonjs"],
 		"exports": {
 			"./package.json": "./package.json",
 			".": "./src/index.ts"
@@ -98,6 +86,7 @@
 		"np": "^10.2.0",
 		"openai": "^4.85.4",
 		"poolifier-web-worker": "^0.4.31",
+		"postscribe": "^2.0.8",
 		"tshy": "^3.0.2",
 		"typescript": "^5.7.3",
 		"vitepress": "^2.0.0-alpha.3",

@@ -72,6 +72,7 @@ export default defineConfig({
 			{ text: 'Home', link: '/' },
 			{ text: 'Documentation', link: '/docs' },
 			{ text: 'Use Cases', link: '/use-cases' },
+			{ text: 'Playground', link: '/playground.md' },
 			{ text: 'Blog', link: '/blog' },
 		],
 		outline: 'deep',

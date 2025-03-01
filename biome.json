@@ -14,7 +14,8 @@
 			"cookieconsent-init2.js",
 			"cookieconsent.css",
 			"docs",
-			".tshy-build"
+			".tshy-build",
+			"website/.vitepress/.temp"
 		]
 	},
 	"linter": {

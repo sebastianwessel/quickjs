@@ -17,6 +17,9 @@ hero:
     - theme: alt
       text: 🔥 Use Cases
       link: /use-cases
+    - theme: alt
+      text: Try Out Online
+      link: /playground.md
 
 features:
   - title: AI Generated Code

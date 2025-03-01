@@ -3,6 +3,7 @@ import DefaultTheme from 'vitepress/theme'
 // https://vitepress.dev/guide/custom-theme
 import { h } from 'vue'
 import './style.css'
+import Playground from './components/Playground.vue'
 
 export default {
 	extends: DefaultTheme,
@@ -13,5 +14,6 @@ export default {
 	},
 	enhanceApp({ app, router, siteData }) {
 		// ...
+		app.component('Playground', Playground)
 	},
 } satisfies Theme
