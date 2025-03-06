@@ -27,6 +27,6 @@ const testResult = await runTests();
 export default testResult
 `
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
 
 console.log(JSON.stringify(result, null, 2))

@@ -19,7 +19,7 @@ export default sum
 `
 
 const result = await runSandboxed(async ({ evalCode }) => {
-	const result = await evalCode(code, undefined, options)
+	const result = await evalCode(code)
 	if (!result.ok) {
 		console.error(result)
 		throw new Error('Failed to evaluate code')

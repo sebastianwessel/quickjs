@@ -26,7 +26,7 @@ setTimeout(() => {
 export default await new Promise((resolve) => setTimeout(() => resolve('ok'), t))
 `
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
 
 console.log(result)
 

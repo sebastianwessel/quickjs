@@ -41,12 +41,12 @@ export default 'step 2' + step1
 
 const result = await runSandboxed(async ({ evalCode }) => {
 	// run first call
-	const result = await evalCode(code, undefined, options)
+	const result = await evalCode(code)
 
 	console.log('step 1', result)
 
 	// run second call
-	return evalCode(code2, undefined, options)
+	return evalCode(code2)
 }, options)
 
 console.log(result) // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }

@@ -52,6 +52,6 @@ const fileContent = readFileSync('text.txt', 'utf8')
 export default { customModule, relativeImport, fileContent, cwd: process.cwd() }
 `
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
 
 console.log(result) // { ok: true, data: 'Hello from the custom module' }
