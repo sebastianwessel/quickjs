@@ -127,7 +127,7 @@ const options: SandboxOptions = {
 }
 
 const result = await runSandboxed(async ({ evalCode }) => {
-  const evalResult = await evalCode(code, undefined, options)
+  const evalResult = await evalCode(code)
 
   console.log('evalCode result', evalResult)
   return evalResult
@@ -158,7 +158,7 @@ async function executeAIInstruction(instruction: string) {
   const options: SandboxOptions = { allowFetch: true }
 
   // 3️⃣ Execute generated code
-  return await runSandboxed(async ({ evalCode }) => evalCode(generatedCode, undefined, options))
+  return await runSandboxed(async ({ evalCode }) => evalCode(generatedCode))
 }
 
 // Example Usage:

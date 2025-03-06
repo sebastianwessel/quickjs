@@ -90,7 +90,7 @@ export default await fn()
 `
 
 const result = await runSandboxed(async ({ evalCode }) => {
-  return evalCode(code, undefined, options), options
+  return evalCode(code), options
   })
 
 console.log(result)

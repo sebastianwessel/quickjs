@@ -161,7 +161,7 @@ export default main()
 `
 
 const resultSandbox = await runSandboxed(async ({ evalCode }) => {
-  return await evalCode(executionCode, undefined, options)
+  return await evalCode(executionCode)
 }, options)
 
 console.log(resultSandbox)
