@@ -72,7 +72,7 @@ const options: SandboxOptions = {
 
 const resultSandbox = await runSandboxed(async ({ evalCode }) => {
 	console.log('Executing code')
-	return await evalCode(code, undefined, options)
+	return await evalCode(code)
 }, options)
 
 let resultText = ''

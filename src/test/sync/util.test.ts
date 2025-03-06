@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'bun:test'
 import { loadQuickJs } from '../../loadQuickJs.js'
 import type { OkResponse } from '../../types/OkResponse.js'
 
-describe('node:util - base', () => {
+describe('sync - node:util - base', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 
 	beforeAll(async () => {

@@ -24,6 +24,6 @@ const example = (input: string):string => input
 export default { fn: example('Hello World'), custom: custom('Custom string') }
 `
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
 
 console.log(result)

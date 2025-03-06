@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'bun:test'
 import { loadQuickJs } from '../../loadQuickJs.js'
 import type { OkResponse } from '../../types/OkResponse.js'
 
-describe('node:fs - file', () => {
+describe('sync - node:fs - file', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 	const testFilePath = '/test.txt'
 	const testFileContent = 'example content'

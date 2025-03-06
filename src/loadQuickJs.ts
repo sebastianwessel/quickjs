@@ -1,4 +1,4 @@
-import { Scope } from 'quickjs-emscripten-core'
+import { Scope, shouldInterruptAfterDeadline } from 'quickjs-emscripten-core'
 import { getTypescriptSupport } from './getTypescriptSupport.js'
 import { getModuleLoader } from './sandbox/syncVersion/getModuleLoader.js'
 import { modulePathNormalizer } from './sandbox/syncVersion/modulePathNormalizer.js'
@@ -33,47 +33,63 @@ export const loadQuickJs = async (loadOptions: LoadQuickJsOptions = '@jitl/quick
 		sandboxedFunction: SandboxFunction<T>,
 		sandboxOptions: SandboxOptions = {},
 	): Promise<T> => {
-		const scope = new Scope()
+		try {
+			const scope = new Scope()
 
-		const ctx = scope.manage(module.newContext())
+			const ctx = scope.manage(module.newContext())
 
-		// Virtual File System,
-		const fs = setupFileSystem(sandboxOptions)
+			if (sandboxOptions.executionTimeout) {
+				ctx.runtime.setInterruptHandler(shouldInterruptAfterDeadline(Date.now() + sandboxOptions.executionTimeout))
+			}
 
-		// TypeScript Support:
-		const { transpileVirtualFs, transpileFile } = await getTypescriptSupport(
-			sandboxOptions.transformTypescript,
-			sandboxOptions.typescriptImportFile,
-			sandboxOptions.transformCompilerOptions,
-		)
-		// if typescript support is enabled, transpile all ts files in file system
-		transpileVirtualFs(fs)
+			if (sandboxOptions.maxStackSize) {
+				ctx.runtime.setMaxStackSize(sandboxOptions.maxStackSize)
+			}
 
-		// JS Module Loader
-		const moduleLoader = sandboxOptions.getModuleLoader
-			? sandboxOptions.getModuleLoader(fs, sandboxOptions)
-			: getModuleLoader(fs, sandboxOptions)
-		ctx.runtime.setModuleLoader(moduleLoader, sandboxOptions.modulePathNormalizer ?? modulePathNormalizer)
+			if (sandboxOptions.memoryLimit) {
+				ctx.runtime.setMemoryLimit(sandboxOptions.memoryLimit)
+			}
 
-		// Register Globals to be more Node.js compatible
-		prepareNodeCompatibility(ctx, sandboxOptions)
+			// Virtual File System,
+			const fs = setupFileSystem(sandboxOptions)
 
-		// Prepare the Sandbox
-		// Expose Data and Functions to Client
-		prepareSandbox(ctx, scope, sandboxOptions, fs)
+			// TypeScript Support:
+			const { transpileVirtualFs, transpileFile } = await getTypescriptSupport(
+				sandboxOptions.transformTypescript,
+				sandboxOptions.typescriptImportFile,
+				sandboxOptions.transformCompilerOptions,
+			)
+			// if typescript support is enabled, transpile all ts files in file system
+			transpileVirtualFs(fs)
 
-		// Run the given Function
-		const result = await executeSandboxFunction({
-			ctx,
-			fs,
-			scope,
-			sandboxOptions,
-			sandboxedFunction,
-			transpileFile,
-		})
+			// JS Module Loader
+			const moduleLoader = sandboxOptions.getModuleLoader
+				? sandboxOptions.getModuleLoader(fs, sandboxOptions)
+				: getModuleLoader(fs, sandboxOptions)
+			ctx.runtime.setModuleLoader(moduleLoader, sandboxOptions.modulePathNormalizer ?? modulePathNormalizer)
 
-		scope.dispose()
-		return result
+			// Register Globals to be more Node.js compatible
+			prepareNodeCompatibility(ctx, sandboxOptions)
+
+			// Prepare the Sandbox
+			// Expose Data and Functions to Client
+			prepareSandbox(ctx, scope, sandboxOptions, fs)
+
+			// Run the given Function
+			const result = await executeSandboxFunction({
+				ctx,
+				fs,
+				scope,
+				sandboxOptions,
+				sandboxedFunction,
+				transpileFile,
+			})
+
+			scope.dispose()
+			return result
+		} catch (error) {
+			throw error instanceof Error ? error : new Error('Internal Error')
+		}
 	}
 
 	return { runSandboxed, module }

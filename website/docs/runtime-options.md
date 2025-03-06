@@ -18,7 +18,7 @@ These options apply to both synchronous and asynchronous sandbox instances.
 |--------|------|-------------|
 | `executionTimeout` | `number` | Maximum script execution time (in seconds). Set to `0` for unlimited. |
 | `maxStackSize` | `number` | Maximum stack size (in bytes). Set to `0` to disable the limit. |
-| `memoryLimit` | `number` | Maximum memory allocation. Set to `-1` to remove the limit. |
+| `memoryLimit` | `number` | Maximum memory allocation. Set to `0` to remove the limit. |
 
 ### 📂 Virtual File System
 
@@ -106,7 +106,6 @@ Both **synchronous** and **asynchronous** QuickJS sandboxes allow customizing mo
 
 🔗 **More info:** See [github.com/justjake/quickjs-emscripten](https://github.com/justjake/quickjs-emscripten?tab=readme-ov-file#asyncify) for details on asynchronous execution.
 
-
 ## Example Usage
 
 The options are passed to the `createRuntime` method. Here is a basic example:
@@ -152,7 +151,7 @@ const fn = async () => {
 export default await fn();
 `
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
 
 console.log(result); // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
 ```

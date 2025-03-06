@@ -3,7 +3,7 @@ import { loadQuickJs } from '../../loadQuickJs.js'
 import type { OkResponse } from '../../types/OkResponse.js'
 import type { SandboxOptions } from '../../types/SandboxOptions.js'
 
-describe('core - console', () => {
+describe('sync - core - console', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 
 	beforeAll(async () => {

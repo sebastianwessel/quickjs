@@ -1,4 +1,4 @@
-import { Scope } from 'quickjs-emscripten-core'
+import { Scope, shouldInterruptAfterDeadline } from 'quickjs-emscripten-core'
 import { getTypescriptSupport } from './getTypescriptSupport.js'
 import { getAsyncModuleLoader } from './sandbox/asyncVersion/getAsyncModuleLoader.js'
 import { modulePathNormalizerAsync } from './sandbox/asyncVersion/modulePathNormalizerAsync.js'
@@ -38,6 +38,18 @@ export const loadAsyncQuickJs = async (
 		const scope = new Scope()
 
 		const ctx = scope.manage(module.newContext())
+
+		if (sandboxOptions.executionTimeout) {
+			ctx.runtime.setInterruptHandler(shouldInterruptAfterDeadline(Date.now() + sandboxOptions.executionTimeout))
+		}
+
+		if (sandboxOptions.maxStackSize) {
+			ctx.runtime.setMaxStackSize(sandboxOptions.maxStackSize)
+		}
+
+		if (sandboxOptions.memoryLimit) {
+			ctx.runtime.setMemoryLimit(sandboxOptions.memoryLimit)
+		}
 
 		// Virtual File System,
 		const fs = setupFileSystem(sandboxOptions)

@@ -4,7 +4,7 @@ import type { OkResponse } from '../../types/OkResponse.js'
 
 type AssetCheck = { success: boolean; error: Error | string }
 
-describe('node:assert', () => {
+describe('sync - node:assert', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 
 	beforeAll(async () => {

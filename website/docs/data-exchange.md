@@ -46,7 +46,7 @@ const value = env.KV.get('guest-key')
 export default value
 `
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
 
 console.log('result from guest:', result.data) // result from guest: value set by guest system
 console.log('result from host:', keyValueStoreOnHost.get('guest-key')) // result from host: value set by guest system
@@ -110,7 +110,7 @@ env.KV.get = () => { throw new Error('Security!!!') }
 export default value
 `
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
 
 console.log('result from guest:', result)
 console.log('result from host:', keyValueStoreOnHost.get('guest-key'))

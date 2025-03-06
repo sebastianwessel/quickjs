@@ -3,7 +3,7 @@ import { loadQuickJs } from '../../loadQuickJs.js'
 import type { ErrorResponse } from '../../types/ErrorResponse.js'
 import type { OkResponseCheck } from '../../types/OkResponseCheck.js'
 
-describe('core - validateCode', () => {
+describe('sync - core - validateCode', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 
 	beforeAll(async () => {

@@ -3,7 +3,7 @@ import { loadQuickJs } from '../../loadQuickJs.js'
 import type { ErrorResponse } from '../../types/ErrorResponse.js'
 import type { OkResponse } from '../../types/OkResponse.js'
 
-describe('core - return values', () => {
+describe('sync - core - return values', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 
 	beforeAll(async () => {
