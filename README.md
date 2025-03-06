@@ -2,6 +2,8 @@
 
 This TypeScript package allows you to safely execute **JavaScript AND TypeScript code** within a WebAssembly sandbox using the QuickJS engine. Perfect for isolating and running untrusted code securely, it leverages the lightweight and fast QuickJS engine compiled to WebAssembly, providing a robust environment for code execution.
 
+**[View the full documentation](https://sebastianwessel.github.io/quickjs/)** | **[Find examples in the repository](https://github.com/sebastianwessel/quickjs/tree/main/example)** | **[Online Playground](https://sebastianwessel.github.io/quickjs/playground.html)**
+
 ## Features
 
 - **Security**: Run untrusted JavaScript and TypeScript code in a safe, isolated environment.
@@ -14,31 +16,12 @@ This TypeScript package allows you to safely execute **JavaScript AND TypeScript
 - **Versatility**: Easily integrate with existing TypeScript projects.
 - **Simplicity**: User-friendly API for executing and managing JavaScript and TypeScript code in the sandbox.
 
-**[View the full documentation](https://sebastianwessel.github.io/quickjs/)**
-
-**[Find examples in the repository](https://github.com/sebastianwessel/quickjs/tree/main/example)**
-
-## Version 1: Rolling Release
-
-### Fast Lane - Fast Pace
-
-Welcome to the first version of our npm package! This release follows a rolling release model, prioritizing rapid development and quick iterations. The approach is designed to deliver features swiftly, gather feedback promptly, and implement fixes without delay. This means you get the latest features and improvements as soon as they are ready, ensuring you always have access to the cutting-edge functionality.
-
-Key aspects of our rolling release model:
-
-- **Ship Fast:** Release new features and updates as soon as they are developed.
-- **Get Fast Feedback:** Your feedback is crucial. I listen and respond quickly to ensure the package meets your needs.
-- **Fix Quickly:** Bugs and issues are addressed promptly, minimizing any disruptions.
-- **Fast-Paced Development:** Our development cycle is agile, allowing us to adapt and evolve based on user input.
-
-Stay tuned for frequent updates and enhancements.
-
 ## Basic Usage
 
 Here's a simple example of how to use the package:
 
 ```typescript
-import { type SandboxOptions, loadQuickJs } from '../../src/index.js'
+import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
 
 // General setup like loading and init of the QuickJS wasm
 // It is a ressource intensive job and should be done only once if possible
@@ -70,10 +53,14 @@ const fn = async ()=>{
 export default await fn()
 `
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code, undefined, options), options)
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
 
 console.log(result) // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
 ```
+
+**[View the full documentation](https://sebastianwessel.github.io/quickjs/)**
+
+**[Find examples in the repository](https://github.com/sebastianwessel/quickjs/tree/main/example)**
 
 ## Credits
 
