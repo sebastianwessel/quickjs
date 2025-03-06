@@ -6,11 +6,5 @@ import type { Prettify } from './Prettify.js'
 export type SandboxEvalCode = (
 	code: string,
 	filename?: string,
-	options?: Prettify<
-		Omit<ContextEvalOptions, 'type'> & {
-			executionTimeout?: number
-			maxStackSize?: number
-			memoryLimit?: number
-		}
-	>,
+	options?: Prettify<Omit<ContextEvalOptions, 'type'>>,
 ) => Promise<OkResponse | ErrorResponse>
