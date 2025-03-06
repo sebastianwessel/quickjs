@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'bun:test'
 import { loadQuickJs } from '../../loadQuickJs.js'
 import type { OkResponse } from '../../types/OkResponse.js'
 
-describe('node:util - types', () => {
+describe('sync - node:util - types', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 	const typesToTest = [
 		{ method: 'isAnyArrayBuffer', value: 'new ArrayBuffer(10)', expected: true },

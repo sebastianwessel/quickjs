@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'bun:test'
 import { loadQuickJs } from '../../loadQuickJs.js'
 import type { OkResponse } from '../../types/OkResponse.js'
 
-describe('node:fs - directory', () => {
+describe('sync - node:fs - directory', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 	const testDirPath = '/testDir'
 	const tempDirPrefix = '/tmpDir'

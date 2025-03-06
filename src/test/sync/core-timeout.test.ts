@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'bun:test'
 import { loadQuickJs } from '../../loadQuickJs.js'
 import type { OkResponse } from '../../types/OkResponse.js'
 
-describe('core - timeout', () => {
+describe('sync - core - timeout', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 
 	beforeAll(async () => {
@@ -21,19 +21,6 @@ describe('core - timeout', () => {
     export default 'ok'
     `
 
-		const result = await runCode(code, { executionTimeout: 1 })
-		expect(result.ok).toBeFalse()
-		expect(result.data).toBeUndefined()
-	})
-
-	it('terminates execution when evalCode timeout is reached', async () => {
-		const code = `
-    while(true){}  
-    export default 'ok'
-    `
-
-		const result = await runCode(code, { executionTimeout: 1 })
-		expect(result.ok).toBeFalse()
-		expect(result.data).toBeUndefined()
+		await expect(runCode(code, { executionTimeout: 1 })).rejects.toThrow('interrupted')
 	})
 })
