@@ -16,7 +16,7 @@ export const provideTimingFunctions = (
 	let intervalCounter = 0
 
 	const _setTimeout = ctx.newFunction('setTimeout', (vmFnHandle, timeoutHandle) => {
-		timeoutCounter++
+		const currentCounter = timeoutCounter++
 		if (timeouts.size + 1 > max.maxTimeoutCount) {
 			throw new Error(
 				`Client tries to use setTimeout, which exceeds the limit of max ${max.maxTimeoutCount} concurrent running timeout functions`,
@@ -28,17 +28,17 @@ export const provideTimingFunctions = (
 		const timeout = timeoutHandle ? ctx.dump(timeoutHandle) : undefined
 
 		const timeoutID = setTimeout(() => {
-			const t = timeouts.get(timeoutCounter)
+			const t = timeouts.get(currentCounter)
 			if (t) {
 				clearTimeout(t)
-				timeouts.delete(timeoutCounter)
+				timeouts.delete(currentCounter)
 			}
 			ctx.callFunction(vmFnHandleCopy, ctx.undefined)
 		}, timeout)
 
-		timeouts.set(timeoutCounter, timeoutID)
+		timeouts.set(currentCounter, timeoutID)
 
-		return ctx.newNumber(timeoutCounter)
+		return ctx.newNumber(currentCounter)
 	})
 
 	scope.manage(_setTimeout)
@@ -46,7 +46,7 @@ export const provideTimingFunctions = (
 
 	const _clearTimeout = ctx.newFunction('clearTimeout', timeoutHandle => {
 		const id: number = ctx.dump(timeoutHandle)
-		timeoutHandle.dispose
+		timeoutHandle.dispose()
 
 		const t = timeouts.get(id)
 		if (t) {
@@ -59,7 +59,7 @@ export const provideTimingFunctions = (
 	ctx.setProp(ctx.global, 'clearTimeout', _clearTimeout)
 
 	const _setInterval = ctx.newFunction('setInterval', (vmFnHandle, intervalHandle) => {
-		intervalCounter++
+		const currentCounter = intervalCounter++
 		if (intervals.size + 1 > max.maxIntervalCount) {
 			throw new Error(
 				`Client tries to use setInterval, which exceeds the limit of max ${max.maxIntervalCount} concurrent running interval functions`,
@@ -73,9 +73,9 @@ export const provideTimingFunctions = (
 			ctx.callFunction(vmFnHandleCopy, ctx.undefined)
 		}, interval)
 
-		intervals.set(intervalCounter, intervalID)
+		intervals.set(currentCounter, intervalID)
 
-		return ctx.newNumber(intervalCounter)
+		return ctx.newNumber(currentCounter)
 	})
 
 	scope.manage(_setInterval)
@@ -83,7 +83,7 @@ export const provideTimingFunctions = (
 
 	const _clearInterval = ctx.newFunction('clearInterval', intervalHandle => {
 		const id: number = ctx.dump(intervalHandle)
-		intervalHandle.dispose
+		intervalHandle.dispose()
 
 		const t = intervals.get(id)
 		if (t) {
