@@ -49,7 +49,7 @@ You might expect that this code does not block the host system, but it does, eve
 **❗ Set Execution Timeouts if Possible**  
 It is highly recommended to set a default timeout value to avoid blocking the host system indefinitely. The execution timeout can be set in the options of `createRuntime` and `evalCode`. The smaller value between the two functions will be chosen. Setting the `executionTimeout` to `0` or `undefined` disables the execution timeout.
 
-Timeout values are in seconds for better readability.
+Timeout values are in milliseconds.
 
 **Please see: [Runtime Options - Execution Limits](./runtime-options.md)**
 
