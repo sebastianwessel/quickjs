@@ -90,8 +90,8 @@ export default await fn()
 `
 
 const result = await runSandboxed(async ({ evalCode }) => {
-  return evalCode(code), options
-  })
+  return evalCode(code)
+}, options)
 
 console.log(result)
 // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
