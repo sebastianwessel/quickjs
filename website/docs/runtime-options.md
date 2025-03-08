@@ -16,7 +16,7 @@ These options apply to both synchronous and asynchronous sandbox instances.
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `executionTimeout` | `number` | Maximum script execution time (in seconds). Set to `0` for unlimited. |
+| `executionTimeout` | `number` | Maximum script execution time (in milliseconds). Set to `0` for unlimited. |
 | `maxStackSize` | `number` | Maximum stack size (in bytes). Set to `0` to disable the limit. |
 | `memoryLimit` | `number` | Maximum memory allocation. Set to `0` to remove the limit. |
 
