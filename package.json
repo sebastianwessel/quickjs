@@ -90,6 +90,7 @@
 		"@jitl/quickjs-ng-wasmfile-release-asyncify": "^0.31.0",
 		"@jitl/quickjs-ng-wasmfile-release-sync": "^0.31.0",
 		"@types/autocannon": "^7.12.6",
+		"@types/bun": "^1.2.4",
 		"@types/node": "^22.13.5",
 		"autocannon": "^8.0.0",
 		"chai": "^5.2.0",
