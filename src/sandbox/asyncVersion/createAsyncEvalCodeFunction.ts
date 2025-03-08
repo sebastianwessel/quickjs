@@ -38,6 +38,7 @@ export const createAsyncEvalCodeFunction = (input: CodeFunctionAsyncInput, scope
 
 			const native = handleToNative(ctx, handle, scope)
 
+			let timeoutId: ReturnType<typeof setTimeout> | undefined
 			const result = await Promise.race([
 				(async () => {
 					const res = await native
@@ -45,7 +46,7 @@ export const createAsyncEvalCodeFunction = (input: CodeFunctionAsyncInput, scope
 				})(),
 				new Promise((_resolve, reject) => {
 					if (sandboxOptions.executionTimeout) {
-						setTimeout(() => {
+						timeoutId = setTimeout(() => {
 							const err = new Error('The script execution has exceeded the maximum allowed time limit.')
 							err.name = 'ExecutionTimeout'
 							reject(err)
@@ -53,6 +54,10 @@ export const createAsyncEvalCodeFunction = (input: CodeFunctionAsyncInput, scope
 					}
 				}),
 			])
+
+			if (timeoutId) {
+				clearTimeout(timeoutId)
+			}
 
 			return { ok: true, data: result } as OkResponse
 		} catch (err) {
