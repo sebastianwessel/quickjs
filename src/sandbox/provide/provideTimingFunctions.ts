@@ -25,7 +25,7 @@ export const provideTimingFunctions = (
 
 		const vmFnHandleCopy = vmFnHandle.dup()
 		scope.manage(vmFnHandleCopy)
-		const timeout = ctx.dump(timeoutHandle)
+		const timeout = timeoutHandle ? ctx.dump(timeoutHandle) : undefined
 
 		const timeoutID = setTimeout(() => {
 			const t = timeouts.get(timeoutCounter)
