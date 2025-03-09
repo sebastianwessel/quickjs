@@ -48,7 +48,7 @@
 		"start": "bun run --watch example/server/server.ts",
 		"build": "bun run build:vendor && tshy && bun run build:copy",
 		"build:vendor": "bun vendor.ts",
-		"build:copy": "cp -r ./src/modules/build/ ./dist/esm/modules/build && cp -r ./src/modules/build/ ./dist/commonjs/modules/build",
+		"build:copy": "cp -R ./src/modules/build/ ./dist/esm/modules/build && cp -R ./src/modules/build/ ./dist/commonjs/modules/build",
 		"test": "bun test",
 		"test:dev": "bun test --watch",
 		"lint": "bunx @biomejs/biome check",
