@@ -135,3 +135,4 @@ dist
 src/modules/build
 
 website/.vitepress/cache
+docs
