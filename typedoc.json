@@ -1,0 +1,27 @@
+{
+	"$schema": "https://typedoc.org/schema.json",
+	"name": "@sebastianwessel/quickjs",
+	"entryPoints": ["./src/index.ts"],
+	"plugin": ["typedoc-plugin-markdown"],
+	"out": "website/api",
+
+	"hideGenerator": true,
+	"includeVersion": true,
+	"excludeInternal": true,
+	"excludeExternals": true,
+	"excludePrivate": true,
+	"excludeProtected": false,
+	"exclude": [
+		"**/**/*.(test).ts",
+		"**/*+(index|.spec|.e2e|.test).ts",
+		"dist/**",
+		"lib/**",
+		"example",
+		"node_modules",
+		"**/node_modules",
+		"vendor",
+		"loadtest.ts"
+	],
+	"gitRevision": "main",
+	"tsconfig": "typedoc.tsconfig.json"
+}

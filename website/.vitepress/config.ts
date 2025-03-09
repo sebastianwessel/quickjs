@@ -73,6 +73,7 @@ export default defineConfig({
 			{ text: 'Documentation', link: '/docs' },
 			{ text: 'Use Cases', link: '/use-cases' },
 			{ text: 'Playground', link: '/playground.md' },
+			{ text: 'API', link: '/api/globals.md' },
 			{ text: 'Blog', link: '/blog' },
 		],
 		outline: 'deep',

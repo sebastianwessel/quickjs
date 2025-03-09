@@ -23,22 +23,10 @@
 		"package",
 		"library"
 	],
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"tshy": {
-		"exclude": [
-			"src/**/*.test.ts",
-			"vendor",
-			"example",
-			"docs",
-			"vendor.ts",
-			"node_modules"
-		],
-		"dialects": [
-			"esm",
-			"commonjs"
-		],
+		"exclude": ["src/**/*.test.ts", "vendor", "example", "docs", "vendor.ts", "node_modules"],
+		"dialects": ["esm", "commonjs"],
 		"exports": {
 			"./package.json": "./package.json",
 			".": "./src/index.ts"
@@ -67,7 +55,7 @@
 		"knip": "knip",
 		"release": "bun run build && bun run lint:fix && np",
 		"docs:dev": "vitepress dev website",
-		"docs:build": "vitepress build website",
+		"docs:build": "git-cliff > CHANGELOG.md && typedoc --options typedoc.json && vitepress build website",
 		"docs:preview": "vitepress preview website"
 	},
 	"author": {
@@ -94,12 +82,15 @@
 		"@types/node": "^22.13.5",
 		"autocannon": "^8.0.0",
 		"chai": "^5.2.0",
+		"git-cliff": "^2.8.0",
 		"hono": "^4.7.2",
 		"knip": "^5.45.0",
 		"np": "^10.2.0",
 		"openai": "^4.85.4",
 		"poolifier-web-worker": "^0.4.31",
 		"tshy": "^3.0.2",
+		"typedoc": "^0.27.9",
+		"typedoc-plugin-markdown": "^4.4.2",
 		"typescript": "^5.7.3",
 		"vitepress": "^2.0.0-alpha.3",
 		"vitepress-sidebar": "^1.31.0",

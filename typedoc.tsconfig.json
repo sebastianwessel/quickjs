@@ -1,0 +1,31 @@
+{
+	"compilerOptions": {
+		"outDir": "dist",
+		"target": "ES2022",
+		"module": "es2022",
+		"moduleResolution": "node",
+		"moduleDetection": "force",
+		"allowJs": true,
+
+		"allowImportingTsExtensions": false,
+		"verbatimModuleSyntax": false,
+		"noEmit": false,
+
+		"strict": true,
+		"skipLibCheck": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitAny": false,
+
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noPropertyAccessFromIndexSignature": true,
+
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"declaration": true
+	},
+	"exclude": ["./dist/**", "./example", "./vendor", "loadtest.ts", "**/node_modules"]
+}
