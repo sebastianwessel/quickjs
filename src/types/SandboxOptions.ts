@@ -11,7 +11,7 @@ import type { RuntimeOptions } from './RuntimeOptions.js'
 
 export type SandboxBaseOptions = {
 	/**
-	 * The maximum time in seconds a script can run.
+	 * The maximum time in milliseconds a script can run.
 	 * Unset or set to 0 for unlimited execution time.
 	 */
 	executionTimeout?: number
