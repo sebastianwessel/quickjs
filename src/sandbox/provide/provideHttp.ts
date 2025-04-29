@@ -21,7 +21,7 @@ export const provideHttp = (
 			) as T
 		}
 
-	let fetchFunction: typeof fetch = injectUnsupported('fetch')
+	let fetchFunction: typeof fetch = injectUnsupported('fetch') as unknown as typeof fetch
 
 	if (options.allowFetch) {
 		fetchFunction = options.fetchAdapter ? options.fetchAdapter : getDefaultFetchAdapter({ fs: input?.fs })
