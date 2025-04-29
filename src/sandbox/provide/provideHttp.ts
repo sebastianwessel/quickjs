@@ -21,10 +21,19 @@ export const provideHttp = (
 			) as T
 		}
 
-	let fetchFunction: typeof fetch = injectUnsupported('fetch') as unknown as typeof fetch
+	let fetchFunction: typeof fetch = Object.assign(injectUnsupported('fetch'), {
+		preconnect: async (_url: string | URL, _options?: any) => {
+			return
+		},
+	})
 
 	if (options.allowFetch) {
-		fetchFunction = options.fetchAdapter ? options.fetchAdapter : getDefaultFetchAdapter({ fs: input?.fs })
+		const adapter = options.fetchAdapter ?? getDefaultFetchAdapter({ fs: input?.fs })
+		fetchFunction = Object.assign(adapter, {
+			preconnect: async (_url: string | URL, _options?: any) => {
+				return
+			},
+		})
 	}
 
 	expose(ctx, scope, {
