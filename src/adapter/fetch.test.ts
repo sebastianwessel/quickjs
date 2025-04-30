@@ -58,7 +58,9 @@ describe('core - fetch adapter', () => {
 		const fetchAdapter = getDefaultFetchAdapter(adapterOptions)
 
 		// Mocking fetch to return a response without CORS headers
-		global.fetch = mock().mockResolvedValue(new Response('', { status: 200, statusText: 'OK' }))
+		global.fetch = Object.assign(mock().mockResolvedValue(new Response('', { status: 200, statusText: 'OK' })), {
+			preconnect: async () => {},
+		})
 
 		const response = await fetchAdapter('http://example.com')
 		expect(response.status).toBe(200)
@@ -72,7 +74,9 @@ describe('core - fetch adapter', () => {
 		const fetchAdapter = getDefaultFetchAdapter(adapterOptions)
 
 		// Mocking fetch to return a response without CORS headers
-		global.fetch = mock().mockResolvedValue(new Response('', { status: 200, statusText: 'OK' }))
+		global.fetch = Object.assign(mock().mockResolvedValue(new Response('', { status: 200, statusText: 'OK' })), {
+			preconnect: async () => {},
+		})
 
 		const response = await fetchAdapter('http://example.com')
 		expect(response.status).toBe(403)
