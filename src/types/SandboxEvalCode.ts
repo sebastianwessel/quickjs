@@ -3,8 +3,8 @@ import type { ErrorResponse } from './ErrorResponse.js'
 import type { OkResponse } from './OkResponse.js'
 import type { Prettify } from './Prettify.js'
 
-export type SandboxEvalCode = (
+export type SandboxEvalCode<T = unknown> = (
 	code: string,
 	filename?: string,
 	options?: Prettify<Omit<ContextEvalOptions, 'type'>>,
-) => Promise<OkResponse | ErrorResponse>
+) => Promise<OkResponse<T> | ErrorResponse>
