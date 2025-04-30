@@ -13,10 +13,10 @@ describe.skip('sync - node:fs - links', () => {
 		runtime = await loadQuickJs()
 	})
 
-	const runCode = async (code: string): Promise<OkResponse> => {
+	const runCode = async (code: string) => {
 		return await runtime.runSandboxed(
 			async ({ evalCode }) => {
-				return (await evalCode(code)) as OkResponse
+				return await evalCode(code)
 			},
 			{ allowFs: true },
 		)
@@ -35,7 +35,7 @@ describe.skip('sync - node:fs - links', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(testFilePath)
+		expect((result as OkResponse).data).toBe(testFilePath)
 	})
 
 	it('can create a symbolic link asynchronously', async () => {
@@ -51,7 +51,7 @@ describe.skip('sync - node:fs - links', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(testFilePath)
+		expect((result as OkResponse).data).toBe(testFilePath)
 	})
 
 	it('can create a hard link synchronously', async () => {
@@ -68,7 +68,7 @@ describe.skip('sync - node:fs - links', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can create a hard link asynchronously', async () => {
@@ -85,7 +85,7 @@ describe.skip('sync - node:fs - links', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can resolve a symbolic link path synchronously', async () => {
@@ -101,7 +101,7 @@ describe.skip('sync - node:fs - links', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(testFilePath)
+		expect((result as OkResponse).data).toBe(testFilePath)
 	})
 
 	it('can resolve a symbolic link path asynchronously', async () => {
@@ -117,7 +117,7 @@ describe.skip('sync - node:fs - links', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(testFilePath)
+		expect((result as OkResponse).data).toBe(testFilePath)
 	})
 
 	it('can unlink a symbolic link synchronously', async () => {
@@ -134,7 +134,7 @@ describe.skip('sync - node:fs - links', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(false)
+		expect((result as OkResponse).data).toBe(false)
 	})
 
 	it('can unlink a symbolic link asynchronously', async () => {
@@ -156,6 +156,6 @@ describe.skip('sync - node:fs - links', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(false)
+		expect((result as OkResponse).data).toBe(false)
 	})
 })

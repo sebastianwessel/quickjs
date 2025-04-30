@@ -11,10 +11,10 @@ describe('sync - node:fs - directory', () => {
 		runtime = await loadQuickJs()
 	})
 
-	const runCode = async (code: string): Promise<OkResponse> => {
+	const runCode = async (code: string) => {
 		return await runtime.runSandboxed(
 			async ({ evalCode }) => {
-				return (await evalCode(code)) as OkResponse
+				return await evalCode(code)
 			},
 			{ allowFs: true },
 		)
@@ -32,7 +32,7 @@ describe('sync - node:fs - directory', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can create and remove a directory synchronously', async () => {
@@ -48,7 +48,7 @@ describe('sync - node:fs - directory', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can create a temporary directory synchronously', async () => {
@@ -63,7 +63,7 @@ describe('sync - node:fs - directory', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can create and read a directory asynchronously', async () => {
@@ -78,7 +78,7 @@ describe('sync - node:fs - directory', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can create and remove a directory asynchronously', async () => {
@@ -94,7 +94,7 @@ describe('sync - node:fs - directory', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can create a temporary directory asynchronously', async () => {
@@ -109,6 +109,6 @@ describe('sync - node:fs - directory', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 })

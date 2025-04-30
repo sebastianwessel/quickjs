@@ -10,7 +10,7 @@ describe('async - core - return values', () => {
 		runtime = await loadAsyncQuickJs()
 	})
 
-	const execute = async (code: string): Promise<OkResponse | ErrorResponse> => {
+	const execute = async (code: string) => {
 		return await runtime.runSandboxed(async ({ evalCode }) => evalCode(code))
 	}
 
@@ -19,7 +19,7 @@ describe('async - core - return values', () => {
     export default 'some valid code'
     `
 
-		const result = (await execute(code)) as OkResponse
+		const result = await execute(code)
 		expect(result).toStrictEqual({
 			ok: true,
 			data: 'some valid code',
@@ -31,7 +31,7 @@ describe('async - core - return values', () => {
     export default 42
     `
 
-		const result = (await execute(code)) as OkResponse
+		const result = await execute(code)
 		expect(result).toStrictEqual({
 			ok: true,
 			data: 42,
@@ -43,7 +43,7 @@ describe('async - core - return values', () => {
     export default undefined
     `
 
-		const result = (await execute(code)) as OkResponse
+		const result = await execute(code)
 		expect(result).toStrictEqual({
 			ok: true,
 			data: undefined,
@@ -55,7 +55,7 @@ describe('async - core - return values', () => {
     export default true
     `
 
-		const result = (await execute(code)) as OkResponse
+		const result = await execute(code)
 		expect(result).toStrictEqual({
 			ok: true,
 			data: true,
@@ -67,7 +67,7 @@ describe('async - core - return values', () => {
     export default false
     `
 
-		const result = (await execute(code)) as OkResponse
+		const result = await execute(code)
 		expect(result).toStrictEqual({
 			ok: true,
 			data: false,
@@ -79,7 +79,7 @@ describe('async - core - return values', () => {
     export default null
     `
 
-		const result = (await execute(code)) as OkResponse
+		const result = await execute(code)
 		expect(result).toStrictEqual({
 			ok: true,
 			data: null,
@@ -101,7 +101,7 @@ describe('async - core - return values', () => {
     }
     `
 
-		const result = (await execute(code)) as OkResponse
+		const result = await execute(code)
 		expect(result).toStrictEqual({
 			ok: true,
 			data: {
@@ -138,9 +138,9 @@ describe('async - core - return values', () => {
     export default new Error('error')
     `
 
-		const result = (await runtime.runSandboxed(async ({ evalCode }) => evalCode(code))) as OkResponse
+		const result = await runtime.runSandboxed(async ({ evalCode }) => evalCode(code))
 		expect(result.ok).toBeTrue()
-		expect(result.data).toEqual(new Error('error'))
+		expect((result as OkResponse).data).toEqual(new Error('error'))
 	})
 
 	it('throws an error', async () => {
@@ -149,9 +149,9 @@ describe('async - core - return values', () => {
     export default 'x'
     `
 
-		const result = (await runtime.runSandboxed(async ({ evalCode }) => evalCode(code))) as ErrorResponse
+		const result = await runtime.runSandboxed(async ({ evalCode }) => evalCode(code))
 		expect(result.ok).toBeFalse()
-		expect(result.error.message).toEqual('custom error')
-		expect(result.error.name).toEqual('Error')
+		expect((result as ErrorResponse).error.message).toEqual('custom error')
+		expect((result as ErrorResponse).error.name).toEqual('Error')
 	})
 })

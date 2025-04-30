@@ -12,10 +12,10 @@ describe.skip('async - node:fs - permissions', () => {
 		runtime = await loadAsyncQuickJs()
 	})
 
-	const runCode = async (code: string): Promise<OkResponse> => {
+	const runCode = async (code: string) => {
 		return await runtime.runSandboxed(
 			async ({ evalCode }) => {
-				return (await evalCode(code)) as OkResponse
+				return await evalCode(code)
 			},
 			{ allowFs: true },
 		)
@@ -34,7 +34,7 @@ describe.skip('async - node:fs - permissions', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can change file ownership synchronously', async () => {
@@ -50,7 +50,7 @@ describe.skip('async - node:fs - permissions', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can change file permissions asynchronously', async () => {
@@ -66,7 +66,7 @@ describe.skip('async - node:fs - permissions', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can change file ownership asynchronously', async () => {
@@ -82,7 +82,7 @@ describe.skip('async - node:fs - permissions', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can change directory permissions synchronously', async () => {
@@ -98,7 +98,7 @@ describe.skip('async - node:fs - permissions', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can change directory ownership synchronously', async () => {
@@ -114,7 +114,7 @@ describe.skip('async - node:fs - permissions', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can change directory permissions asynchronously', async () => {
@@ -130,7 +130,7 @@ describe.skip('async - node:fs - permissions', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can change directory ownership asynchronously', async () => {
@@ -146,6 +146,6 @@ describe.skip('async - node:fs - permissions', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 })

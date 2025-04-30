@@ -20,11 +20,11 @@ describe('sync - core - console', () => {
 
 		const options: SandboxOptions = { console: { log: logSpy } }
 		const result = await runtime.runSandboxed(async ({ evalCode }) => {
-			return (await evalCode(code)) as OkResponse
+			return await evalCode(code)
 		}, options)
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('logged')
+		expect((result as OkResponse).data).toBe('logged')
 		expect(logSpy).toHaveBeenCalledWith('Test log')
 	})
 
@@ -42,7 +42,7 @@ describe('sync - core - console', () => {
 		}, options)
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('errored')
+		expect((result as OkResponse).data).toBe('errored')
 		expect(errorSpy).toHaveBeenCalledWith('Test error')
 	})
 
@@ -60,7 +60,7 @@ describe('sync - core - console', () => {
 		}, options)
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('warned')
+		expect((result as OkResponse).data).toBe('warned')
 		expect(warnSpy).toHaveBeenCalledWith('Test warn')
 	})
 
@@ -78,7 +78,7 @@ describe('sync - core - console', () => {
 		}, options)
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('infoed')
+		expect((result as OkResponse).data).toBe('infoed')
 		expect(infoSpy).toHaveBeenCalledWith('Test info')
 	})
 
@@ -96,7 +96,7 @@ describe('sync - core - console', () => {
 		}, options)
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('debugged')
+		expect((result as OkResponse).data).toBe('debugged')
 		expect(debugSpy).toHaveBeenCalledWith('Test debug')
 	})
 
@@ -114,7 +114,7 @@ describe('sync - core - console', () => {
 		}, options)
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('traced')
+		expect((result as OkResponse).data).toBe('traced')
 		expect(traceSpy).toHaveBeenCalled()
 	})
 
@@ -132,7 +132,7 @@ describe('sync - core - console', () => {
 		}, options)
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('asserted')
+		expect((result as OkResponse).data).toBe('asserted')
 		expect(assertSpy).toHaveBeenCalledWith(false, 'Test assert')
 	})
 
@@ -151,7 +151,7 @@ describe('sync - core - console', () => {
 		}, options)
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('counted')
+		expect((result as OkResponse).data).toBe('counted')
 		expect(countSpy).toHaveBeenCalledTimes(2)
 	})
 
@@ -169,7 +169,7 @@ describe('sync - core - console', () => {
 		}, options)
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('dir')
+		expect((result as OkResponse).data).toBe('dir')
 		expect(dirSpy).toHaveBeenCalledWith({ key: 'value' })
 	})
 
@@ -190,7 +190,7 @@ describe('sync - core - console', () => {
 		}, options)
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('grouped')
+		expect((result as OkResponse).data).toBe('grouped')
 		expect(groupSpy).toHaveBeenCalledWith('Test group')
 		expect(groupEndSpy).toHaveBeenCalled()
 	})
@@ -209,7 +209,7 @@ describe('sync - core - console', () => {
 		}, options)
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('tabled')
+		expect((result as OkResponse).data).toBe('tabled')
 		expect(tableSpy).toHaveBeenCalledWith([
 			{ a: 1, b: 'Y' },
 			{ a: 'Z', b: 2 },
@@ -232,7 +232,7 @@ describe('sync - core - console', () => {
 		}, options)
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('timed')
+		expect((result as OkResponse).data).toBe('timed')
 		expect(timeSpy).toHaveBeenCalledWith('Test timer')
 		expect(timeEndSpy).toHaveBeenCalledWith('Test timer')
 	})
@@ -251,7 +251,7 @@ describe('sync - core - console', () => {
 		}, options)
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('cleared')
+		expect((result as OkResponse).data).toBe('cleared')
 		expect(clearSpy).toHaveBeenCalled()
 	})
 })

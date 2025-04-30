@@ -9,9 +9,9 @@ describe('async - core - timers', () => {
 		runtime = await loadAsyncQuickJs()
 	})
 
-	const runCode = async (code: string): Promise<OkResponse> => {
+	const runCode = async (code: string) => {
 		return await runtime.runSandboxed(async ({ evalCode }) => {
-			return (await evalCode(code)) as OkResponse
+			return await evalCode(code)
 		})
 	}
 
@@ -25,7 +25,7 @@ describe('async - core - timers', () => {
     `
 
 		const result = await runCode(code)
-		expect(result.data).toBe('timeout reached')
+		expect((result as OkResponse).data).toBe('timeout reached')
 	})
 
 	it('clearTimeout works correctly', async () => {
@@ -45,7 +45,7 @@ describe('async - core - timers', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('timeout cleared')
+		expect((result as OkResponse).data).toBe('timeout cleared')
 	})
 
 	it('setInterval works correctly', async () => {
@@ -64,7 +64,7 @@ describe('async - core - timers', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('interval reached')
+		expect((result as OkResponse).data).toBe('interval reached')
 	})
 
 	it('clearInterval works correctly', async () => {
@@ -85,7 +85,7 @@ describe('async - core - timers', () => {
 		expect(result.ok).toBeTrue()
 		// The exact count can vary depending on timing precision,
 		// but it should be around 3 if intervals are 100ms and we clear after 500ms.
-		expect(result.data).toBeGreaterThanOrEqual(3)
-		expect(result.data).toBeLessThanOrEqual(5)
+		expect((result as OkResponse).data).toBeGreaterThanOrEqual(3)
+		expect((result as OkResponse).data).toBeLessThanOrEqual(5)
 	})
 })

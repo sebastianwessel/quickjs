@@ -9,9 +9,9 @@ describe('async - node:util - base', () => {
 		runtime = await loadAsyncQuickJs()
 	})
 
-	const runCode = async (code: string): Promise<OkResponse> => {
+	const runCode = async (code: string) => {
 		return await runtime.runSandboxed(async ({ evalCode }) => {
-			return (await evalCode(code)) as OkResponse
+			return await evalCode(code)
 		})
 	}
 
@@ -50,7 +50,7 @@ describe('async - node:util - base', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('Test passed')
+		expect((result as OkResponse).data).toBe('Test passed')
 	})
 
 	it('callbackify works correctly', async () => {
@@ -89,6 +89,6 @@ describe('async - node:util - base', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('Test passed')
+		expect((result as OkResponse).data).toBe('Test passed')
 	})
 })

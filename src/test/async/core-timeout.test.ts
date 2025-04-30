@@ -1,6 +1,5 @@
 import { beforeAll, describe, expect, it } from 'bun:test'
 import { loadAsyncQuickJs } from '../../loadAsyncQuickJs.js'
-import type { OkResponse } from '../../types/OkResponse.js'
 
 describe('async - core - timeout', () => {
 	let runtime: Awaited<ReturnType<typeof loadAsyncQuickJs>>
@@ -9,9 +8,9 @@ describe('async - core - timeout', () => {
 		runtime = await loadAsyncQuickJs()
 	})
 
-	const runCode = async (code: string, options: { executionTimeout?: number } = {}): Promise<OkResponse> => {
+	const runCode = async (code: string, options: { executionTimeout?: number } = {}) => {
 		return await runtime.runSandboxed(async ({ evalCode }) => {
-			return (await evalCode(code)) as OkResponse
+			return await evalCode(code)
 		}, options)
 	}
 

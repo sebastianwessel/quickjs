@@ -11,10 +11,10 @@ describe('sync - node:fs - file', () => {
 		runtime = await loadQuickJs()
 	})
 
-	const runCode = async (code: string): Promise<OkResponse> => {
+	const runCode = async (code: string) => {
 		return await runtime.runSandboxed(
 			async ({ evalCode }) => {
-				return (await evalCode(code)) as OkResponse
+				return await evalCode(code)
 			},
 			{ allowFs: true },
 		)
@@ -32,7 +32,7 @@ describe('sync - node:fs - file', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(testFileContent)
+		expect((result as OkResponse).data).toBe(testFileContent)
 	})
 
 	it('can append to a file', async () => {
@@ -49,7 +49,7 @@ describe('sync - node:fs - file', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(testFileContent + appendedContent)
+		expect((result as OkResponse).data).toBe(testFileContent + appendedContent)
 	})
 
 	it('can check file existence', async () => {
@@ -64,7 +64,7 @@ describe('sync - node:fs - file', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(true)
+		expect((result as OkResponse).data).toBe(true)
 	})
 
 	it('can read and write file asynchronously', async () => {
@@ -79,7 +79,7 @@ describe('sync - node:fs - file', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(testFileContent)
+		expect((result as OkResponse).data).toBe(testFileContent)
 	})
 
 	it('can rename a file', async () => {
@@ -96,7 +96,7 @@ describe('sync - node:fs - file', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(testFileContent)
+		expect((result as OkResponse).data).toBe(testFileContent)
 	})
 
 	it('can delete a file', async () => {
@@ -112,6 +112,6 @@ describe('sync - node:fs - file', () => {
 
 		const result = await runCode(code)
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe(false)
+		expect((result as OkResponse).data).toBe(false)
 	})
 })
