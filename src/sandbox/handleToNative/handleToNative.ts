@@ -26,8 +26,7 @@ export const handleToNative = (ctx: QuickJSContext | QuickJSAsyncContext, handle
 		return null
 	}
 	if (ty === 'number' || ty === 'string' || ty === 'boolean' || ty === 'bigint') {
-		const val = ctx.dump(handle)
-		return val
+		return ctx.dump(handle)
 	}
 
 	if (ty === 'symbol') {
@@ -55,9 +54,7 @@ export const handleToNative = (ctx: QuickJSContext | QuickJSAsyncContext, handle
 		ctx
 			.newFunction('', (key, value) => {
 				const keyName = handleToNative(ctx, key, rootScope)
-				if (typeof keyName !== 'string' && typeof keyName !== 'number' && typeof keyName !== 'symbol') {
-					return
-				}
+				if (typeof keyName !== 'string' && typeof keyName !== 'number' && typeof keyName !== 'symbol') return
 
 				const desc = (
 					[
@@ -74,7 +71,7 @@ export const handleToNative = (ctx: QuickJSContext | QuickJSAsyncContext, handle
 
 					if (t === 'undefined') return desc
 					if (!unmarshable && t === 'boolean') {
-						desc[key] = ctx.dump(ctx.getProp(value, key))
+						desc[key] = ctx.dump(h)
 						return desc
 					}
 
@@ -90,12 +87,12 @@ export const handleToNative = (ctx: QuickJSContext | QuickJSAsyncContext, handle
 			.consume(f => {
 				call(
 					ctx,
-					'internal/serializer/setProperties,js',
+					'internal/serializer/setProperties.js',
 					`(o, fn) => {
-              const descs = Object.getOwnPropertyDescriptors(o);
-              Object.entries(descs).forEach(([k, v]) => fn(k, v) );
-              Object.getOwnPropertySymbols(descs).forEach(k => fn(k, descs[k]));
-          }`,
+						const descs = Object.getOwnPropertyDescriptors(o);
+						Object.entries(descs).forEach(([k, v]) => fn(k, v));
+						Object.getOwnPropertySymbols(descs).forEach(k => fn(k, descs[k]));
+					}`,
 					undefined,
 					h,
 					f,
@@ -104,51 +101,41 @@ export const handleToNative = (ctx: QuickJSContext | QuickJSAsyncContext, handle
 	}
 
 	if (ty === 'function') {
-		const func = () => {
-			// make a copy
-			if (!rootScope) {
-				throw new Error('Missing root scope')
-			}
-			const cpHandle = rootScope.manage(handle.dup())
+		if (!rootScope) throw new Error('Missing root scope')
+		const cpHandle = rootScope.manage(handle.dup())
 
-			return function (this: any, ...args: any[]) {
-				const scope = new Scope()
-				const thisHandle = getHandle(scope, ctx, '', this)
-				const argHandles = args.map(a => getHandle(scope, ctx, '', a))
+		const f = function (this: any, ...args: any[]) {
+			const scope = new Scope()
+			const thisHandle = getHandle(scope, ctx, '', this)
+			const argHandles = args.map(a => getHandle(scope, ctx, '', a))
 
-				if (new.target) {
-					const instance = handleToNative(
+			if (new.target) {
+				const instance = handleToNative(
+					ctx,
+					call(
 						ctx,
-						call(
-							ctx,
-							'internal/serializer/newClass.js',
-							'(Cls, ...args) => new Cls(...args)',
-							thisHandle,
-							cpHandle,
-							...argHandles,
-						),
-						rootScope,
-					)
-					Object.defineProperties(this, Object.getOwnPropertyDescriptors(instance))
-					scope.dispose()
+						'internal/serializer/newClass.js',
+						'(Cls, ...args) => new Cls(...args)',
+						thisHandle,
+						cpHandle,
+						...argHandles,
+					),
+					rootScope,
+				)
+				Object.defineProperties(this, Object.getOwnPropertyDescriptors(instance))
+				scope.dispose()
+				return this
+			}
 
-					return this
-				}
-
-				try {
-					const resultHandle = scope.manage(ctx.unwrapResult(ctx.callFunction(cpHandle, thisHandle, ...argHandles)))
-
-					const res = handleToNative(ctx, resultHandle, rootScope)
-					return res
-				} catch (error) {
-					throw error as Error
-				} finally {
-					scope.dispose()
-				}
+			try {
+				const resultHandle = scope.manage(ctx.unwrapResult(ctx.callFunction(cpHandle, thisHandle, ...argHandles)))
+				const res = handleToNative(ctx, resultHandle, rootScope)
+				return res
+			} finally {
+				scope.dispose()
 			}
 		}
 
-		const f = func()
 		setProperties(f, handle)
 		return f
 	}
@@ -157,24 +144,62 @@ export const handleToNative = (ctx: QuickJSContext | QuickJSAsyncContext, handle
 		const isNull = call(ctx, 'internal/serializer/isNull.js', 'a => a === null', undefined, handle).consume(r =>
 			ctx.dump(r),
 		)
+		if (isNull) return null
 
-		if (isNull) {
-			return null
+		// Check for Error instances
+		const errorType = call(
+			ctx,
+			'internal/serializer/detectErrorType.js',
+			`(o) => {
+				try {
+					const tag = Object.prototype.toString.call(o)
+					if (tag.startsWith('[object ') && tag.endsWith(']')) {
+						const type = tag.slice(8, -1)
+						if (type.endsWith('Error')) return type
+					}
+				} catch {}
+				if (typeof o?.name === 'string' && typeof o?.message === 'string') return 'Error'
+				return undefined
+			}`,
+			undefined,
+			handle,
+		).consume(r => ctx.dump(r))
+
+		if (typeof errorType === 'string') {
+			const s = getSerializer(errorType)
+			if (s) {
+				const ret = s(ctx, handle)
+				if (ret) {
+					return ret
+				}
+			}
+
+			const messageHandle = ctx.getProp(handle, 'message')
+			const stackHandle = ctx.getProp(handle, 'stack')
+
+			const message = ctx.dump(messageHandle) ?? ''
+			const stack = ctx.dump(stackHandle)
+
+			messageHandle.dispose()
+			stackHandle.dispose()
+
+			const e = new Error(message)
+			e.name = errorType
+			if (typeof stack === 'string') e.stack = stack
+
+			return e
 		}
 
-		const obj = call(ctx, 'internal/serializer/isArray.js', 'Array.isArray', undefined, handle).consume(r =>
+		const isArray = call(ctx, 'internal/serializer/isArray.js', 'Array.isArray', undefined, handle).consume(r =>
 			ctx.dump(r),
 		)
-			? []
-			: {}
+
+		const obj: any = isArray ? [] : {}
 
 		const constructorName = call(
 			ctx,
 			'internal/serializer/getConstructorName.js',
-			`(o) => {
-        if(!o.constructor) { return };
-        return o.constructor.name
-      }`,
+			`o => typeof o?.constructor?.name === 'string' ? o.constructor.name : undefined`,
 			undefined,
 			handle,
 		).consume(r => ctx.dump(r))

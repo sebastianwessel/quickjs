@@ -9,6 +9,7 @@ const promiseTestBody = `const fn = async ()=> {
 
 export default await fn()`
 
+/*
 const fetchTestBody = `import * as path from 'node:path'
 import { writeFileSync, readFileSync } from 'node:fs'
 
@@ -30,6 +31,7 @@ const fn = async ()=>{
   }
   
 export default await fn()`
+*/
 
 autocannon(
 	{

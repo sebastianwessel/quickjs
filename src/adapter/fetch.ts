@@ -110,70 +110,76 @@ export const getDefaultFetchAdapter = (adapterOptions: GetFetchAdapterOptions = 
 		duration: options.rateLimitDuration,
 	})
 
-	const fetchAdapter: typeof fetch = async (input, init) => {
-		try {
-			await rateLimiter.consume('fetch', 1)
+	const fetchAdapter = Object.assign(
+		async (input: RequestInfo, init?: RequestInit) => {
+			try {
+				await rateLimiter.consume('fetch', 1)
+				const parsedUrl = new URL(input.toString())
 
-			const parsedUrl = new URL(input.toString())
-
-			if (options.disallowedHosts.includes(parsedUrl.hostname)) {
-				return getForbiddenResponse()
-			}
-
-			if (options.allowedHosts && !options.allowedHosts.includes(parsedUrl.hostname)) {
-				return getForbiddenResponse()
-			}
-
-			if (!options.allowedProtocols.includes(parsedUrl.protocol)) {
-				return getForbiddenResponse()
-			}
-
-			// Prevent accessing the host's file system
-			if (parsedUrl.protocol === 'file:') {
-				// No virtual guest file system available
-				if (!options.fs) {
+				// Check disallowed hosts
+				if (options.disallowedHosts.includes(parsedUrl.hostname)) {
 					return getForbiddenResponse()
 				}
 
-				// Return the file from the virtual file system of this sandbox if available.
-				if (!options.fs.existsSync(input.toString())) {
-					const res = new Response('', { status: 404, statusText: 'NOT_FOUND' })
+				// Check allowed hosts
+				if (options.allowedHosts && !options.allowedHosts.includes(parsedUrl.hostname)) {
+					return getForbiddenResponse()
+				}
+
+				// Check allowed protocols
+				if (!options.allowedProtocols.includes(parsedUrl.protocol)) {
+					return getForbiddenResponse()
+				}
+
+				// Handle file:// protocol with virtual file system
+				if (parsedUrl.protocol === 'file:') {
+					if (!options.fs) {
+						return getForbiddenResponse()
+					}
+					if (!options.fs.existsSync(input.toString())) {
+						const res = new Response('', { status: 404, statusText: 'NOT_FOUND' })
+						return mapResponse(res)
+					}
+					const content = options.fs.readFileSync(input.toString())
+					const res = new Response(content, { status: 200, statusText: 'OK' })
 					return mapResponse(res)
 				}
 
-				const content = options.fs.readFileSync(input.toString())
-				const res = new Response(content, { status: 200, statusText: 'OK' })
-				return mapResponse(res)
-			}
-
-			const initWithDefaults: RequestInit = {
-				redirect: 'error',
-				...init,
-				// Set a timeout to prevent long-running requests
-				signal: AbortSignal.timeout(options.timeout),
-			}
-
-			const res = await fetch(input, initWithDefaults)
-
-			// Enforce CORS policies if not disabled
-			if (options.corsCheck) {
-				const origin = res.headers.get('Access-Control-Allow-Origin')
-				if (!origin || (!options.allowedCorsOrigins.includes('*') && !options.allowedCorsOrigins.includes(origin))) {
-					return getForbiddenResponse()
+				// Setup request with timeout
+				const initWithDefaults: RequestInit = {
+					redirect: 'error',
+					...init,
+					signal: AbortSignal.timeout(options.timeout),
 				}
-			}
 
-			return mapResponse(res)
-		} catch (rateLimiterRes) {
-			if (rateLimiterRes instanceof Error) {
-				console.error('Fetch adapter error:', rateLimiterRes)
-				const res = new Response('', { status: 500, statusText: 'INTERNAL SERVER ERROR' })
+				const res = await fetch(input, initWithDefaults)
+
+				// Enforce CORS policy if needed
+				if (options.corsCheck) {
+					const origin = res.headers.get('Access-Control-Allow-Origin')
+					if (!origin || (!options.allowedCorsOrigins.includes('*') && !options.allowedCorsOrigins.includes(origin))) {
+						return getForbiddenResponse()
+					}
+				}
+
+				return mapResponse(res)
+			} catch (err) {
+				if (err instanceof Error) {
+					console.error('Fetch adapter error:', err)
+					const res = new Response('', { status: 500, statusText: 'INTERNAL SERVER ERROR' })
+					return mapResponse(res)
+				}
+				const res = new Response('', { status: 429, statusText: 'TOO MANY REQUESTS' })
 				return mapResponse(res)
 			}
-			const res = new Response('', { status: 429, statusText: 'TOO MANY REQUESTS' })
-			return mapResponse(res)
-		}
-	}
+		},
+		{
+			// Dummy implementation of preconnect for Bun compatibility
+			preconnect: async (_url: string | URL, _options?: any) => {
+				return
+			},
+		},
+	)
 
-	return fetchAdapter
+	return fetchAdapter as typeof fetch
 }

@@ -10,7 +10,7 @@ describe('sync - core - validateCode', () => {
 		runtime = await loadQuickJs()
 	})
 
-	const runValidation = async (code: string): Promise<OkResponseCheck | ErrorResponse> => {
+	const runValidation = async (code: string) => {
 		return await runtime.runSandboxed(async ({ validateCode }) => {
 			return await validateCode(code)
 		})

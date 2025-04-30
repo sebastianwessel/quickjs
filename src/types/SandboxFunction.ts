@@ -3,14 +3,14 @@ import type { QuickJSAsyncContext, QuickJSContext } from 'quickjs-emscripten-cor
 import type { SandboxEvalCode } from './SandboxEvalCode.js'
 import type { SandboxValidateCode } from './SandboxValidateCode.js'
 
-export type SandboxFunction<T> = (sandbox: {
+export type SandboxFunction<T = any> = (sandbox: {
 	ctx: QuickJSContext
 	evalCode: SandboxEvalCode
 	validateCode: SandboxValidateCode
 	mountedFs: IFs
 }) => Promise<T>
 
-export type AsyncSandboxFunction<T> = (sandbox: {
+export type AsyncSandboxFunction<T = any> = (sandbox: {
 	ctx: QuickJSAsyncContext
 	evalCode: SandboxEvalCode
 	validateCode: SandboxValidateCode

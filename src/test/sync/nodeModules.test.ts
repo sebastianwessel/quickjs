@@ -10,7 +10,7 @@ describe('sync - node_modules', () => {
 		runtime = await loadQuickJs()
 	})
 
-	const runCode = async (code: string, options: object = {}): Promise<OkResponse | ErrorResponse> => {
+	const runCode = async (code: string, options: object = {}) => {
 		return await runtime.runSandboxed(async ({ evalCode }) => {
 			return await evalCode(code)
 		}, options)
@@ -25,7 +25,7 @@ describe('sync - node_modules', () => {
 		const result = (await runCode(code)) as OkResponse
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('example/folder')
+		expect((result as OkResponse).data).toBe('example/folder')
 	})
 
 	it('can use node:path module', async () => {
@@ -37,7 +37,7 @@ describe('sync - node_modules', () => {
 		const result = (await runCode(code)) as OkResponse
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('/example/index')
+		expect((result as OkResponse).data).toBe('/example/index')
 	})
 
 	it('cannot use node:fs module by default', async () => {
@@ -72,7 +72,7 @@ describe('sync - node_modules', () => {
 		const result = (await runCode(code, { allowFs: true })) as OkResponse
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('text content')
+		expect((result as OkResponse).data).toBe('text content')
 	})
 
 	it('can use a custom module', async () => {
@@ -92,7 +92,7 @@ describe('sync - node_modules', () => {
 		})) as OkResponse
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('Hello from custom module function')
+		expect((result as OkResponse).data).toBe('Hello from custom module function')
 	})
 
 	it('can use relative imports with js extension', async () => {
@@ -112,7 +112,7 @@ describe('sync - node_modules', () => {
 		})) as OkResponse
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('Hello from relative import function')
+		expect((result as OkResponse).data).toBe('Hello from relative import function')
 	})
 
 	it('can use relative imports without js extension', async () => {
@@ -132,6 +132,6 @@ describe('sync - node_modules', () => {
 		})) as OkResponse
 
 		expect(result.ok).toBeTrue()
-		expect(result.data).toBe('Hello from relative import function')
+		expect((result as OkResponse).data).toBe('Hello from relative import function')
 	})
 })

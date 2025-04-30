@@ -36,7 +36,7 @@ export const getHandle = (
 			e => {
 				const handle = getHandle(scope, ctx, '', e)
 				promise.reject(handle)
-				handle.dispose
+				handle.dispose()
 			},
 		)
 

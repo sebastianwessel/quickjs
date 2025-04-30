@@ -11,9 +11,9 @@ describe('sync - node:assert', () => {
 		runtime = await loadQuickJs()
 	})
 
-	const runCode = async (code: string): Promise<OkResponse<AssetCheck>> => {
+	const runCode = async (code: string) => {
 		return await runtime.runSandboxed(async ({ evalCode }) => {
-			return (await evalCode(code)) as OkResponse<AssetCheck>
+			return await evalCode(code)
 		})
 	}
 
@@ -33,7 +33,7 @@ describe('sync - node:assert', () => {
 		`
 
 		const result = await runCode(code)
-		expect(result.data.success).toBeTrue()
+		expect((result as OkResponse<AssetCheck>).data.success).toBeTrue()
 	})
 
 	it('assert.ok should fail for falsy values', async () => {
@@ -52,8 +52,8 @@ describe('sync - node:assert', () => {
 		`
 
 		const result = await runCode(code)
-		expect(result.data.success).toBeFalse()
-		expect(result.data.error).toBe('False should be falsy')
+		expect((result as OkResponse<AssetCheck>).data.success).toBeFalse()
+		expect((result as OkResponse<AssetCheck>).data.error).toBe('False should be falsy')
 	})
 
 	it('assert.equal should pass for equal values', async () => {
@@ -72,7 +72,7 @@ describe('sync - node:assert', () => {
 		`
 
 		const result = await runCode(code)
-		expect(result.data.success).toBeTrue()
+		expect((result as OkResponse<AssetCheck>).data.success).toBeTrue()
 	})
 
 	it('assert.equal should fail for non-equal values', async () => {
@@ -91,8 +91,8 @@ describe('sync - node:assert', () => {
 		`
 
 		const result = await runCode(code)
-		expect(result.data.success).toBeFalse()
-		expect(result.data.error).toBe('1 should not equal 2')
+		expect((result as OkResponse<AssetCheck>).data.success).toBeFalse()
+		expect((result as OkResponse<AssetCheck>).data.error).toBe('1 should not equal 2')
 	})
 
 	it('assert.deepEqual should pass for deeply equal objects', async () => {
@@ -111,7 +111,7 @@ describe('sync - node:assert', () => {
 		`
 
 		const result = await runCode(code)
-		expect(result.data.success).toBeTrue()
+		expect((result as OkResponse<AssetCheck>).data.success).toBeTrue()
 	})
 
 	it('assert.deepEqual should fail for non-deeply equal objects', async () => {
@@ -130,8 +130,8 @@ describe('sync - node:assert', () => {
 		`
 
 		const result = await runCode(code)
-		expect(result.data.success).toBeFalse()
-		expect(result.data.error).toBe('Objects should not be deeply equal')
+		expect((result as OkResponse<AssetCheck>).data.success).toBeFalse()
+		expect((result as OkResponse<AssetCheck>).data.error).toBe('Objects should not be deeply equal')
 	})
 
 	it('assert.strictEqual should pass for strictly equal values', async () => {
@@ -150,7 +150,7 @@ describe('sync - node:assert', () => {
 		`
 
 		const result = await runCode(code)
-		expect(result.data.success).toBeTrue()
+		expect((result as OkResponse<AssetCheck>).data.success).toBeTrue()
 	})
 
 	it('assert.strictEqual should fail for non-strictly equal values', async () => {
@@ -169,7 +169,7 @@ describe('sync - node:assert', () => {
 		`
 
 		const result = await runCode(code)
-		expect(result.data.success).toBeFalse()
-		expect(result.data.error).toBe('1 should not strictly equal "1"')
+		expect((result as OkResponse<AssetCheck>).data.success).toBeFalse()
+		expect((result as OkResponse<AssetCheck>).data.error).toBe('1 should not strictly equal "1"')
 	})
 })

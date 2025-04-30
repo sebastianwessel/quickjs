@@ -287,7 +287,7 @@ globalThis.beforeAll = beforeAll
 globalThis.afterAll = afterAll
 globalThis.beforeEach = beforeEach
 globalThis.afterEach = afterEach
-globalThis.runTests = runTests
+;(globalThis as any).runTests = runTests
 globalThis.expect = expect
 
 export { describe, it, beforeAll, afterAll, beforeEach, afterEach, runTests, expect }

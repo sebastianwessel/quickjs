@@ -48,9 +48,9 @@ describe('async - node:util - types', () => {
 		runtime = await loadAsyncQuickJs()
 	})
 
-	const runCode = async (code: string): Promise<OkResponse> => {
+	const runCode = async (code: string) => {
 		return await runtime.runSandboxed(async ({ evalCode }) => {
-			return (await evalCode(code)) as OkResponse
+			return await evalCode(code)
 		})
 	}
 
@@ -64,7 +64,7 @@ describe('async - node:util - types', () => {
 
 			const result = await runCode(code)
 			expect(result.ok).toBeTrue()
-			expect(result.data).toBe(expected)
+			expect((result as OkResponse).data).toBe(expected)
 		})
 	}
 })

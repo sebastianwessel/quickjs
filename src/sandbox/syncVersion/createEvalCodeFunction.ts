@@ -14,12 +14,17 @@ export const createEvalCodeFunction = (input: CodeFunctionInput, scope: Scope): 
 	return async (code, filename = '/src/index.js', evalOptions?) => {
 		const eventLoopinterval = createTimeInterval(() => ctx.runtime.executePendingJobs(), 0)
 
+		let timeoutId: ReturnType<typeof setTimeout> | undefined
+
 		const { dispose: disposeTimer } = provideTimingFunctions(ctx, {
 			maxTimeoutCount: getMaxTimeoutAmount(sandboxOptions),
 			maxIntervalCount: getMaxIntervalAmount(sandboxOptions),
 		})
 
 		const disposeStep = () => {
+			if (timeoutId) {
+				clearTimeout(timeoutId)
+			}
 			eventLoopinterval?.clear()
 			disposeTimer()
 		}
@@ -37,8 +42,6 @@ export const createEvalCodeFunction = (input: CodeFunctionInput, scope: Scope): 
 			const handle = scope.manage(ctx.unwrapResult(evalResult))
 
 			const native = handleToNative(ctx, handle, scope)
-
-			let timeoutId: ReturnType<typeof setTimeout> | undefined
 			const result = await Promise.race([
 				(async () => {
 					const res = await native
@@ -54,10 +57,6 @@ export const createEvalCodeFunction = (input: CodeFunctionInput, scope: Scope): 
 					}
 				}),
 			])
-
-			if (timeoutId) {
-				clearTimeout(timeoutId)
-			}
 
 			return { ok: true, data: result } as OkResponse
 		} catch (err) {
