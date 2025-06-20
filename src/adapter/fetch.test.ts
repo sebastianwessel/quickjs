@@ -82,4 +82,18 @@ describe('core - fetch adapter', () => {
 		expect(response.status).toBe(403)
 		expect(response.statusText).toBe('FORBIDDEN')
 	})
+
+	it('should handle Request objects', async () => {
+		const fetchAdapter = getDefaultFetchAdapter({})
+
+		// Mock fetch to avoid real network call
+		global.fetch = Object.assign(mock().mockResolvedValue(new Response('', { status: 200, statusText: 'OK' })), {
+			preconnect: async () => {},
+		})
+
+		const req = new Request('http://example.com')
+		const response = await fetchAdapter(req)
+		expect(response.status).toBe(200)
+		expect(response.statusText).toBe('OK')
+	})
 })

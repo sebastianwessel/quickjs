@@ -1,9 +1,8 @@
 import { Scope, shouldInterruptAfterDeadline } from 'quickjs-emscripten-core'
 import { getTypescriptSupport } from './getTypescriptSupport.js'
+import { executeAsyncSandboxFunction } from './sandbox/asyncVersion/executeAsyncSandboxFunction.js'
 import { getAsyncModuleLoader } from './sandbox/asyncVersion/getAsyncModuleLoader.js'
 import { modulePathNormalizerAsync } from './sandbox/asyncVersion/modulePathNormalizerAsync.js'
-
-import { executeAsyncSandboxFunction } from './sandbox/asyncVersion/executeAsyncSandboxFunction.js'
 import { prepareAsyncNodeCompatibility } from './sandbox/asyncVersion/prepareAsyncNodeCompatibility.js'
 import { prepareAsyncSandbox } from './sandbox/asyncVersion/prepareAsyncSandbox.js'
 import { loadAsyncWasmModule } from './sandbox/loadAsyncWasmModule.js'

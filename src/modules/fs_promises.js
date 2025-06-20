@@ -52,7 +52,7 @@ export const close = (fd) => new Promise((resolve, reject) => {
 })
 
 export const copyFile = (src, dest, mode) => new Promise((resolve, reject) => {
-    __fs.copyFile(pathResolve(src), pathResolve(dst), mode, (err) => {
+    __fs.copyFile(pathResolve(src), pathResolve(dest), mode, (err) => {
         if (err) {
             reject(err)
         } else {
@@ -65,7 +65,7 @@ export const createReadStream = (...params) => __fs.createReadStream(...params)
 export const createWriteStream = (...params) => __fs.createWriteStream(...params)
 
 export const exists = (path) => new Promise((resolve) => {
-    __fs.exists(pathResolve(file), (exists) => {
+    __fs.exists(pathResolve(path), (exists) => {
         resolve(exists)
     })
 })
@@ -141,7 +141,7 @@ export const futimes = (fd, atime, mtime) => new Promise((resolve, reject) => {
 })
 
 export const lchmod = (path, mode) => new Promise((resolve, reject) => {
-    __fs.lchmod(pathResolve(file), mode, (err) => {
+    __fs.lchmod(pathResolve(path), mode, (err) => {
         if (err) {
             reject(err)
         } else {
@@ -151,7 +151,7 @@ export const lchmod = (path, mode) => new Promise((resolve, reject) => {
 })
 
 export const lchown = (path, uid, gid) => new Promise((resolve, reject) => {
-    __fs.lchown(pathResolve(file), uid, gid, (err) => {
+    __fs.lchown(pathResolve(path), uid, gid, (err) => {
         if (err) {
             reject(err)
         } else {
@@ -171,7 +171,7 @@ export const link = (existingPath, newPath) => new Promise((resolve, reject) => 
 })
 
 export const lstat = (path) => new Promise((resolve, reject) => {
-    __fs.lstat(pathResolve(file), (err, stats) => {
+    __fs.lstat(pathResolve(path), (err, stats) => {
         if (err) {
             reject(err)
         } else {
@@ -232,12 +232,12 @@ export const readFile = (path, options) => new Promise((resolve, reject) => {
       const res = __fs.readFileSync(pathResolve(path), options)
       resolve(res)
     } catch (err) {
-      resolve(err)
+      reject(err)
     }
 })
 
 export const readlink = (path, options) => new Promise((resolve, reject) => {
-    __fs.readlink(pathResolve(file), options, (err, linkString) => {
+    __fs.readlink(pathResolve(path), options, (err, linkString) => {
         if (err) {
             reject(err)
         } else {
@@ -247,7 +247,7 @@ export const readlink = (path, options) => new Promise((resolve, reject) => {
 })
 
 export const realpath = (path, options) => new Promise((resolve, reject) => {
-    __fs.realpath(pathResolve(file), options, (err, resolvedPath) => {
+    __fs.realpath(pathResolve(path), options, (err, resolvedPath) => {
         if (err) {
             reject(err)
         } else {
@@ -296,7 +296,7 @@ export const symlink = (target, path, type) => new Promise((resolve, reject) => 
 })
 
 export const truncate = (path, len) => new Promise((resolve, reject) => {
-    __fs.truncate(pathResolve(file), len, (err) => {
+    __fs.truncate(pathResolve(path), len, (err) => {
         if (err) {
             reject(err)
         } else {
@@ -306,7 +306,7 @@ export const truncate = (path, len) => new Promise((resolve, reject) => {
 })
 
 export const unlink = (path) => new Promise((resolve, reject) => {
-    __fs.unlink(pathResolve(file), (err) => {
+    __fs.unlink(pathResolve(path), (err) => {
         if (err) {
             reject(err)
         } else {
@@ -316,7 +316,7 @@ export const unlink = (path) => new Promise((resolve, reject) => {
 })
 
 export const utimes = (path, atime, mtime) => new Promise((resolve, reject) => {
-    __fs.utimes(pathResolve(file), atime, mtime, (err) => {
+    __fs.utimes(pathResolve(path), atime, mtime, (err) => {
         if (err) {
             reject(err)
         } else {

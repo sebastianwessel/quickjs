@@ -1,4 +1,4 @@
-import { type SandboxOptions, loadQuickJs } from '../../src/index.js'
+import { loadQuickJs, type SandboxOptions } from '../../src/index.js'
 
 const userGeneratedCode = `
 

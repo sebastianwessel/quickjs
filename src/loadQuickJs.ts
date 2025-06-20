@@ -1,15 +1,13 @@
 import { Scope, shouldInterruptAfterDeadline } from 'quickjs-emscripten-core'
 import { getTypescriptSupport } from './getTypescriptSupport.js'
-import { getModuleLoader } from './sandbox/syncVersion/getModuleLoader.js'
-import { modulePathNormalizer } from './sandbox/syncVersion/modulePathNormalizer.js'
-
 import { setupFileSystem } from './sandbox/setupFileSystem.js'
 import { executeSandboxFunction } from './sandbox/syncVersion/executeSandboxFunction.js'
+import { getModuleLoader } from './sandbox/syncVersion/getModuleLoader.js'
+import { loadWasmModule } from './sandbox/syncVersion/loadWasmModule.js'
+import { modulePathNormalizer } from './sandbox/syncVersion/modulePathNormalizer.js'
 import { prepareNodeCompatibility } from './sandbox/syncVersion/prepareNodeCompatibility.js'
 import { prepareSandbox } from './sandbox/syncVersion/prepareSandbox.js'
 import type { LoadQuickJsOptions } from './types/LoadQuickJsOptions.js'
-
-import { loadWasmModule } from './sandbox/syncVersion/loadWasmModule.js'
 import type { SandboxFunction } from './types/SandboxFunction.js'
 import type { SandboxOptions } from './types/SandboxOptions.js'
 

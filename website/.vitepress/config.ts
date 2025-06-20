@@ -1,4 +1,4 @@
-import { type HeadConfig, defineConfig } from 'vitepress'
+import { defineConfig, type HeadConfig } from 'vitepress'
 import { generateSidebar } from 'vitepress-sidebar'
 
 const hostname = 'https://sebastianwessel.github.io'

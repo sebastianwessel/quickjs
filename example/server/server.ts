@@ -1,7 +1,7 @@
 import { swaggerUI } from '@hono/swagger-ui'
 import { OpenAPIHono } from '@hono/zod-openapi'
 import type { StatusCode } from 'hono/utils/http-status'
-import { DynamicThreadPool, PoolEvents, availableParallelism } from 'poolifier-web-worker'
+import { availableParallelism, DynamicThreadPool, PoolEvents } from 'poolifier-web-worker'
 import { executeRoute } from './openapi.js'
 import type { InputData, ResponseData } from './types.js'
 

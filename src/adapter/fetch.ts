@@ -114,7 +114,15 @@ export const getDefaultFetchAdapter = (adapterOptions: GetFetchAdapterOptions = 
 		async (input: RequestInfo, init?: RequestInit) => {
 			try {
 				await rateLimiter.consume('fetch', 1)
-				const parsedUrl = new URL(input.toString())
+				let urlString: string
+				if (typeof input === 'string') {
+					urlString = input
+				} else if (input instanceof URL) {
+					urlString = input.toString()
+				} else {
+					urlString = input.url
+				}
+				const parsedUrl = new URL(urlString)
 
 				// Check disallowed hosts
 				if (options.disallowedHosts.includes(parsedUrl.hostname)) {
@@ -136,11 +144,12 @@ export const getDefaultFetchAdapter = (adapterOptions: GetFetchAdapterOptions = 
 					if (!options.fs) {
 						return getForbiddenResponse()
 					}
-					if (!options.fs.existsSync(input.toString())) {
+					const filePath = parsedUrl.pathname
+					if (!options.fs.existsSync(filePath)) {
 						const res = new Response('', { status: 404, statusText: 'NOT_FOUND' })
 						return mapResponse(res)
 					}
-					const content = options.fs.readFileSync(input.toString())
+					const content = options.fs.readFileSync(filePath)
 					const res = new Response(content, { status: 200, statusText: 'OK' })
 					return mapResponse(res)
 				}
