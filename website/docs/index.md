@@ -108,7 +108,7 @@ This library will be aligned soon, to support cloudflare as well.
 ## Usage in Browser
 
 Here is the most minimal example on how to use this library in the browser.
-You need to ensure, that the webassembly file can be loaded correctly. Therefore, you need to add this as parameter to the `quickJS` call.
+You need to ensure that the WebAssembly file can be loaded correctly. Therefore, you must pass its location to the `loadQuickJs` call.
 
 Using `fetch`is possible, but there are the same restrictions as in any other browser usage (CORS & co).
 

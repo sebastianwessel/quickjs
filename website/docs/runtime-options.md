@@ -81,8 +81,8 @@ To prevent abuse, the number of running `setTimeout` and `setInterval` calls is 
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `maxTimeoutCount` | `number` | Max concurrent timeouts (default: `100`). |
-| `maxIntervalCount` | `number` | Max concurrent intervals (default: `100`). |
+| `maxTimeoutCount` | `number` | Max concurrent timeouts (default: `10`). |
+| `maxIntervalCount` | `number` | Max concurrent intervals (default: `10`). |
 
 ---
 
@@ -108,7 +108,7 @@ Both **synchronous** and **asynchronous** QuickJS sandboxes allow customizing mo
 
 ## Example Usage
 
-The options are passed to the `createRuntime` method. Here is a basic example:
+The options are passed to the `runSandboxed` function. Here is a basic example:
 
 ```typescript
 import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
