@@ -67,19 +67,33 @@ describe('core - fetch adapter', () => {
 		expect(response.statusText).toBe('OK')
 	})
 
-	it('should enforce CORS policy if enabled', async () => {
-		const adapterOptions: GetFetchAdapterOptions = {
-			corsCheck: true,
-		}
-		const fetchAdapter = getDefaultFetchAdapter(adapterOptions)
+        it('should enforce CORS policy if enabled', async () => {
+                const adapterOptions: GetFetchAdapterOptions = {
+                        corsCheck: true,
+                }
+                const fetchAdapter = getDefaultFetchAdapter(adapterOptions)
 
 		// Mocking fetch to return a response without CORS headers
 		global.fetch = Object.assign(mock().mockResolvedValue(new Response('', { status: 200, statusText: 'OK' })), {
 			preconnect: async () => {},
 		})
 
-		const response = await fetchAdapter('http://example.com')
-		expect(response.status).toBe(403)
-		expect(response.statusText).toBe('FORBIDDEN')
-	})
+                const response = await fetchAdapter('http://example.com')
+                expect(response.status).toBe(403)
+                expect(response.statusText).toBe('FORBIDDEN')
+        })
+
+        it('should handle Request objects', async () => {
+                const fetchAdapter = getDefaultFetchAdapter({})
+
+                // Mock fetch to avoid real network call
+                global.fetch = Object.assign(mock().mockResolvedValue(new Response('', { status: 200, statusText: 'OK' })), {
+                        preconnect: async () => {},
+                })
+
+                const req = new Request('http://example.com')
+                const response = await fetchAdapter(req)
+                expect(response.status).toBe(200)
+                expect(response.statusText).toBe('OK')
+        })
 })
