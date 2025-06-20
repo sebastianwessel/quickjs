@@ -14,14 +14,14 @@ If checking types is required, it should be done and handled, before using this 
 **Requirements:**
 
 - optional dependency package `typescript` must be installed on the host system
-- `createRuntime` option `transformTypescript` must be set to `true`
+- Sandbox option `transformTypescript` must be set to `true`
 
 Example:
 
 ```typescript
-import { quickJS } from '@sebastianwessel/quickjs'
+import { loadQuickJs } from '@sebastianwessel/quickjs'
 
-const { createRuntime } = await quickJS()
+const { runSandboxed } = await loadQuickJs()
 
 const options:SandboxOptions = {
   transformTypescript: true, // [!code ++] enable typescript support
@@ -36,15 +36,15 @@ const options:SandboxOptions = {
 }
 
 
-const result = await evalCode(`
-import { testFn } from './test.js'
+const result = await runSandboxed(async ({ evalCode }) => evalCode(`
+  import { testFn } from './test.js'
 
 const t = (value:string):number=>value.length
 
 console.log(t('abc'))
   
 export default testFn('hello')
-`)
+`), options)
 
 console.log(result) // { ok: true, data: 'hello' }
 // console log on host:
