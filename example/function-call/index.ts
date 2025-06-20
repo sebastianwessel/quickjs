@@ -1,4 +1,4 @@
-import { type SandboxOptions, loadQuickJs } from '../../src/index.js'
+import { loadQuickJs, type SandboxOptions } from '../../src/index.js'
 
 // General setup like loading and init of the QuickJS wasm
 // It is a ressource intensive job and should be done only once if possible

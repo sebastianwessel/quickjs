@@ -1,6 +1,6 @@
 import { join, resolve } from 'node:path'
 import type { QuickJSAsyncContext } from 'quickjs-emscripten-core'
-import { type SandboxAsyncOptions, getAsyncModuleLoader, loadAsyncQuickJs } from '../../src/index.js'
+import { getAsyncModuleLoader, loadAsyncQuickJs, type SandboxAsyncOptions } from '../../src/index.js'
 
 const { runSandboxed } = await loadAsyncQuickJs()
 

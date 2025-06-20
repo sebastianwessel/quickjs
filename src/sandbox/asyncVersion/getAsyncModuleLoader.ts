@@ -1,7 +1,6 @@
+import { join } from 'node:path'
 import type { IFs } from 'memfs'
 import type { JSModuleLoaderAsync } from 'quickjs-emscripten-core'
-
-import { join } from 'node:path'
 
 import type { RuntimeOptions } from '../../types/RuntimeOptions.js'
 

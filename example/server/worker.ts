@@ -1,5 +1,5 @@
 import { ThreadWorker } from 'poolifier-web-worker'
-import { type SandboxOptions, loadQuickJs } from '../../src/index.js'
+import { loadQuickJs, type SandboxOptions } from '../../src/index.js'
 import type { InputData, ResponseData } from './types.js'
 
 class MyThreadWorker extends ThreadWorker<InputData, ResponseData> {

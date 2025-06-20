@@ -1,5 +1,5 @@
 import OpenAI from 'openai'
-import { type SandboxOptions, loadQuickJs } from '../../src/index.js'
+import { loadQuickJs, type SandboxOptions } from '../../src/index.js'
 
 // The user instruction
 const USER_INSTRUCTION = 'I need the content of the title tag from https://purista.dev'

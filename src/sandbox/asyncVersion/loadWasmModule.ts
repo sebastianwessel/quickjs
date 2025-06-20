@@ -1,4 +1,4 @@
-import { type QuickJSAsyncWASMModule, newQuickJSAsyncWASMModuleFromVariant } from 'quickjs-emscripten-core'
+import { newQuickJSAsyncWASMModuleFromVariant, type QuickJSAsyncWASMModule } from 'quickjs-emscripten-core'
 import type { LoadAsyncQuickJsOptions } from '../../types/LoadQuickJsOptions.js'
 
 /**

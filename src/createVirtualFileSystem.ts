@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { type NestedDirectoryJSON, memfs } from 'memfs'
+import { memfs, type NestedDirectoryJSON } from 'memfs'
 import assertModule from './modules/assert.js'
 import bufferModule from './modules/buffer.js'
 import eventModule from './modules/events.js'
