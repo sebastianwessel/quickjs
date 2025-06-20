@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'bun:test'
 import { loadAsyncQuickJs } from '../../loadAsyncQuickJs.js'
 import type { OkResponse } from '../../types/OkResponse.js'
 
-describe.skip('async - node:fs - permissions', () => {
+describe('async - node:fs - permissions', () => {
 	let runtime: Awaited<ReturnType<typeof loadAsyncQuickJs>>
 	const testFilePath = '/test.txt'
 	const testFileContent = 'example content'
