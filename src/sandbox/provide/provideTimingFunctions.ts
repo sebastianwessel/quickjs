@@ -7,10 +7,13 @@ export const provideTimingFunctions = (
 		maxIntervalCount: number
 	},
 ) => {
-	const scope = new Scope()
+        const scope = new Scope()
 
-	const timeouts = new Map<number, ReturnType<typeof setTimeout>>()
-	let timeoutCounter = 0
+        const timeouts = new Map<number, ReturnType<typeof setTimeout>>()
+        let timeoutCounter = 0
+
+        const immediates = new Map<number, ReturnType<typeof setTimeout>>()
+        let immediateCounter = 0
 
 	const intervals = new Map<number, ReturnType<typeof setTimeout>>()
 	let intervalCounter = 0
@@ -56,7 +59,49 @@ export const provideTimingFunctions = (
 	})
 
 	scope.manage(_clearTimeout)
-	ctx.setProp(ctx.global, 'clearTimeout', _clearTimeout)
+        ctx.setProp(ctx.global, 'clearTimeout', _clearTimeout)
+
+        const _setImmediate = ctx.newFunction('setImmediate', vmFnHandle => {
+                const currentCounter = immediateCounter++
+                if (timeouts.size + 1 > max.maxTimeoutCount) {
+                        throw new Error(
+                                `Client tries to use setImmediate, which exceeds the limit of max ${max.maxTimeoutCount} concurrent running timeout functions`,
+                        )
+                }
+
+                const vmFnHandleCopy = vmFnHandle.dup()
+                scope.manage(vmFnHandleCopy)
+
+                const timeoutID = setTimeout(() => {
+                        const t = immediates.get(currentCounter)
+                        if (t) {
+                                clearTimeout(t)
+                                immediates.delete(currentCounter)
+                        }
+                        ctx.callFunction(vmFnHandleCopy, ctx.undefined)
+                }, 0)
+
+                immediates.set(currentCounter, timeoutID)
+
+                return ctx.newNumber(currentCounter)
+        })
+
+        scope.manage(_setImmediate)
+        ctx.setProp(ctx.global, 'setImmediate', _setImmediate)
+
+        const _clearImmediate = ctx.newFunction('clearImmediate', idHandle => {
+                const id: number = ctx.dump(idHandle)
+                idHandle.dispose()
+
+                const t = immediates.get(id)
+                if (t) {
+                        clearTimeout(t)
+                        immediates.delete(id)
+                }
+        })
+
+        scope.manage(_clearImmediate)
+        ctx.setProp(ctx.global, 'clearImmediate', _clearImmediate)
 
 	const _setInterval = ctx.newFunction('setInterval', (vmFnHandle, intervalHandle) => {
 		const currentCounter = intervalCounter++
@@ -95,17 +140,23 @@ export const provideTimingFunctions = (
 	scope.manage(_clearInterval)
 	ctx.setProp(ctx.global, 'clearInterval', _clearInterval)
 
-	const dispose = () => {
-		for (const [_key, value] of timeouts) {
-			clearTimeout(value)
-		}
-		timeouts.clear()
-		timeoutCounter = 0
+        const dispose = () => {
+                for (const [_key, value] of timeouts) {
+                        clearTimeout(value)
+                }
+                timeouts.clear()
+                timeoutCounter = 0
 
-		for (const [_key, value] of intervals) {
-			clearInterval(value)
-		}
-		intervals.clear()
+                for (const [_key, value] of immediates) {
+                        clearTimeout(value)
+                }
+                immediates.clear()
+                immediateCounter = 0
+
+                for (const [_key, value] of intervals) {
+                        clearInterval(value)
+                }
+                intervals.clear()
 		intervalCounter = 0
 
 		scope.dispose()

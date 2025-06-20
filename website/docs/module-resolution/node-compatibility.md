@@ -38,7 +38,8 @@ This library tries to provide basic support for most common used Node.js modules
 | `repl`           | ❌         | Provides a Read-Eval-Print Loop (REPL) interface              |
 | `stream`         | ❌         | Provides an API for implementing stream-based I/O             |
 | `string_decoder` | ✅         | Provides utilities for decoding buffer objects into strings   |
-| `timers`         | ❌         | Provides timer functions similar to those in JavaScript       |
+| `timers`         | ✅        | Provides timer functions similar to those in JavaScript |
+| `timers/promises`| ✅        | Promise-based timer functions |
 | `tls`            | ❌         | Provides an implementation of TLS and SSL protocols           |
 | `trace_events`   | ❌         | Provides a mechanism to centralize tracing information        |
 | `tty`            | ❌         | Provides utilities for working with TTYs (terminals)          |

@@ -1,4 +1,5 @@
-export default `class Headers {
+export default `if (typeof globalThis.Headers === 'undefined') {
+class Headers {
   constructor(init) {
     this.map = {};
 
@@ -51,6 +52,7 @@ export default `class Headers {
     });
   }
 }
-
 globalThis.Headers = Headers;
+}
+export default globalThis.Headers;
 `
