@@ -67,7 +67,7 @@ describe('async - core - timers', () => {
 		expect((result as OkResponse).data).toBe('interval reached')
 	})
 
-        it('clearInterval works correctly', async () => {
+	it('clearInterval works correctly', async () => {
 		const code = `
       export default await new Promise((resolve) => {
         let count = 0
@@ -87,10 +87,10 @@ describe('async - core - timers', () => {
 		// but it should be around 3 if intervals are 100ms and we clear after 500ms.
 		expect((result as OkResponse).data).toBeGreaterThanOrEqual(3)
 		expect((result as OkResponse).data).toBeLessThanOrEqual(5)
-        })
+	})
 
-        it('setImmediate works correctly', async () => {
-                const code = `
+	it('setImmediate works correctly', async () => {
+		const code = `
       export default await new Promise((resolve) => {
         setImmediate(() => {
           resolve('immediate reached')
@@ -98,8 +98,8 @@ describe('async - core - timers', () => {
       })
     `
 
-                const result = await runCode(code)
-                expect(result.ok).toBeTrue()
-                expect((result as OkResponse).data).toBe('immediate reached')
-        })
+		const result = await runCode(code)
+		expect(result.ok).toBeTrue()
+		expect((result as OkResponse).data).toBe('immediate reached')
+	})
 })
