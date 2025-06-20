@@ -105,6 +105,28 @@ Cloudflare workers have some limitations regarding bundling. The developers of t
 
 This library will be aligned soon, to support cloudflare as well.
 
+### Vite
+
+When bundling for the browser with [Vite](https://vitejs.dev/), the `memfs` dependency requires polyfills for Node.js built-in modules. Install a Node polyfill plugin and prebundle `memfs`:
+
+```ts
+import { defineConfig } from 'vite'
+import rollupNodePolyFill from 'rollup-plugin-polyfill-node'
+
+export default defineConfig({
+  plugins: [rollupNodePolyFill()],
+  optimizeDeps: {
+    include: ['memfs']
+  },
+  build: {
+    rollupOptions: {
+      plugins: [rollupNodePolyFill()]
+    }
+  }
+})
+```
+
+
 ## Usage in Browser
 
 Here is the most minimal example on how to use this library in the browser.
