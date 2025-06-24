@@ -168,7 +168,7 @@ export const handleToNative = (ctx: QuickJSContext | QuickJSAsyncContext, handle
 		if (typeof errorType === 'string') {
 			const s = getSerializer(errorType)
 			if (s) {
-				const ret = s(ctx, handle)
+				const ret = s(ctx, handle, rootScope)
 				if (ret) {
 					return ret
 				}
@@ -206,7 +206,7 @@ export const handleToNative = (ctx: QuickJSContext | QuickJSAsyncContext, handle
 
 		const serializer = getSerializer(constructorName)
 		if (serializer) {
-			const ret = serializer(ctx, handle)
+			const ret = serializer(ctx, handle, rootScope)
 			if (ret) {
 				return ret
 			}
