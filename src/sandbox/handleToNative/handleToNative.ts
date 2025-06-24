@@ -204,9 +204,9 @@ export const handleToNative = (ctx: QuickJSContext | QuickJSAsyncContext, handle
 			handle,
 		).consume(r => ctx.dump(r))
 
-		const serializer = getSerializer(constructorName)
-		if (serializer) {
-			const ret = serializer(ctx, handle)
+                const serializer = getSerializer(constructorName)
+                if (serializer) {
+                        const ret = serializer(ctx, handle, rootScope)
 			if (ret) {
 				return ret
 			}

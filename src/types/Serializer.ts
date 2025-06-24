@@ -1,3 +1,12 @@
-import type { QuickJSContext, QuickJSHandle } from 'quickjs-emscripten-core'
+import type {
+    QuickJSAsyncContext,
+    QuickJSContext,
+    QuickJSHandle,
+    Scope,
+} from 'quickjs-emscripten-core'
 
-export type Serializer = (ctx: QuickJSContext, handle: QuickJSHandle) => any
+export type Serializer = (
+    ctx: QuickJSContext | QuickJSAsyncContext,
+    handle: QuickJSHandle,
+    rootScope?: Scope,
+) => any
