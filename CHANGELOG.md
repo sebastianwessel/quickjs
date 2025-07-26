@@ -2,6 +2,71 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 📚 Documentation
+
+- Add blog entry v3.0
+- Fix minor doc issues
+
+### ⚙️ Miscellaneous Tasks
+
+- Remove dependency
+
+## [2.3.1] - 2025-06-24
+
+### ⚙️ Miscellaneous Tasks
+
+- Lint
+- Update packages
+- Update linter deps
+- Bump version
+- Bump jsr version
+
+## [2.3.0] - 2025-06-21
+
+### 🚀 Features
+
+- Improve node timers compatibility
+
+### 📚 Documentation
+
+- Update runtime and ts instructions
+
+### ⚙️ Miscellaneous Tasks
+
+- Bump jsr.json version
+- Update packages
+- Lint
+- Fix lint
+- Bump to version 2.3.0
+- Update packages
+
+## [2.2.0] - 2025-04-30
+
+### 🐛 Bug Fixes
+
+- Typing
+- Typings
+- WASM crash if env async function throws error #68
+
+### 📚 Documentation
+
+- Clarify executionTimeout is in milliseconds
+
+### ⚙️ Miscellaneous Tasks
+
+- Generate website in CI and add api docs
+- Remove docs as they are now CI build
+- Add docs build folder to git ignore
+- Add build & test CI
+- Bump dependencies
+- Align test
+- Cleanup code
+- Improve typings
+- Minor improvements
+- Bump dependencies
+
 ## [2.1.1] - 2025-03-09
 
 ### 🐛 Bug Fixes

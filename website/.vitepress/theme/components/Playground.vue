@@ -40,7 +40,6 @@ export default await fn('Hello World')
 </template>
 
 <script setup>
-import variant from 'https://esm.sh/@jitl/quickjs-wasmfile-release-sync'
 import { onMounted } from 'vue'
 
 onMounted(async () => {
@@ -95,6 +94,7 @@ onMounted(async () => {
 
 	// Load QuickJS
 	const { loadQuickJs } = await import('https://esm.sh/@sebastianwessel/quickjs@latest')
+	const variant = await import('https://esm.sh/@jitl/quickjs-wasmfile-release-sync')
 	const { runSandboxed } = await loadQuickJs(variant)
 
 	const fetchAdapter = async (url, param) => {
