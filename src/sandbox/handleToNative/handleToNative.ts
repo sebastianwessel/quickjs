@@ -49,7 +49,7 @@ export const handleToNative = (ctx: QuickJSContext | QuickJSAsyncContext, handle
 		})
 	}
 
-	// biome-ignore lint/complexity/noBannedTypes: <explanation>
+	// biome-ignore lint/complexity/noBannedTypes: ok here
 	const setProperties = (obj: Object | Function, h: QuickJSHandle) => {
 		ctx
 			.newFunction('', (key, value) => {

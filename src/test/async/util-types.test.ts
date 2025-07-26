@@ -1,26 +1,59 @@
 import { beforeAll, describe, expect, it } from 'bun:test'
+import variant from '@jitl/quickjs-ng-wasmfile-release-asyncify'
 import { loadAsyncQuickJs } from '../../loadAsyncQuickJs.js'
 import type { OkResponse } from '../../types/OkResponse.js'
 
 describe('async - node:util - types', () => {
 	let runtime: Awaited<ReturnType<typeof loadAsyncQuickJs>>
 	const typesToTest = [
-		{ method: 'isAnyArrayBuffer', value: 'new ArrayBuffer(10)', expected: true },
-		{ method: 'isAnyArrayBuffer', value: 'new SharedArrayBuffer(10)', expected: true },
-		{ method: 'isArrayBufferView', value: 'new Uint8Array(10)', expected: true },
-		{ method: 'isArgumentsObject', value: '(function() { return arguments; })()', expected: true },
+		{
+			method: 'isAnyArrayBuffer',
+			value: 'new ArrayBuffer(10)',
+			expected: true,
+		},
+		{
+			method: 'isAnyArrayBuffer',
+			value: 'new SharedArrayBuffer(10)',
+			expected: true,
+		},
+		{
+			method: 'isArrayBufferView',
+			value: 'new Uint8Array(10)',
+			expected: true,
+		},
+		{
+			method: 'isArgumentsObject',
+			value: '(function() { return arguments; })()',
+			expected: true,
+		},
 		{ method: 'isArrayBuffer', value: 'new ArrayBuffer(10)', expected: true },
 		{ method: 'isAsyncFunction', value: 'async function() {}', expected: true },
-		{ method: 'isBigInt64Array', value: 'new BigInt64Array(10)', expected: true },
-		{ method: 'isBigUint64Array', value: 'new BigUint64Array(10)', expected: true },
+		{
+			method: 'isBigInt64Array',
+			value: 'new BigInt64Array(10)',
+			expected: true,
+		},
+		{
+			method: 'isBigUint64Array',
+			value: 'new BigUint64Array(10)',
+			expected: true,
+		},
 		{ method: 'isBooleanObject', value: 'new Boolean(true)', expected: true },
 		{ method: 'isBoxedPrimitive', value: 'new String("test")', expected: true },
-		{ method: 'isDataView', value: 'new DataView(new ArrayBuffer(10))', expected: true },
+		{
+			method: 'isDataView',
+			value: 'new DataView(new ArrayBuffer(10))',
+			expected: true,
+		},
 		{ method: 'isDate', value: 'new Date()', expected: true },
 		{ method: 'isFloat32Array', value: 'new Float32Array(10)', expected: true },
 		{ method: 'isFloat64Array', value: 'new Float64Array(10)', expected: true },
 		{ method: 'isGeneratorFunction', value: 'function*() {}', expected: true },
-		{ method: 'isGeneratorObject', value: '(function*() {})()', expected: true },
+		{
+			method: 'isGeneratorObject',
+			value: '(function*() {})()',
+			expected: true,
+		},
 		{ method: 'isInt8Array', value: 'new Int8Array(10)', expected: true },
 		{ method: 'isInt16Array', value: 'new Int16Array(10)', expected: true },
 		{ method: 'isInt32Array', value: 'new Int32Array(10)', expected: true },
@@ -32,12 +65,24 @@ describe('async - node:util - types', () => {
 		{ method: 'isRegExp', value: '/test/', expected: true },
 		{ method: 'isSet', value: 'new Set()', expected: true },
 		{ method: 'isSetIterator', value: 'new Set().entries()', expected: true },
-		{ method: 'isSharedArrayBuffer', value: 'new SharedArrayBuffer(10)', expected: true },
+		{
+			method: 'isSharedArrayBuffer',
+			value: 'new SharedArrayBuffer(10)',
+			expected: true,
+		},
 		{ method: 'isStringObject', value: 'new String("test")', expected: true },
-		{ method: 'isSymbolObject', value: 'Object(Symbol("test"))', expected: true },
+		{
+			method: 'isSymbolObject',
+			value: 'Object(Symbol("test"))',
+			expected: true,
+		},
 		{ method: 'isTypedArray', value: 'new Uint8Array(10)', expected: true },
 		{ method: 'isUint8Array', value: 'new Uint8Array(10)', expected: true },
-		{ method: 'isUint8ClampedArray', value: 'new Uint8ClampedArray(10)', expected: true },
+		{
+			method: 'isUint8ClampedArray',
+			value: 'new Uint8ClampedArray(10)',
+			expected: true,
+		},
 		{ method: 'isUint16Array', value: 'new Uint16Array(10)', expected: true },
 		{ method: 'isUint32Array', value: 'new Uint32Array(10)', expected: true },
 		{ method: 'isWeakMap', value: 'new WeakMap()', expected: true },
@@ -45,7 +90,7 @@ describe('async - node:util - types', () => {
 	]
 
 	beforeAll(async () => {
-		runtime = await loadAsyncQuickJs()
+		runtime = await loadAsyncQuickJs(variant)
 	})
 
 	const runCode = async (code: string) => {

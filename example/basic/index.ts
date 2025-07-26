@@ -1,8 +1,9 @@
+import variant from '@jitl/quickjs-ng-wasmfile-release-sync'
 import { loadQuickJs, type SandboxOptions } from '../../src/index.js'
 
 // General setup like loading and init of the QuickJS wasm
 // It is a ressource intensive job and should be done only once if possible
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs(variant)
 
 const options: SandboxOptions = {
 	allowFetch: true, // inject fetch and allow the code to fetch data
@@ -30,7 +31,7 @@ const fn = async ()=>{
 const result = await fn()
 
 globalThis.step1 = result
-  
+
 export default result
 `
 

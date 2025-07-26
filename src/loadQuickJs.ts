@@ -1,9 +1,8 @@
-import { Scope, shouldInterruptAfterDeadline } from 'quickjs-emscripten-core'
+import { newQuickJSWASMModuleFromVariant, Scope, shouldInterruptAfterDeadline } from 'quickjs-emscripten-core'
 import { getTypescriptSupport } from './getTypescriptSupport.js'
 import { setupFileSystem } from './sandbox/setupFileSystem.js'
 import { executeSandboxFunction } from './sandbox/syncVersion/executeSandboxFunction.js'
 import { getModuleLoader } from './sandbox/syncVersion/getModuleLoader.js'
-import { loadWasmModule } from './sandbox/syncVersion/loadWasmModule.js'
 import { modulePathNormalizer } from './sandbox/syncVersion/modulePathNormalizer.js'
 import { prepareNodeCompatibility } from './sandbox/syncVersion/prepareNodeCompatibility.js'
 import { prepareSandbox } from './sandbox/syncVersion/prepareSandbox.js'
@@ -13,12 +12,11 @@ import type { SandboxOptions } from './types/SandboxOptions.js'
 
 /**
  * Loads the QuickJS module and returns a sandbox execution function.
- * @param loadOptions - Options for loading the QuickJS module. Defaults to '@jitl/quickjs-ng-wasmfile-release-sync'.
+ * @param variant - Options for loading the QuickJS module. Defaults to '@jitl/quickjs-ng-wasmfile-release-sync'.
  * @returns An object containing the runSandboxed function and the loaded module.
  */
-export const loadQuickJs = async (loadOptions: LoadQuickJsOptions = '@jitl/quickjs-ng-wasmfile-release-sync') => {
-	const module = await loadWasmModule(loadOptions)
-
+export const loadQuickJs = async (variant: LoadQuickJsOptions) => {
+	const module = await newQuickJSWASMModuleFromVariant(variant)
 	/**
 	 * Provides a new sandbox and executes the given function.
 	 * When the function has been finished, the sandbox gets disposed and can longer be used.

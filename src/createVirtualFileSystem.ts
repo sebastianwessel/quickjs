@@ -36,7 +36,7 @@ export const createVirtualFileSystem = (runtimeOptions: RuntimeOptions = {}) => 
 		'/': {
 			...customFileSystem,
 			src: {
-				// biome-ignore lint/complexity/useLiteralKeys: <explanation>
+				// biome-ignore lint/complexity/useLiteralKeys: ok here
 				...(customFileSystem?.['src'] ? (customFileSystem?.['src'] as NestedDirectoryJSON) : {}),
 			},
 			node_modules: {

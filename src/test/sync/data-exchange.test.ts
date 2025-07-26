@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from 'bun:test'
+import variant from '@jitl/quickjs-ng-wasmfile-release-sync'
 import { loadQuickJs } from '../../loadQuickJs.js'
 import type { OkResponse } from '../../types/OkResponse.js'
 
@@ -6,7 +7,7 @@ describe('sync - env data exchange', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 
 	beforeAll(async () => {
-		runtime = await loadQuickJs()
+		runtime = await loadQuickJs(variant)
 	})
 
 	it('can exchange numbers', async () => {
@@ -62,7 +63,10 @@ describe('sync - env data exchange', () => {
 		})
 
 		expect(result.ok).toBeTrue()
-		expect((result as OkResponse).data).toEqual({ before: 'init', after: 'added' })
+		expect((result as OkResponse).data).toEqual({
+			before: 'init',
+			after: 'added',
+		})
 	})
 
 	it('can exchange array', async () => {
@@ -90,7 +94,10 @@ describe('sync - env data exchange', () => {
 		})
 
 		expect(result.ok).toBeTrue()
-		expect((result as OkResponse).data).toEqual({ before: ['init'], after: ['added'] })
+		expect((result as OkResponse).data).toEqual({
+			before: ['init'],
+			after: ['added'],
+		})
 	})
 
 	it('can exchange date', async () => {
@@ -118,7 +125,10 @@ describe('sync - env data exchange', () => {
 		})
 
 		expect(result.ok).toBeTrue()
-		expect((result as OkResponse).data).toEqual({ before: new Date(1740575765115), after: new Date(1740575767000) })
+		expect((result as OkResponse).data).toEqual({
+			before: new Date(1740575765115),
+			after: new Date(1740575767000),
+		})
 	})
 
 	it('can exchange object', async () => {

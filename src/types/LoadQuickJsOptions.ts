@@ -1,6 +1,5 @@
-import type { QuickJSAsyncWASMModule, QuickJSWASMModule } from 'quickjs-emscripten-core'
-import type { Prettify } from './Prettify.js'
+import type { QuickJSAsyncVariant, QuickJSSyncVariant } from 'quickjs-emscripten-core'
 
-export type LoadQuickJsOptions = Prettify<string | QuickJSWASMModule>
+export type LoadQuickJsOptions = QuickJSSyncVariant
 
-export type LoadAsyncQuickJsOptions = Prettify<string | QuickJSAsyncWASMModule>
+export type LoadAsyncQuickJsOptions = QuickJSAsyncVariant

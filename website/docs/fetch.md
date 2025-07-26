@@ -24,44 +24,45 @@ A common example is calling an API. A better alternative is to create a helper f
 ### Simple Example
 
 ```typescript
-import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from "@sebastianwessel/quickjs";
+import variant from "@jitl/quickjs-ng-wasmfile-release-sync";
 
-import { z } from 'zod'
+import { z } from "zod";
 
 const getData = async (input: string) => {
   try {
     // Do not trust the client system - validate input
-    const id = z.string().parse(input)
+    const id = z.string().parse(input);
 
-    const result = await fetch('https://example.com/api/' + id, {
+    const result = await fetch("https://example.com/api/" + id, {
       // Secrets are only available on the host system
-      headers: { Authentication: 'Bearer MY_SECRET_ONLY_ON_HOST' },
-    })
+      headers: { Authentication: "Bearer MY_SECRET_ONLY_ON_HOST" },
+    });
 
     if (result.ok) {
-      const payload = await result.json()
+      const payload = await result.json();
 
       // Validate & strip out any data that is not required
       const payloadValidationSchema = z.object({
         myValue: z.string(),
-      })
+      });
 
-      return payloadValidationSchema.parse(payload)
+      return payloadValidationSchema.parse(payload);
     }
   } catch (_err) {
     // Do not expose host internal details
-    throw new Error('Request failed')
+    throw new Error("Request failed");
   }
-}
+};
 
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs(variant);
 
-const options:SandboxOptions = {
+const options: SandboxOptions = {
   allowFetch: false,
   env: {
     getExternalData: getData,
   },
-}
+};
 
 const code = `
 const fn = async ()=>{
@@ -69,13 +70,16 @@ const fn = async ()=>{
 
   return data.myValue
 }
-  
+
 export default await fn()
-`
+`;
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
+const result = await runSandboxed(
+  async ({ evalCode }) => evalCode(code),
+  options,
+);
 
-console.log(result)
+console.log(result);
 ```
 
 ## Default Adapter
@@ -88,17 +92,17 @@ The `getDefaultFetchAdapter` function provides a customizable fetch adapter with
 
 The `getDefaultFetchAdapter` function accepts an options object to configure its behavior. Below is a table describing the available options and their default values:
 
-| Option               | Type         | Description                                                        | Default Value                  |
-|----------------------|--------------|--------------------------------------------------------------------|--------------------------------|
-| `fs`                 | `IFs`        | The virtual file system of the sandbox (excludes node_modules)     | `undefined`                    |
-| `allowedHosts`       | `string[]`   | List of allowed hosts. If set, only these hosts are allowed to call| `undefined`                    |
-| `allowedProtocols`   | `string[]`   | List of allowed protocols. If set, only these protocols are allowed to call | `['http:', 'https:']` |
-| `disallowedHosts`    | `string[]`   | List of disallowed hosts.                                          | `['localhost', '127.0.0.1']`   |
-| `timeout`            | `number`     | Timeout for fetch requests in milliseconds                         | `5000` (5 seconds)             |
-| `corsCheck`          | `boolean`    | Flag to enable CORS policy check                                   | `false`                        |
-| `allowedCorsOrigins` | `string[]`   | List of allowed CORS origins                                       | `['*']`                        |
-| `rateLimitPoints`    | `number`     | Number of requests allowed in the specified duration               | `10`                           |
-| `rateLimitDuration`  | `number`     | Duration in seconds for the rate limit                             | `1`                            |
+| Option               | Type       | Description                                                                 | Default Value                |
+| -------------------- | ---------- | --------------------------------------------------------------------------- | ---------------------------- |
+| `fs`                 | `IFs`      | The virtual file system of the sandbox (excludes node_modules)              | `undefined`                  |
+| `allowedHosts`       | `string[]` | List of allowed hosts. If set, only these hosts are allowed to call         | `undefined`                  |
+| `allowedProtocols`   | `string[]` | List of allowed protocols. If set, only these protocols are allowed to call | `['http:', 'https:']`        |
+| `disallowedHosts`    | `string[]` | List of disallowed hosts.                                                   | `['localhost', '127.0.0.1']` |
+| `timeout`            | `number`   | Timeout for fetch requests in milliseconds                                  | `5000` (5 seconds)           |
+| `corsCheck`          | `boolean`  | Flag to enable CORS policy check                                            | `false`                      |
+| `allowedCorsOrigins` | `string[]` | List of allowed CORS origins                                                | `['*']`                      |
+| `rateLimitPoints`    | `number`   | Number of requests allowed in the specified duration                        | `10`                         |
+| `rateLimitDuration`  | `number`   | Duration in seconds for the rate limit                                      | `1`                          |
 
 ## Features
 

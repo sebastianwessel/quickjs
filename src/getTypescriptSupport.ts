@@ -42,7 +42,7 @@ export const getTypescriptSupport = async (
 	let ts: typeof TS
 	try {
 		ts = await import(typescriptImportFile ?? 'typescript')
-	} catch (error) {
+	} catch (_error) {
 		throw new Error('Package "typescript" is missing')
 	}
 

@@ -21,15 +21,16 @@ When the `evalCode` method is called on the host, the event loop of the host sys
 Here is an example of how the host system can be blocked 🔥:
 
 ```typescript
-import { loadQuickJs } from '@sebastianwessel/quickjs'
+import { loadQuickJs } from "@sebastianwessel/quickjs";
+import variant from "@jitl/quickjs-ng-wasmfile-release-sync";
 
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs(variant);
 
 setInterval(() => {
-  console.log('y')
-}, 2000)
+  console.log("y");
+}, 2000);
 
-console.log('start')
+console.log("start");
 
 const code = `
 const fn = () => new Promise(() => {
@@ -37,16 +38,16 @@ const fn = () => new Promise(() => {
   }
 })
 export default await fn()
-`
+`;
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code))
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code));
 ```
 
 You might expect that this code does not block the host system, but it does, even with `await evalCode`. The host system must wait for the guest system to return a value. In this example, the value is never returned because of the endless while-loop.
 
 ### ⏳ Setting Execution Timeouts
 
-**❗ Set Execution Timeouts if Possible**  
+**❗ Set Execution Timeouts if Possible**
 It is highly recommended to set a default timeout value to avoid blocking the host system indefinitely. The execution timeout can be set in the options of `runSandboxed`. Setting the `executionTimeout` to `0` or `undefined` disables the execution timeout.
 
 Timeout values are in milliseconds.

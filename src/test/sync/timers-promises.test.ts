@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from 'bun:test'
+import variant from '@jitl/quickjs-ng-wasmfile-release-sync'
 import { loadQuickJs } from '../../loadQuickJs.js'
 import type { OkResponse } from '../../types/OkResponse.js'
 
@@ -6,7 +7,7 @@ describe('sync - node:timers/promises', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 
 	beforeAll(async () => {
-		runtime = await loadQuickJs()
+		runtime = await loadQuickJs(variant)
 	})
 
 	const runCode = async (code: string) => {

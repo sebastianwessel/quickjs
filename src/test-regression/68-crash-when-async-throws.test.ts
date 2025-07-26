@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'bun:test'
+import variant from '@jitl/quickjs-ng-wasmfile-release-sync'
 import { loadQuickJs } from '../loadQuickJs.js'
 import type { ErrorResponse } from '../types/ErrorResponse.js'
 import type { OkResponse } from '../types/OkResponse.js'
@@ -6,7 +7,7 @@ import type { SandboxOptions } from '../types/SandboxOptions.js'
 
 describe('bugfix - #68', () => {
 	it('does not crash when async function resolves', async () => {
-		const runtime = await loadQuickJs()
+		const runtime = await loadQuickJs(variant)
 
 		const getExternalData = async (input: string) => {
 			return { myValue: input }
@@ -24,7 +25,7 @@ describe('bugfix - #68', () => {
         const data = await env.getExternalData('some-id')
         return data.myValue
       }
-        
+
       export default await fn()
     `
 
@@ -34,7 +35,7 @@ describe('bugfix - #68', () => {
 	})
 
 	it('does not crash when async function throws', async () => {
-		const runtime = await loadQuickJs('@jitl/quickjs-ng-wasmfile-debug-sync')
+		const runtime = await loadQuickJs(variant)
 
 		const getExternalData = async (_input: string) => {
 			throw new Error('test')
@@ -52,7 +53,7 @@ describe('bugfix - #68', () => {
         const data = await env.getExternalData('some-id')
         return data.myValue
       }
-        
+
       export default await fn()
     `
 
@@ -63,7 +64,7 @@ describe('bugfix - #68', () => {
 	})
 
 	it('maps Error type correctly', async () => {
-		const runtime = await loadQuickJs('@jitl/quickjs-ng-wasmfile-debug-sync')
+		const runtime = await loadQuickJs(variant)
 
 		const getExternalData = async (_input: string) => {
 			throw new TypeError('test')
@@ -81,7 +82,7 @@ describe('bugfix - #68', () => {
         const data = await env.getExternalData('some-id')
         return data.myValue
       }
-        
+
       export default await fn()
     `
 

@@ -1,5 +1,5 @@
 <template>
-  <textarea id="code" style="height: 400px; width: 100%">
+    <textarea id="code" style="height: 400px; width: 100%">
 import { readFileSync, writeFileSync } from 'node:fs'
 console.info('Starting...')
 const fn = async (value) => {
@@ -14,7 +14,7 @@ const getExample = async () => {
     const response = await fetch('https://sebastianwessel.github.io/quickjs/example-request.html')
     if (!response.ok) {
       console.error('Request failed: ' + response.status + ' ' + response.statusText)
-      return 
+      return
     }
     const body = await response.text()
     console.log('Response body: ' + body)
@@ -26,19 +26,21 @@ await getExample()
 console.warn('top-level await is nice')
 
 export default await fn('Hello World')
-  </textarea>
+  </textarea
+    >
 
-  <button id="runButton" class="button-modern">Run Code</button>
-  <h2>Result</h2>
-  <pre id="output" class="font-semibold"></pre>
-  <h2>Console Output</h2>
-  <div id="consoleOutput">
-    <pre id="console"></pre>
-  </div>
-  <div id="gist"></div>
+    <button id="runButton" class="button-modern">Run Code</button>
+    <h2>Result</h2>
+    <pre id="output" class="font-semibold"></pre>
+    <h2>Console Output</h2>
+    <div id="consoleOutput">
+        <pre id="console"></pre>
+    </div>
+    <div id="gist"></div>
 </template>
 
 <script setup>
+import variant from 'https://esm.sh/@jitl/quickjs-wasmfile-release-sync'
 import { onMounted } from 'vue'
 
 onMounted(async () => {
@@ -93,7 +95,7 @@ onMounted(async () => {
 
 	// Load QuickJS
 	const { loadQuickJs } = await import('https://esm.sh/@sebastianwessel/quickjs@latest')
-	const { runSandboxed } = await loadQuickJs('https://esm.sh/@jitl/quickjs-wasmfile-release-sync')
+	const { runSandboxed } = await loadQuickJs(variant)
 
 	const fetchAdapter = async (url, param) => {
 		const res = await fetch(url, { ...param })
@@ -155,33 +157,33 @@ onMounted(async () => {
 
 <style>
 .button-modern {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(135deg, #4A90E2, #007AFF);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 10px rgba(0, 122, 255, 0.2);
-  margin-top: 20px;
-  margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #4a90e2, #007aff);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 122, 255, 0.2);
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .button-modern:hover {
-  background: linear-gradient(135deg, #007AFF, #4A90E2);
-  box-shadow: 0 6px 15px rgba(0, 122, 255, 0.3);
+    background: linear-gradient(135deg, #007aff, #4a90e2);
+    box-shadow: 0 6px 15px rgba(0, 122, 255, 0.3);
 }
 
 .button-modern:active {
-  transform: scale(0.98);
+    transform: scale(0.98);
 }
 
 .button-modern:focus {
-  outline: 2px sol
+    outline: 2px sol;
 }
 </style>

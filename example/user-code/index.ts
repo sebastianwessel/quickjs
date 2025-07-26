@@ -1,3 +1,4 @@
+import variant from '@jitl/quickjs-ng-wasmfile-release-sync'
 import { loadQuickJs, type SandboxOptions } from '../../src/index.js'
 
 const userGeneratedCode = `
@@ -25,7 +26,7 @@ const options: SandboxOptions = {
                     errorCode: number
                     dateTime: string
                   }
-                  
+
                   export type AlertDecisionFn = ( input: LogRow[] ) => boolean`,
 			'custom.ts': `import type { AlertDecisionFn } from './types.js'
 
@@ -44,7 +45,7 @@ const options: SandboxOptions = {
 	},
 }
 
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs(variant)
 
 // fixed code (guest:  src/index.ts)
 const executionCode = `import { readFileSync } from 'node:fs'
@@ -56,7 +57,7 @@ const main = () => {
 
   const logFileContent = readFileSync('log.jsonl', 'utf-8')
   const logs: LogRow[] = logFileContent.split('\\n').map(line => JSON.parse(line))
-  
+
   return shouldAlert(logs)
  }
 

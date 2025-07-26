@@ -1,10 +1,11 @@
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import variant from '@jitl/quickjs-ng-wasmfile-release-sync'
 import { loadQuickJs, type SandboxOptions } from '../../src/index.js'
 
 // General setup like loading and init of the QuickJS wasm
 // It is a ressource intensive job and should be done only once if possible
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs(variant)
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const customModuleHostLocation = join(__dirname, './custom-module.js')
@@ -48,7 +49,7 @@ console.log('relativeImport:', relativeImport)
 
 // node:fs is relative to cwd which is / = the root of the file system
 const fileContent = readFileSync('text.txt', 'utf8')
-  
+
 export default { customModule, relativeImport, fileContent, cwd: process.cwd() }
 `
 

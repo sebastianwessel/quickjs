@@ -1,18 +1,22 @@
 <!doctype html>
 <!-- Import from a ES Module CDN -->
 <script type="module">
+    import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@3.0.0";
+    import variant from "https://esm.sh/@jitl/quickjs-wasmfile-release-sync";
 
-  import { quickJS } from "https://esm.sh/@sebastianwessel/quickjs@1.3.0"
+    const { runSandboxed } = await loadQuickJs(variant);
 
-  const {createRuntime} = await quickJS('https://esm.sh/@jitl/quickjs-wasmfile-release-sync')
+    const options = {
+        allowFetch: true, // inject fetch and allow the code to fetch data
+        allowFs: true, // mount a virtual file system and provide node:fs module
+        env: {
+            MY_ENV_VAR: "env var value",
+        },
+    };
 
-  const { evalCode } = await createRuntime({
-	allowFetch: true, // inject fetch and allow the code to fetch data
-	allowFs: true, // mount a virtual file system and provide node:fs module
-	env: {
-		MY_ENV_VAR: 'env var value',
-	},
-})
+    const result = await runSandboxed(async ({ evalCode }) => {
+        return await evalCode("export default 1+1");
+    }, options);
 
-  console.log(await evalCode("export default 1+1"))
+    console.log(result);
 </script>

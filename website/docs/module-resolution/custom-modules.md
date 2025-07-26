@@ -24,7 +24,7 @@ To create a bundled module as a single file with dependencies, you need an entry
 // entry.ts
 
 // Import the module or functionality to bundle
-import { expect } from 'chai';
+import { expect } from "chai";
 
 // Optional custom code
 
@@ -38,10 +38,10 @@ A configuration file is recommended to repeat the build step easily:
 ```typescript
 // build.ts
 const testRunnerResult = await Bun.build({
-  entrypoints: ['./entry.ts'],
-  format: 'esm',
+  entrypoints: ["./entry.ts"],
+  format: "esm",
   minify: true,
-  outdir: './vendor'
+  outdir: "./vendor",
 });
 ```
 
@@ -57,12 +57,12 @@ The entry file will be the same as for Bun. The config file needs to be adapted 
 
 ```typescript
 // build.mjs
-import * as esbuild from 'esbuild';
+import * as esbuild from "esbuild";
 
 await esbuild.build({
-  entryPoints: ['./entry.ts'],
+  entryPoints: ["./entry.ts"],
   bundle: true,
-  outfile: './vendor/my-package.js',
+  outfile: "./vendor/my-package.js",
 });
 ```
 
@@ -79,24 +79,25 @@ The root key is the package name, and the child key represents the index file, w
 Example:
 
 ```typescript
-import { join } from 'node:path';
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs';
+import { join } from "node:path";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { type SandboxOptions, loadQuickJs } from "@sebastianwessel/quickjs";
+import variant from "@jitl/quickjs-ng-wasmfile-release-sync";
 
 // General setup, such as loading and initializing the QuickJS WASM
 // This is a resource-intensive job and should be done only once if possible
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs(variant);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const customModuleHostLocation = join(__dirname, './custom.js');
+const customModuleHostLocation = join(__dirname, "./custom.js");
 
-const options:SandboxOptions = {
+const options: SandboxOptions = {
   nodeModules: {
     // Module name
-    'custom-module': {
+    "custom-module": {
       // Key must be index.js, value is the file content of the module
-      'index.js': await Bun.file(customModuleHostLocation).text(),
+      "index.js": await Bun.file(customModuleHostLocation).text(),
     },
   },
 };
@@ -109,10 +110,12 @@ const result = customFn();
 console.log(result);
 
 export default result;
-`
+`;
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
-
+const result = await runSandboxed(
+  async ({ evalCode }) => evalCode(code),
+  options,
+);
 
 console.log(result); // { ok: true, data: 'Hello from the custom module' }
 ```
