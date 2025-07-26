@@ -111,7 +111,6 @@
 	},
 	"dependencies": {
 		"memfs": "^4.20.0",
-		"quickjs-emscripten": "^0.31.0",
 		"quickjs-emscripten-core": "^0.31.0",
 		"rate-limiter-flexible": "^7.1.1"
 	},
