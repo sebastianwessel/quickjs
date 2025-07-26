@@ -57,7 +57,7 @@ Please see [github.com/justjake/quickjs-emscripten](https://github.com/justjake/
 Here's a simple example of how to use the package:
 
 ```typescript
-import { type SandboxOptions, loadQuickJs } from "../../src/index.js";
+import { type SandboxOptions, loadQuickJs } from "@sebastianwessel/quickjs";
 import variant from "@jitl/quickjs-ng-wasmfile-release-sync";
 
 // General setup like loading and init of the QuickJS wasm

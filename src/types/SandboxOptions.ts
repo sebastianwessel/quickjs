@@ -121,7 +121,7 @@ export type SandboxBaseOptions = {
 	 * This might impact the host.
 	 * Because of this, the maximum concurrent running timeouts is limited by this option.
 	 *
-	 * @default 100
+	 * @default 10
 	 */
 	maxTimeoutCount?: number
 	/**
@@ -129,7 +129,7 @@ export type SandboxBaseOptions = {
 	 * This might impact the host.
 	 * Because of this, the maximum concurrent running intervals is limited by this option.
 	 *
-	 * @default 100
+	 * @default 10
 	 */
 	maxIntervalCount?: number
 }

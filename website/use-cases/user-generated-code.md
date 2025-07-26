@@ -106,7 +106,7 @@ export const shouldAlert: AlertDecisionFn = (input) => {
 We'll map these files into a **QuickJS sandbox**, allowing users to edit only `custom.ts`, while keeping the rest of the logic **untouched**.
 
 ```ts
-import { type SandboxOptions } from "../../src/index.js";
+import { type SandboxOptions } from "@sebastianwessel/quickjs";
 
 const userGeneratedCode = "return true"; // Example user input
 
@@ -144,7 +144,7 @@ const options: SandboxOptions = {
 Here’s how the **sandboxed execution** works:
 
 ```ts
-import { type SandboxOptions, loadQuickJs } from "../../src/index.js";
+import { type SandboxOptions, loadQuickJs } from "@sebastianwessel/quickjs";
 import variant from "@jitl/quickjs-ng-wasmfile-release-sync";
 
 const { runSandboxed } = await loadQuickJs(variant);
