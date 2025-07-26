@@ -21,19 +21,20 @@ This TypeScript package allows you to safely execute **JavaScript AND TypeScript
 Here's a simple example of how to use the package:
 
 ```typescript
-import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
+import variant from "@jitl/quickjs-ng-wasmfile-release-sync";
+import { type SandboxOptions, loadQuickJs } from "@sebastianwessel/quickjs";
 
 // General setup like loading and init of the QuickJS wasm
 // It is a ressource intensive job and should be done only once if possible
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs(variant);
 
 const options: SandboxOptions = {
   allowFetch: true, // inject fetch and allow the code to fetch data
   allowFs: true, // mount a virtual file system and provide node:fs module
   env: {
-    MY_ENV_VAR: 'env var value',
+    MY_ENV_VAR: "env var value",
   },
-}
+};
 
 const code = `
 import { join } from 'path'
@@ -49,13 +50,16 @@ const fn = async ()=>{
 
   return f.text()
 }
-  
+
 export default await fn()
-`
+`;
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
+const result = await runSandboxed(
+  async ({ evalCode }) => evalCode(code),
+  options,
+);
 
-console.log(result) // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
+console.log(result); // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
 ```
 
 **[View the full documentation](https://sebastianwessel.github.io/quickjs/)**

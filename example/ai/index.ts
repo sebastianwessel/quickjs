@@ -1,3 +1,4 @@
+import variant from '@jitl/quickjs-ng-wasmfile-release-sync'
 import OpenAI from 'openai'
 import { loadQuickJs, type SandboxOptions } from '../../src/index.js'
 
@@ -5,10 +6,11 @@ import { loadQuickJs, type SandboxOptions } from '../../src/index.js'
 const USER_INSTRUCTION = 'I need the content of the title tag from https://purista.dev'
 
 // Set the LLM - here, Ollama with model Qwen 2.5 7b is used
-// biome-ignore lint/complexity/useLiteralKeys: <explanation>
+// biome-ignore lint/complexity/useLiteralKeys: ok here
 const OPENAI_API_KEY = process.env['OPENAI_API_KEY'] ?? ''
-// biome-ignore lint/complexity/useLiteralKeys: <explanation>
-const OPENAI_API_BASE = process.env['OPENAI_API_BASE'] ?? 'http://localhost:11434/v1'
+const OPENAI_API_BASE =
+	// biome-ignore lint/complexity/useLiteralKeys: ok here
+	process.env['OPENAI_API_BASE'] ?? 'http://localhost:11434/v1'
 const MODEL = 'qwen2.5-coder:7b' //'gpt-4o'
 
 const client = new OpenAI({
@@ -53,7 +55,12 @@ export default await myFunction()
 console.log('Generating code')
 
 const chatCompletion = await client.chat.completions.create({
-	messages: [{ role: 'user', content: promptTemplate.replace('%INSTRUCTION%', USER_INSTRUCTION) }],
+	messages: [
+		{
+			role: 'user',
+			content: promptTemplate.replace('%INSTRUCTION%', USER_INSTRUCTION),
+		},
+	],
 	model: MODEL,
 })
 
@@ -63,7 +70,7 @@ if (!code) {
 	throw new Error('Failed to generate code')
 }
 
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs(variant)
 
 const options: SandboxOptions = {
 	allowFetch: true, // inject fetch and allow the code to fetch data

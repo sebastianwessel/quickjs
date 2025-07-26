@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'bun:test'
+import variant from '@jitl/quickjs-ng-wasmfile-release-sync'
 import { loadQuickJs } from '../loadQuickJs.js'
 import type { ErrorResponse } from '../types/ErrorResponse.js'
 import type { SandboxOptions } from '../types/SandboxOptions.js'
 
 describe('bugfix - #82', () => {
 	it('handles async env errors without crashing', async () => {
-		const runtime = await loadQuickJs()
+		const runtime = await loadQuickJs(variant)
 
 		const thrower = async (_input: string) => {
 			throw new Error('test')

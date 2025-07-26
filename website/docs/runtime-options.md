@@ -14,36 +14,36 @@ These options apply to both synchronous and asynchronous sandbox instances.
 
 ### ⏳ Execution Limits
 
-| Option | Type | Description |
-|--------|------|-------------|
+| Option             | Type     | Description                                                                |
+| ------------------ | -------- | -------------------------------------------------------------------------- |
 | `executionTimeout` | `number` | Maximum script execution time (in milliseconds). Set to `0` for unlimited. |
-| `maxStackSize` | `number` | Maximum stack size (in bytes). Set to `0` to disable the limit. |
-| `memoryLimit` | `number` | Maximum memory allocation. Set to `0` to remove the limit. |
+| `maxStackSize`     | `number` | Maximum stack size (in bytes). Set to `0` to disable the limit.            |
+| `memoryLimit`      | `number` | Maximum memory allocation. Set to `0` to remove the limit.                 |
 
 ### 📂 Virtual File System
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `mountFs` | `NestedDirectoryJSON | IFs` | Mounts a virtual file system using [memfs](https://github.com/streamich/memfs). |
+| Option        | Type                  | Description                                              |
+| ------------- | --------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `mountFs`     | `NestedDirectoryJSON  | IFs`                                                     | Mounts a virtual file system using [memfs](https://github.com/streamich/memfs). |
 | `nodeModules` | `NestedDirectoryJSON` | Mounts custom `node_modules` in the virtual file system. |
 
 ### 📄 File System Access
 
-| Option | Type | Description |
-|--------|------|-------------|
+| Option    | Type      | Description                             |
+| --------- | --------- | --------------------------------------- |
 | `allowFs` | `boolean` | Enables file system access (`node:fs`). |
 
 ### 🌐 Networking
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `allowFetch` | `boolean` | Enables `fetch` for making HTTP(S) calls. |
+| Option         | Type           | Description                                       |
+| -------------- | -------------- | ------------------------------------------------- |
+| `allowFetch`   | `boolean`      | Enables `fetch` for making HTTP(S) calls.         |
 | `fetchAdapter` | `typeof fetch` | Custom fetch adapter provided as a host function. |
 
 ### 🛠️ Testing Utilities
 
-| Option | Type | Description |
-|--------|------|-------------|
+| Option            | Type      | Description                                 |
+| ----------------- | --------- | ------------------------------------------- |
 | `enableTestUtils` | `boolean` | Enables test frameworks (`chai` & `mocha`). |
 
 ### 📢 Console Customization
@@ -62,26 +62,26 @@ console: {
 
 ### 🛑 Environment & Syncing
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `env` | `Record<string, unknown>` | Defines environment variables available inside QuickJS. |
+| Option          | Type                      | Description                                                    |
+| --------------- | ------------------------- | -------------------------------------------------------------- |
+| `env`           | `Record<string, unknown>` | Defines environment variables available inside QuickJS.        |
 | `dangerousSync` | `Record<string, unknown>` | Syncs data between host & guest (⚠️ can be modified by guest). |
 
 ### 📝 TypeScript Support
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `typescriptImportFile` | `string` | TypeScript library to import (default: `typescript`). |
-| `transformTypescript` | `boolean` | Transpiles TypeScript files to JavaScript in `mountFs`. |
-| `transformCompilerOptions` | `TS.CompilerOptions` | TypeScript compiler options. |
+| Option                     | Type                 | Description                                             |
+| -------------------------- | -------------------- | ------------------------------------------------------- |
+| `typescriptImportFile`     | `string`             | TypeScript library to import (default: `typescript`).   |
+| `transformTypescript`      | `boolean`            | Transpiles TypeScript files to JavaScript in `mountFs`. |
+| `transformCompilerOptions` | `TS.CompilerOptions` | TypeScript compiler options.                            |
 
 ### ⏲️ Timer Limits
 
 To prevent abuse, the number of running `setTimeout` and `setInterval` calls is restricted.
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `maxTimeoutCount` | `number` | Max concurrent timeouts (default: `10`). |
+| Option             | Type     | Description                               |
+| ------------------ | -------- | ----------------------------------------- |
+| `maxTimeoutCount`  | `number` | Max concurrent timeouts (default: `10`).  |
 | `maxIntervalCount` | `number` | Max concurrent intervals (default: `10`). |
 
 ---
@@ -92,17 +92,17 @@ Both **synchronous** and **asynchronous** QuickJS sandboxes allow customizing mo
 
 ### 📦 Synchronous Module Options (`SandboxOptions`)
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `getModuleLoader` | `(fs: IFs, options: RuntimeOptions) => JSModuleLoader` | Custom module loader. |
-| `modulePathNormalizer` | `JSModuleNormalizer` | Transforms module paths before loading. |
+| Option                 | Type                                                   | Description                             |
+| ---------------------- | ------------------------------------------------------ | --------------------------------------- |
+| `getModuleLoader`      | `(fs: IFs, options: RuntimeOptions) => JSModuleLoader` | Custom module loader.                   |
+| `modulePathNormalizer` | `JSModuleNormalizer`                                   | Transforms module paths before loading. |
 
 ### 🌍 Asynchronous Module Options (`SandboxAsyncOptions`)
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `getModuleLoader` | `(fs: IFs, options: RuntimeOptions) => JSModuleLoaderAsync` | Custom module loader. |
-| `modulePathNormalizer` | `JSModuleNormalizerAsync` | Transforms module paths before loading. |
+| Option                 | Type                                                        | Description                             |
+| ---------------------- | ----------------------------------------------------------- | --------------------------------------- |
+| `getModuleLoader`      | `(fs: IFs, options: RuntimeOptions) => JSModuleLoaderAsync` | Custom module loader.                   |
+| `modulePathNormalizer` | `JSModuleNormalizerAsync`                                   | Transforms module paths before loading. |
 
 🔗 **More info:** See [github.com/justjake/quickjs-emscripten](https://github.com/justjake/quickjs-emscripten?tab=readme-ov-file#asyncify) for details on asynchronous execution.
 
@@ -111,16 +111,17 @@ Both **synchronous** and **asynchronous** QuickJS sandboxes allow customizing mo
 The options are passed to the `runSandboxed` function. Here is a basic example:
 
 ```typescript
-import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from "@sebastianwessel/quickjs";
+import variant from "@jitl/quickjs-ng-wasmfile-release-sync";
 
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs(variant);
 
 // Create a runtime instance each time a JS code should be executed
-const options:SandboxOptions = {
+const options: SandboxOptions = {
   allowFetch: true, // inject fetch and allow the code to fetch data
-  allowFs: true,    // mount a virtual file system and provide node:fs module
+  allowFs: true, // mount a virtual file system and provide node:fs module
   env: {
-    MY_ENV_VAR: 'env var value'
+    MY_ENV_VAR: "env var value",
   },
   console: {
     log: (message, ...optionalParams) => {
@@ -128,9 +129,9 @@ const options:SandboxOptions = {
     },
     error: (message, ...optionalParams) => {
       console.error(`[QuickJS Error]: ${message}`, ...optionalParams);
-    }
+    },
     // Customize other console methods as needed
-  }
+  },
 };
 
 const code = `
@@ -149,9 +150,12 @@ const fn = async () => {
 }
 
 export default await fn();
-`
+`;
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
+const result = await runSandboxed(
+  async ({ evalCode }) => evalCode(code),
+  options,
+);
 
 console.log(result); // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
 ```

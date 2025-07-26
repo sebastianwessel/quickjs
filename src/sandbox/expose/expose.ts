@@ -114,7 +114,7 @@ export const getHandle = (
 const setProperties = (
 	ctx: QuickJSContext | QuickJSAsyncContext,
 	scope: Scope,
-	// biome-ignore lint/complexity/noBannedTypes: <explanation>
+	// biome-ignore lint/complexity/noBannedTypes: ok here
 	input: object | Function,
 	parent: QuickJSHandle,
 ) => {

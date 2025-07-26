@@ -88,7 +88,7 @@ function afterEach(fn: HookFunction) {
  * @returns A promise that resolves if the function completes in time, or rejects if it times out.
  */
 
-// biome-ignore lint/complexity/noBannedTypes: <explanation>
+// biome-ignore lint/complexity/noBannedTypes: ok here
 async function runWithTimeout(fn: Function, timeout: number): Promise<void> {
 	let timeoutHandle: ReturnType<typeof setTimeout> | undefined
 	const res = await Promise.race([

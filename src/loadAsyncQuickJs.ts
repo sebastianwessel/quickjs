@@ -1,11 +1,10 @@
-import { Scope, shouldInterruptAfterDeadline } from 'quickjs-emscripten-core'
+import { newQuickJSAsyncWASMModuleFromVariant, Scope, shouldInterruptAfterDeadline } from 'quickjs-emscripten-core'
 import { getTypescriptSupport } from './getTypescriptSupport.js'
 import { executeAsyncSandboxFunction } from './sandbox/asyncVersion/executeAsyncSandboxFunction.js'
 import { getAsyncModuleLoader } from './sandbox/asyncVersion/getAsyncModuleLoader.js'
 import { modulePathNormalizerAsync } from './sandbox/asyncVersion/modulePathNormalizerAsync.js'
 import { prepareAsyncNodeCompatibility } from './sandbox/asyncVersion/prepareAsyncNodeCompatibility.js'
 import { prepareAsyncSandbox } from './sandbox/asyncVersion/prepareAsyncSandbox.js'
-import { loadAsyncWasmModule } from './sandbox/loadAsyncWasmModule.js'
 import { setupFileSystem } from './sandbox/setupFileSystem.js'
 import type { LoadAsyncQuickJsOptions } from './types/LoadQuickJsOptions.js'
 
@@ -14,13 +13,11 @@ import type { SandboxAsyncOptions } from './types/SandboxOptions.js'
 
 /**
  * Loads the QuickJS async module and returns a sandbox execution function.
- * @param loadOptions - Options for loading the QuickJS module. Defaults to '@jitl/quickjs-ng-wasmfile-release-asyncify'.
+ * @param variant - Options for loading the QuickJS module. Defaults to '@jitl/quickjs-ng-wasmfile-release-asyncify'.
  * @returns An object containing the runSandboxed function and the loaded module.
  */
-export const loadAsyncQuickJs = async (
-	loadOptions: LoadAsyncQuickJsOptions = '@jitl/quickjs-ng-wasmfile-release-asyncify',
-) => {
-	const module = await loadAsyncWasmModule(loadOptions)
+export const loadAsyncQuickJs = async (variant: LoadAsyncQuickJsOptions) => {
+	const module = await newQuickJSAsyncWASMModuleFromVariant(variant)
 
 	/**
 	 * Provides a new sandbox and executes the given function.

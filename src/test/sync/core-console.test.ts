@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it, mock } from 'bun:test'
+import variant from '@jitl/quickjs-ng-wasmfile-release-sync'
 import { loadQuickJs } from '../../loadQuickJs.js'
 import type { OkResponse } from '../../types/OkResponse.js'
 import type { SandboxOptions } from '../../types/SandboxOptions.js'
@@ -7,7 +8,7 @@ describe('sync - core - console', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
 
 	beforeAll(async () => {
-		runtime = await loadQuickJs()
+		runtime = await loadQuickJs(variant)
 	})
 
 	it('console.log works correctly', async () => {
@@ -184,7 +185,9 @@ describe('sync - core - console', () => {
       export default 'grouped'
     `
 
-		const options: SandboxOptions = { console: { group: groupSpy, groupEnd: groupEndSpy } }
+		const options: SandboxOptions = {
+			console: { group: groupSpy, groupEnd: groupEndSpy },
+		}
 		const result = await runtime.runSandboxed(async ({ evalCode }) => {
 			return (await evalCode(code)) as OkResponse
 		}, options)
@@ -226,7 +229,9 @@ describe('sync - core - console', () => {
       export default 'timed'
     `
 
-		const options: SandboxOptions = { console: { time: timeSpy, timeEnd: timeEndSpy } }
+		const options: SandboxOptions = {
+			console: { time: timeSpy, timeEnd: timeEndSpy },
+		}
 		const result = await runtime.runSandboxed(async ({ evalCode }) => {
 			return (await evalCode(code)) as OkResponse
 		}, options)

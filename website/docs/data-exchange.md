@@ -23,33 +23,37 @@ The host system can provide various data types to the guest system, including pr
 Example:
 
 ```typescript
-import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from "@sebastianwessel/quickjs";
+import variant from "@jitl/quickjs-ng-wasmfile-release-sync";
 
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs(variant);
 
-const keyValueStoreOnHost = new Map<string, string>()
+const keyValueStoreOnHost = new Map<string, string>();
 
-const options:SandboxOptions = {
+const options: SandboxOptions = {
   env: {
-    MY_PROCESS_ENV: 'some environment variable provided by the host',
+    MY_PROCESS_ENV: "some environment variable provided by the host",
     KV: {
       set: (key: string, value: string) => keyValueStoreOnHost.set(key, value),
       get: (key: string) => keyValueStoreOnHost.get(key),
     },
   },
-}
+};
 
 const code = `
 console.log(env.MY_PROCESS_ENV)
 env.KV.set('guest-key', 'value set by guest system')
 const value = env.KV.get('guest-key')
 export default value
-`
+`;
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
+const result = await runSandboxed(
+  async ({ evalCode }) => evalCode(code),
+  options,
+);
 
-console.log('result from guest:', result.data) // result from guest: value set by guest system
-console.log('result from host:', keyValueStoreOnHost.get('guest-key')) // result from host: value set by guest system
+console.log("result from guest:", result.data); // result from guest: value set by guest system
+console.log("result from host:", keyValueStoreOnHost.get("guest-key")); // result from host: value set by guest system
 ```
 
 ### Wrapping Functions
@@ -59,61 +63,64 @@ If a function is provided from host to guest, it should be wrapped in a dummy fu
 👎 **Incorrect**:
 
 ```typescript
-const options:SandboxOptions = {
+const options: SandboxOptions = {
   env: {
     KV: {
       set: keyValueStoreOnHost.set,
       get: keyValueStoreOnHost.get,
     },
   },
-}
+};
 ```
 
 👍 **Correct**:
 
 ```typescript
-const options:SandboxOptions = {
+const options: SandboxOptions = {
   env: {
     KV: {
       set: (key: string, value: string) => keyValueStoreOnHost.set(key, value),
       get: (key: string) => keyValueStoreOnHost.get(key),
     },
   },
-}
+};
 ```
 
-**🚨 Security Information ‼️**  
+**🚨 Security Information ‼️**
 The host system only provides the given values but never reads them back. Even if the guest system modifies `env.KV.set`, it will not impact the host side.
 
 Example:
 
 ```typescript
-import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from "@sebastianwessel/quickjs";
 
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs();
 
-const keyValueStoreOnHost = new Map<string, string>()
+const keyValueStoreOnHost = new Map<string, string>();
 
-const options:SandboxOptions = {
+const options: SandboxOptions = {
   env: {
     KV: {
       set: (key: string, value: string) => keyValueStoreOnHost.set(key, value),
       get: (key: string) => keyValueStoreOnHost.get(key),
     },
   },
-}
+};
 
 const code = `
 env.KV.set('guest-key', 'value set by guest system')
 const value = env.KV.get('guest-key')
 env.KV.get = () => { throw new Error('Security!!!') }
 export default value
-`
+`;
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
+const result = await runSandboxed(
+  async ({ evalCode }) => evalCode(code),
+  options,
+);
 
-console.log('result from guest:', result)
-console.log('result from host:', keyValueStoreOnHost.get('guest-key'))
+console.log("result from guest:", result);
+console.log("result from host:", keyValueStoreOnHost.get("guest-key"));
 ```
 
 ## Guest to Host
@@ -125,39 +132,42 @@ The guest system can return a final value using `export default`. The library se
 Example:
 
 ```typescript
-import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from "@sebastianwessel/quickjs";
 
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs();
 
 const code = `
 export default 'my value'
-`
+`;
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code))
+const result = await runSandboxed(async ({ evalCode }) => evalCode(code));
 
-console.log('result from guest:', result.data) // result from guest: my value
+console.log("result from guest:", result.data); // result from guest: my value
 ```
 
-**❗ Promises Must Be Awaited**  
+**❗ Promises Must Be Awaited**
 If the executed script returns a promise, the promise must be awaited.
 
 👎 **Incorrect**:
 
 ```typescript
-import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from "@sebastianwessel/quickjs";
 
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs();
 
-const options:SandboxOptions = `
+const options: SandboxOptions = `
 const prom = async () => {
   return 'my value'
 }
 export default prom() // 🚨 promise is not awaited!!
-`
+`;
 
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
+const result = await runSandboxed(
+  async ({ evalCode }) => evalCode(code),
+  options,
+);
 
-console.log('result from guest:', result.data) // result from guest: my value
+console.log("result from guest:", result.data); // result from guest: my value
 ```
 
 **Here, the promise itself is returned to the host, but not the result of the promise!**
@@ -165,19 +175,22 @@ console.log('result from guest:', result.data) // result from guest: my value
 👍 **Correct**:
 
 ```typescript
-import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from "@sebastianwessel/quickjs";
 
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs();
 
-const options:SandboxOptions = `
+const options: SandboxOptions = `
 const prom = async () => {
   return 'my value'
 }
 export default await prom() // 👍 promise is awaited
-`
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
+`;
+const result = await runSandboxed(
+  async ({ evalCode }) => evalCode(code),
+  options,
+);
 
-console.log('result from guest:', result.data) // result from guest: my value
+console.log("result from guest:", result.data); // result from guest: my value
 ```
 
 The library wraps the result of the `eval` method into a result object, similar to the result of the `fetch` method. This makes handling success and error paths easier for developers.
@@ -220,6 +233,6 @@ A class itself must exist in the host and the guest system. Furthermore, as data
 
 ### Functions
 
-Exchanging functions works, but brings up the question, in which context the function should be executed.  
+Exchanging functions works, but brings up the question, in which context the function should be executed.
 This library shares functions from host to the guest system. This means, the client system can call a host function, which is executed within the hosts context. The result is than passed to the client system.
 The opposite way is also possible, as the host can call the `evalCode` method.

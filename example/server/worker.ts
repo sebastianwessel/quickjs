@@ -1,3 +1,4 @@
+import variant from '@jitl/quickjs-ng-wasmfile-release-sync'
 import { ThreadWorker } from 'poolifier-web-worker'
 import { loadQuickJs, type SandboxOptions } from '../../src/index.js'
 import type { InputData, ResponseData } from './types.js'
@@ -20,7 +21,7 @@ class MyThreadWorker extends ThreadWorker<InputData, ResponseData> {
 			return { id: '', result: { ok: true, data: { ok: true } } }
 		}
 		if (!this.runtime) {
-			this.runtime = await loadQuickJs()
+			this.runtime = await loadQuickJs(variant)
 		}
 
 		const options: SandboxOptions = {

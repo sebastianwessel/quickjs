@@ -1,8 +1,9 @@
 import { join, resolve } from 'node:path'
+import variant from '@jitl/quickjs-wasmfile-release-asyncify'
 import type { QuickJSAsyncContext } from 'quickjs-emscripten-core'
 import { getAsyncModuleLoader, loadAsyncQuickJs, type SandboxAsyncOptions } from '../../src/index.js'
 
-const { runSandboxed } = await loadAsyncQuickJs()
+const { runSandboxed } = await loadAsyncQuickJs(variant)
 
 const modulePathNormalizer = async (baseName: string, requestedName: string) => {
 	// import from esm.sh

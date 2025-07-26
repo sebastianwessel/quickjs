@@ -19,34 +19,38 @@ If checking types is required, it should be done and handled, before using this 
 Example:
 
 ```typescript
-import { loadQuickJs } from '@sebastianwessel/quickjs'
+import { loadQuickJs } from "@sebastianwessel/quickjs";
+import variant from "@jitl/quickjs-ng-wasmfile-release-sync";
 
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs(variant);
 
-const options:SandboxOptions = {
+const options: SandboxOptions = {
   transformTypescript: true, // [!code ++] enable typescript support
   mountFs: {
     src: {
-      'test.ts': `export const testFn = (value: string): string => {
+      "test.ts": `export const testFn = (value: string): string => {
                     console.log(value)
                     return value
                   }`,
     },
   },
-}
+};
 
-
-const result = await runSandboxed(async ({ evalCode }) => evalCode(`
+const result = await runSandboxed(
+  async ({ evalCode }) =>
+    evalCode(`
   import { testFn } from './test.js'
 
 const t = (value:string):number=>value.length
 
 console.log(t('abc'))
-  
-export default testFn('hello')
-`), options)
 
-console.log(result) // { ok: true, data: 'hello' }
+export default testFn('hello')
+`),
+  options,
+);
+
+console.log(result); // { ok: true, data: 'hello' }
 // console log on host:
 // 3
 // hello
@@ -71,7 +75,7 @@ const compilerOptions: TS.CompilerOptions = {
   strict: false,
   allowSyntheticDefaultImports: true,
   ...options,
-}
+};
 ```
 
 If there is a need to use custom settings, please see section `transformCompilerOptions` in [Runtime Options](./runtime-options.md).

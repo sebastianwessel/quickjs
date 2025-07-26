@@ -15,18 +15,18 @@ It is recommended, to always return a value, for better validation on the host s
 In the sandbox, the executed code "lives" in `/src/index.js`. If custom files are added via configuration, source files should be placed below `/src`. Nested directories are supported.
 
 ```typescript
-import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
+import { type SandboxOptions, loadQuickJs } from "@sebastianwessel/quickjs";
+import variant from "@jitl/quickjs-ng-wasmfile-release-sync";
 
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs(variant);
 
-const options:SandboxOptions = {
+const options: SandboxOptions = {
   allowFetch: true, // inject fetch and allow the code to fetch data
   allowFs: true, // mount a virtual file system and provide node:fs module
   env: {
-    MY_ENV_VAR: 'env var value'
+    MY_ENV_VAR: "env var value",
   },
-}
-
+};
 
 const code = `
 import { join } as path from 'path'
@@ -42,12 +42,15 @@ const fn = async ()=>{
 
   return f.text()
 }
-  
-export default await fn()
-`
-const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
 
-console.log(result) // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
+export default await fn()
+`;
+const result = await runSandboxed(
+  async ({ evalCode }) => evalCode(code),
+  options,
+);
+
+console.log(result); // { ok: true, data: '<!doctype html>\n<html>\n[....]</html>\n' }
 ```
 
 The `evalCode` functions returns a unified result object, and does not throw.
@@ -60,18 +63,21 @@ There are use cases, where the given JavaScript code should not be executed, but
 To only test the code, without executing the code, the function `validateCode` should be used.
 
 ```typescript
-import { loadQuickJs } from '@sebastianwessel/quickjs'
+import { loadQuickJs } from "@sebastianwessel/quickjs";
+import variant from "@jitl/quickjs-ng-wasmfile-release-sync";
 
-const { runSandboxed } = await loadQuickJs()
+const { runSandboxed } = await loadQuickJs(variant);
 
 const code = `
   const value ='missing string end
   export default value
-`
+`;
 
-const result = await runSandboxed(async ({ validateCode }) => validateCode(code))
+const result = await runSandboxed(async ({ validateCode }) =>
+  validateCode(code),
+);
 
-console.log(result)
+console.log(result);
 //{
 //  ok: false,
 //  error: {

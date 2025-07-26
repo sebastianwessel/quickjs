@@ -1,24 +1,31 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@sebastianwessel/quickjs in browser example</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        .CodeMirror {
-            height: 100%;
-        }
-    </style>
-</head>
-<body class="flex h-screen font-sans">
-    <div class="flex flex-col w-2/3 border-r border-gray-300">
-        <div class="bg-gray-100 text-center text-xl font-bold p-4">
-            Enter your code
-        </div>
-        <div class="flex-1">
-            <textarea id="code" class="h-full w-full">import { readFileSync, writeFileSync } from 'node:fs'
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@sebastianwessel/quickjs in browser example</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css"
+        />
+        <link
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+            rel="stylesheet"
+        />
+        <style>
+            .CodeMirror {
+                height: 100%;
+            }
+        </style>
+    </head>
+    <body class="flex h-screen font-sans">
+        <div class="flex flex-col w-2/3 border-r border-gray-300">
+            <div class="bg-gray-100 text-center text-xl font-bold p-4">
+                Enter your code
+            </div>
+            <div class="flex-1">
+                <textarea id="code" class="h-full w-full">
+import { readFileSync, writeFileSync } from 'node:fs'
 console.info('Starting...')
 const fn = async (value)=> {
   console.debug(value)
@@ -32,7 +39,7 @@ const getExample = async ()=> {
     const response = await fetch('https://sebastianwessel.github.io/quickjs/example-request.html')
     if(!response.ok) {
       console.error('Request failed: ' + response.status + ' ' + response.statusText)
-      return 
+      return
     }
     const body = await response.text()
     console.log('Response body: '+ body)
@@ -43,99 +50,123 @@ await getExample()
 
 console.warn('top-level await is nice')
 
-export default await fn('Hello World')</textarea>
+export default await fn('Hello World')</textarea
+                >
+            </div>
+            <button
+                id="runButton"
+                class="bg-blue-500 text-white font-semibold text-lg p-4 hover:bg-blue-700"
+            >
+                Run Code
+            </button>
         </div>
-        <button id="runButton" class="bg-blue-500 text-white font-semibold text-lg p-4 hover:bg-blue-700">
-            Run Code
-        </button>
-    </div>
-    <div class="flex flex-col w-1/3">
-        <div class="bg-gray-100 p-4">
-            <div class="text-center text-xl font-bold ">Result</div>
-            <pre id="output" class="font-semibold"></pre>
+        <div class="flex flex-col w-1/3">
+            <div class="bg-gray-100 p-4">
+                <div class="text-center text-xl font-bold">Result</div>
+                <pre id="output" class="font-semibold"></pre>
+            </div>
+            <div
+                id="consoleOutput"
+                class="flex-1 p-4 bg-black text-white overflow-y-auto"
+            >
+                <pre id="console"></pre>
+            </div>
         </div>
-        <div id="consoleOutput" class="flex-1 p-4 bg-black text-white overflow-y-auto">
-            <pre id="console"></pre>
-        </div>
-    </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
-    <script type="module">
-        var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
-            mode: { name: "javascript", typescript: true },
-            lineNumbers: true
-        });
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+        <script type="module">
+            var editor = CodeMirror.fromTextArea(
+                document.getElementById("code"),
+                {
+                    mode: { name: "javascript", typescript: true },
+                    lineNumbers: true,
+                },
+            );
 
-        function logMessage(type, message) {
-            var outputElement = document.getElementById('console');
-            var logMessage = document.createElement('div');
-            logMessage.className = type;
-            logMessage.textContent = message;
-            outputElement.appendChild(logMessage);
-        }
-      
-// =========== QuickJS =====================
-        import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@2.0.0"
-        import "https://esm.sh/typescript"
-
-        const { runSandboxed } = await loadQuickJs('https://esm.sh/@jitl/quickjs-wasmfile-release-sync')
-
-        const fetchAdapter = async (url,param)=> {
-            const res = await fetch(url,{...param})
-            console.log(res)
-            return {
-              status: res.status,
-              ok: res.ok,
-              statusText: res.statusText,
-              json: async () => await res.json(),
-              text: async () => await res.text(),
-              formData: () => res.formData(),
-              headers: res.headers,
-              type: res.type,
-              url: res.url,
-              blob: async () => await res.blob(),
-              bodyUsed: res.bodyUsed,
-              redirected: res.redirected,
-              body: res.body,
-              arrayBuffer: async () => await res.arrayBuffer(),
-              clone: () => res.clone(),
+            function logMessage(type, message) {
+                var outputElement = document.getElementById("console");
+                var logMessage = document.createElement("div");
+                logMessage.className = type;
+                logMessage.textContent = message;
+                outputElement.appendChild(logMessage);
             }
-        } 
 
-        document.getElementById('runButton').addEventListener('click', async function() {
-            var code = editor.getValue();
-            var outputElement = document.getElementById('output');
-            var consoleElement = document.getElementById('console');
-            outputElement.innerHTML=''
-            consoleElement.innerHTML=''
+            // =========== QuickJS =====================
+            import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@3.0.0";
+            import "https://esm.sh/typescript";
+            import variant from "https://esm.sh/@jitl/quickjs-wasmfile-release-sync";
 
-            const options = {
-              allowFetch: true, // inject fetch and allow the code to fetch data
-              allowFs: true, // mount a virtual file system and provide node:fs module
-              fetchAdapter, // browser-fetch
-              env: {
-                MY_ENV_VAR: 'env var value',
-              },
-              console: {
-                log: (message)=>logMessage('log text-gray-400', message),
-                info: (message)=>logMessage('info text-blue-500', message),
-                warn: (message)=>logMessage('warn text-yellow-500', message),
-                error: (message)=>logMessage('error text-red-500', message),
-              }
-            }
-            
-            try {
-                const res = await runSandboxed(async ({ evalCode }) => {
-                  return evalCode(code)
-                },options)
+            const { runSandboxed } = await loadQuickJs(variant);
 
-                outputElement.innerHTML = JSON.stringify(res,null,2).replaceAll('\\n','<br>')
-            } catch (e) {
-                console.error(e);
-                logMessage('error text-red-500', JSON.stringify(e).replaceAll('\\n','<br>'))
-            }
-        });
-    </script>
-</body>
+            const fetchAdapter = async (url, param) => {
+                const res = await fetch(url, { ...param });
+                console.log(res);
+                return {
+                    status: res.status,
+                    ok: res.ok,
+                    statusText: res.statusText,
+                    json: async () => await res.json(),
+                    text: async () => await res.text(),
+                    formData: () => res.formData(),
+                    headers: res.headers,
+                    type: res.type,
+                    url: res.url,
+                    blob: async () => await res.blob(),
+                    bodyUsed: res.bodyUsed,
+                    redirected: res.redirected,
+                    body: res.body,
+                    arrayBuffer: async () => await res.arrayBuffer(),
+                    clone: () => res.clone(),
+                };
+            };
+
+            document
+                .getElementById("runButton")
+                .addEventListener("click", async function () {
+                    var code = editor.getValue();
+                    var outputElement = document.getElementById("output");
+                    var consoleElement = document.getElementById("console");
+                    outputElement.innerHTML = "";
+                    consoleElement.innerHTML = "";
+
+                    const options = {
+                        allowFetch: true, // inject fetch and allow the code to fetch data
+                        allowFs: true, // mount a virtual file system and provide node:fs module
+                        fetchAdapter, // browser-fetch
+                        env: {
+                            MY_ENV_VAR: "env var value",
+                        },
+                        console: {
+                            log: (message) =>
+                                logMessage("log text-gray-400", message),
+                            info: (message) =>
+                                logMessage("info text-blue-500", message),
+                            warn: (message) =>
+                                logMessage("warn text-yellow-500", message),
+                            error: (message) =>
+                                logMessage("error text-red-500", message),
+                        },
+                    };
+
+                    try {
+                        const res = await runSandboxed(async ({ evalCode }) => {
+                            return evalCode(code);
+                        }, options);
+
+                        outputElement.innerHTML = JSON.stringify(
+                            res,
+                            null,
+                            2,
+                        ).replaceAll("\\n", "<br>");
+                    } catch (e) {
+                        console.error(e);
+                        logMessage(
+                            "error text-red-500",
+                            JSON.stringify(e).replaceAll("\\n", "<br>"),
+                        );
+                    }
+                });
+        </script>
+    </body>
 </html>

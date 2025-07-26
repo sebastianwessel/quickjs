@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from 'bun:test'
+import variant from '@jitl/quickjs-ng-wasmfile-release-asyncify'
 import { loadAsyncQuickJs } from '../../loadAsyncQuickJs.js'
 import type { ErrorResponse } from '../../types/ErrorResponse.js'
 import type { OkResponseCheck } from '../../types/OkResponseCheck.js'
@@ -7,7 +8,7 @@ describe('async - core - validateCode', () => {
 	let runtime: Awaited<ReturnType<typeof loadAsyncQuickJs>>
 
 	beforeAll(async () => {
-		runtime = await loadAsyncQuickJs()
+		runtime = await loadAsyncQuickJs(variant)
 	})
 
 	const runValidation = async (code: string) => {
