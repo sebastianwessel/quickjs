@@ -55,6 +55,45 @@ export type GetFetchAdapterOptions = {
 }
 
 /**
+ * Symbol to mark an object as a Headers-like object for sandbox serialization
+ */
+export const HEADERS_MARKER = Symbol.for('quickjs-headers')
+
+/**
+ * Create a Headers-like object from a plain headers object
+ * This provides the standard Headers API methods while remaining serializable
+ * The HEADERS_MARKER symbol is used by the sandbox to reconstruct proper Headers instances
+ */
+const createHeadersObject = (headersObj: Record<string, string>) => ({
+	[HEADERS_MARKER]: true,
+	_headers: headersObj,
+	get(name: string): string | null {
+		const key = Object.keys(headersObj).find((k) => k.toLowerCase() === name.toLowerCase())
+		return key ? headersObj[key] : null
+	},
+	has(name: string): boolean {
+		return Object.keys(headersObj).some((k) => k.toLowerCase() === name.toLowerCase())
+	},
+	entries(): IterableIterator<[string, string]> {
+		return Object.entries(headersObj)[Symbol.iterator]() as IterableIterator<[string, string]>
+	},
+	keys(): IterableIterator<string> {
+		return Object.keys(headersObj)[Symbol.iterator]()
+	},
+	values(): IterableIterator<string> {
+		return Object.values(headersObj)[Symbol.iterator]()
+	},
+	forEach(callback: (value: string, key: string) => void): void {
+		for (const [key, value] of Object.entries(headersObj)) {
+			callback(value, key)
+		}
+	},
+	[Symbol.iterator](): IterableIterator<[string, string]> {
+		return Object.entries(headersObj)[Symbol.iterator]() as IterableIterator<[string, string]>
+	},
+})
+
+/**
  * Map a fetch Response to a simplified response object
  * @param res The original response
  * @returns The mapped response object
@@ -67,7 +106,7 @@ const mapResponse = (res: Response) =>
 		json: () => res.json(),
 		text: () => res.text(),
 		formData: () => res.formData(),
-		headers: res.headers,
+		headers: createHeadersObject(Object.fromEntries(res.headers.entries())),
 		type: res.type,
 		url: res.url,
 		blob: () => res.blob(),

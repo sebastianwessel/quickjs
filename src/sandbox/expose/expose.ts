@@ -1,4 +1,5 @@
 import { type QuickJSAsyncContext, type QuickJSContext, type QuickJSHandle, Scope } from 'quickjs-emscripten-core'
+import { HEADERS_MARKER } from '../../adapter/fetch.js'
 import { handleToNative } from '../handleToNative/handleToNative.js'
 import { isES2015Class } from './isES2015Class.js'
 import { isObject } from './isObject.js'
@@ -17,6 +18,14 @@ export const getHandle = (
 	// null
 	if (input === undefined) {
 		return ctx.undefined
+	}
+
+	// Headers-like object - construct using sandbox's Headers class
+	if (input && typeof input === 'object' && HEADERS_MARKER in input && (input as any)._headers) {
+		const headersData = (input as any)._headers as Record<string, string>
+		const headersJson = JSON.stringify(headersData)
+		const result = ctx.evalCode(`new Headers(${headersJson})`)
+		return result.unwrap()
 	}
 
 	// Array Buffer
