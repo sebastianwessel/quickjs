@@ -12,6 +12,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Ensure release runs on main
+        if: github.ref_name != 'main'
+        run: |
+          echo "Release workflow must be triggered on the main branch."
+          exit 1
+
       - name: Checkout
         uses: actions/checkout@v4
 
