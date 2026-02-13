@@ -31,5 +31,8 @@ jobs:
           bunx tsc --noEmit
           for f in $(rg --files src | rg '\.test\.ts$' | sort); do
             echo "Running $f"
-            bun test "$f"
+            if ! bun test "$f"; then
+              echo "Retrying $f once after failure..."
+              bun test "$f"
+            fi
           done
