@@ -12,6 +12,16 @@ This documentation provides essential information to help you avoid common pitfa
 As the QuickJS sandbox is running via WebAssembly, the JavaScript eventloop gets blocked by the WebAssembly execution.
 :::
 
+## Security Scope
+
+This library provides a strong sandboxing layer for host/guest execution, but it is not a complete security boundary by itself.
+
+- Engine-level vulnerabilities in QuickJS are upstream scope.
+- Therefore, use this package in a defense-in-depth architecture.
+
+Please read the dedicated guidance:
+[Security Model & Hardening](./security-model.md)
+
 ## Synchronous Execution
 
 ### 🚫 Blocking the JavaScript Event Loop
