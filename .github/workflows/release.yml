@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (must match package.json and jsr.json)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Verify version sync
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          node -e "
+          const fs = require('node:fs');
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const jsr = JSON.parse(fs.readFileSync('jsr.json', 'utf8'));
+          const expected = process.env.INPUT_VERSION;
+          if (pkg.version !== jsr.version) {
+            throw new Error('package.json and jsr.json versions are not in sync');
+          }
+          if (pkg.version !== expected) {
+            throw new Error('workflow input version does not match package.json/jsr.json version');
+          }
+          console.log('Version verified:', expected);
+          "
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Typecheck
+        run: bunx tsc --noEmit
+
+      - name: Run tests (serial by file)
+        run: |
+          set -e
+          for f in $(rg --files src | rg '\.test\.ts$' | sort); do
+            echo "Running $f"
+            bun test "$f"
+          done
+
+      - name: Build
+        run: bun run build
+
+      - name: Publish to npm (trusted publishing)
+        run: npm publish --provenance --access public --ignore-scripts
+
+      - name: Publish to JSR
+        run: npx jsr publish

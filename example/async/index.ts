@@ -1,5 +1,5 @@
 import { join, resolve } from 'node:path'
-import variant from '@jitl/quickjs-wasmfile-release-asyncify'
+import variant from '@jitl/quickjs-ng-wasmfile-release-asyncify'
 import type { QuickJSAsyncContext } from 'quickjs-emscripten-core'
 import { getAsyncModuleLoader, loadAsyncQuickJs, type SandboxAsyncOptions } from '../../src/index.js'
 

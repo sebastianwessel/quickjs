@@ -1,5 +1,6 @@
 import { newQuickJSWASMModuleFromVariant, Scope, shouldInterruptAfterDeadline } from 'quickjs-emscripten-core'
 import { getTypescriptSupport } from './getTypescriptSupport.js'
+import { rejectAndFlushPendingHostPromises } from './sandbox/expose/pendingHostPromises.js'
 import { setupFileSystem } from './sandbox/setupFileSystem.js'
 import { executeSandboxFunction } from './sandbox/syncVersion/executeSandboxFunction.js'
 import { getModuleLoader } from './sandbox/syncVersion/getModuleLoader.js'
@@ -29,10 +30,10 @@ export const loadQuickJs = async (variant: LoadQuickJsOptions) => {
 		sandboxedFunction: SandboxFunction<T>,
 		sandboxOptions: SandboxOptions = {},
 	): Promise<T> => {
+		const scope = new Scope()
+		let ctx: ReturnType<typeof module.newContext> | undefined
 		try {
-			const scope = new Scope()
-
-			const ctx = scope.manage(module.newContext())
+			ctx = scope.manage(module.newContext())
 
 			if (sandboxOptions.executionTimeout) {
 				ctx.runtime.setInterruptHandler(shouldInterruptAfterDeadline(Date.now() + sandboxOptions.executionTimeout))
@@ -80,11 +81,14 @@ export const loadQuickJs = async (variant: LoadQuickJsOptions) => {
 				sandboxedFunction,
 				transpileFile,
 			})
-
-			scope.dispose()
 			return result
 		} catch (error) {
 			throw error instanceof Error ? error : new Error('Internal Error')
+		} finally {
+			if (ctx) {
+				await rejectAndFlushPendingHostPromises(ctx)
+			}
+			scope.dispose()
 		}
 	}
 

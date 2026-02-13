@@ -22,10 +22,10 @@ These options apply to both synchronous and asynchronous sandbox instances.
 
 ### 📂 Virtual File System
 
-| Option        | Type                  | Description                                              |
-| ------------- | --------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `mountFs`     | `NestedDirectoryJSON  | IFs`                                                     | Mounts a virtual file system using [memfs](https://github.com/streamich/memfs). |
-| `nodeModules` | `NestedDirectoryJSON` | Mounts custom `node_modules` in the virtual file system. |
+| Option        | Type                         | Description                                                                     |
+| ------------- | ---------------------------- | ------------------------------------------------------------------------------- |
+| `mountFs`     | `NestedDirectoryJSON \| IFs` | Mounts a virtual file system using [memfs](https://github.com/streamich/memfs). |
+| `nodeModules` | `NestedDirectoryJSON`        | Mounts custom `node_modules` in the virtual file system.                        |
 
 ### 📄 File System Access
 

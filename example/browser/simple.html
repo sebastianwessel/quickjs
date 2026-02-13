@@ -1,8 +1,8 @@
 <!doctype html>
 <!-- Import from a ES Module CDN -->
 <script type="module">
-    import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@3.0.0";
     import variant from "https://esm.sh/@jitl/quickjs-wasmfile-release-sync";
+    import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@3.0.0";
 
     const { runSandboxed } = await loadQuickJs(variant);
 
