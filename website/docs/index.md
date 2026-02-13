@@ -52,6 +52,11 @@ yarn add @jitl/quickjs-ng-wasmfile-release-sync
 
 Please see [github.com/justjake/quickjs-emscripten](https://github.com/justjake/quickjs-emscripten/blob/main/doc/quickjs-emscripten-core/README.md) to find the variant which fits best for your needs.
 
+## Security Note
+
+Before running untrusted code in production, read:
+[Security Model & Hardening](./security-model.md)
+
 ## Backend Usage
 
 Here's a simple example of how to use the package:

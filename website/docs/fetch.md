@@ -8,6 +8,9 @@ order: 60
 
 Allowing the guest system inside a sandbox to connect to the outside world is potentially risky. Therefore, the usage should be restricted as much as possible.
 
+For the broader threat model and deployment guidance, see
+[Security Model & Hardening](./security-model.md).
+
 ## Consider Alternatives
 
 Balancing technical needs, possibilities, security, and implementation overhead highly depends on the individual application.
