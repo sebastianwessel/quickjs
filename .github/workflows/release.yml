@@ -28,6 +28,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Upgrade npm for trusted publishing
+        run: |
+          npm install --global npm@^11.5.1
+          npm --version
 
       - name: Verify version sync and export version
         id: version
@@ -36,6 +42,9 @@ jobs:
           const fs = require('node:fs');
           const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
           const jsr = JSON.parse(fs.readFileSync('jsr.json', 'utf8'));
+          if (pkg.name !== jsr.name) {
+            throw new Error('package.json and jsr.json names are not in sync');
+          }
           if (pkg.version !== jsr.version) {
             throw new Error('package.json and jsr.json versions are not in sync');
           }
