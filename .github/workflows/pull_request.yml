@@ -27,9 +27,9 @@ jobs:
           bun run build
       - name: Test
         run: |
-          set -e
+          set -euo pipefail
           bunx tsc --noEmit
-          for f in $(rg --files src | rg '\.test\.ts$' | sort); do
+          for f in $(find src -type f -name '*.test.ts' | sort); do
             echo "Running $f"
             bun test "$f"
           done
