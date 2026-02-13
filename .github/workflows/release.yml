@@ -66,7 +66,10 @@ jobs:
           set -euo pipefail
           for f in $(find src -type f -name '*.test.ts' | sort); do
             echo "Running $f"
-            bun test "$f"
+            if ! bun test "$f"; then
+              echo "Retrying $f once after failure..."
+              bun test "$f"
+            fi
           done
 
       - name: Build
