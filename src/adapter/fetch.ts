@@ -6,6 +6,8 @@ const DEFAULT_TIMEOUT = 5000 // 5 seconds
 const DEFAULT_RATE_LIMIT_POINTS = 10 // Number of requests
 const DEFAULT_RATE_LIMIT_DURATION = 1 // Per second
 
+const HEADERS_MARKER = '__quickjsHeadersObject__'
+
 /**
  * Options for creating the default fetch adapter
  */
@@ -59,6 +61,16 @@ export type GetFetchAdapterOptions = {
  * @param res The original response
  * @returns The mapped response object
  */
+const createHeadersObject = (headers: Headers) => ({
+	[HEADERS_MARKER]: true,
+	_headers: Object.fromEntries(headers.entries()),
+})
+
+/**
+ * Map a fetch Response to a simplified response object
+ * @param res The original response
+ * @returns The mapped response object
+ */
 const mapResponse = (res: Response) =>
 	({
 		status: res.status,
@@ -67,7 +79,7 @@ const mapResponse = (res: Response) =>
 		json: () => res.json(),
 		text: () => res.text(),
 		formData: () => res.formData(),
-		headers: res.headers,
+		headers: createHeadersObject(res.headers),
 		type: res.type,
 		url: res.url,
 		blob: () => res.blob(),
@@ -150,7 +162,7 @@ export const getDefaultFetchAdapter = (adapterOptions: GetFetchAdapterOptions = 
 						return mapResponse(res)
 					}
 					const content = options.fs.readFileSync(filePath)
-					const res = new Response(content, { status: 200, statusText: 'OK' })
+					const res = new Response(content as unknown as BodyInit, { status: 200, statusText: 'OK' })
 					return mapResponse(res)
 				}
 
@@ -192,3 +204,5 @@ export const getDefaultFetchAdapter = (adapterOptions: GetFetchAdapterOptions = 
 
 	return fetchAdapter as typeof fetch
 }
+
+export { HEADERS_MARKER }

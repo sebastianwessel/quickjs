@@ -1,7 +1,9 @@
 import { type QuickJSAsyncContext, type QuickJSContext, type QuickJSHandle, Scope } from 'quickjs-emscripten-core'
+import { HEADERS_MARKER } from '../../adapter/fetch.js'
 import { handleToNative } from '../handleToNative/handleToNative.js'
 import { isES2015Class } from './isES2015Class.js'
 import { isObject } from './isObject.js'
+import { registerPendingHostPromise, unregisterPendingHostPromise } from './pendingHostPromises.js'
 
 export const getHandle = (
 	scope: Scope,
@@ -19,6 +21,13 @@ export const getHandle = (
 		return ctx.undefined
 	}
 
+	// Map serialized fetch headers from host to a native Headers instance in guest.
+	if (input && typeof input === 'object' && HEADERS_MARKER in input && '_headers' in input) {
+		const headersValue = (input as { _headers: Record<string, string> })._headers
+		const headersJson = JSON.stringify(headersValue)
+		return ctx.unwrapResult(ctx.evalCode(`new Headers(${headersJson})`))
+	}
+
 	// Array Buffer
 	if (input instanceof ArrayBuffer) {
 		return ctx.newArrayBuffer(input)
@@ -26,14 +35,26 @@ export const getHandle = (
 	// Promise
 	if (input instanceof Promise) {
 		const promise = ctx.newPromise()
-		promise.settled.then(ctx.runtime.executePendingJobs)
+		registerPendingHostPromise(ctx, promise)
+		promise.settled.finally(() => {
+			unregisterPendingHostPromise(ctx, promise)
+			if (ctx.alive) {
+				ctx.runtime.executePendingJobs()
+			}
+		})
 		input.then(
 			r => {
+				if (!ctx.alive || !promise.alive) {
+					return
+				}
 				const handle = getHandle(scope, ctx, '', r)
 				promise.resolve(handle)
 				handle.dispose()
 			},
 			e => {
+				if (!ctx.alive || !promise.alive) {
+					return
+				}
 				const handle = getHandle(scope, ctx, '', e)
 				promise.reject(handle)
 				handle.dispose()

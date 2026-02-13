@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { memfs, type NestedDirectoryJSON } from 'memfs'
+import { fileURLToPath } from 'node:url'
+import type { memfs as memfsFactory, NestedDirectoryJSON } from 'memfs'
+import * as memfsPkg from 'memfs'
 import assertModule from './modules/assert.js'
 import bufferModule from './modules/buffer.js'
 import eventModule from './modules/events.js'
@@ -20,6 +22,21 @@ import timersPromisesModule from './modules/timers_promises.js'
 import urlModule from './modules/url.js'
 import utilModule from './modules/util.js'
 import type { RuntimeOptions } from './types/RuntimeOptions.js'
+
+const getCurrentDirname = () => {
+	if (typeof __dirname !== 'undefined') {
+		return __dirname
+	}
+	const stack = new Error().stack ?? ''
+	const stackUrl = stack.match(/(file:\/\/[^\s)]+createVirtualFileSystem\.[cm]?js)/)?.[1]
+	if (stackUrl) {
+		return fileURLToPath(new URL('.', stackUrl))
+	}
+	return process.cwd()
+}
+
+const memfsCompat = memfsPkg as any
+const getMemfs = () => (memfsCompat.memfs ?? memfsCompat.default?.memfs ?? memfsCompat.default) as typeof memfsFactory
 
 /**
  * Create the virtual file system for the sandbox
@@ -172,12 +189,13 @@ export const createVirtualFileSystem = (runtimeOptions: RuntimeOptions = {}) => 
 	}
 
 	if (runtimeOptions.enableTestUtils) {
+		const currentDirname = getCurrentDirname()
 		virtualFS['/'].node_modules.test = {
-			'index.js': readFileSync(join(__dirname, 'modules', 'build', 'test-lib.js')),
+			'index.js': readFileSync(join(currentDirname, 'modules', 'build', 'test-lib.js')),
 		}
 	}
 
-	const { vol, fs } = memfs(virtualFS, '/')
+	const { vol, fs } = getMemfs()(virtualFS, '/')
 
 	return { vol, fs }
 }
