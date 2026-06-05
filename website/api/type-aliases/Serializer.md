@@ -1,10 +1,10 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.0.1**](../README.md)
 
 ***
 
 [@sebastianwessel/quickjs](../globals.md) / Serializer
 
-# Type Alias: Serializer()
+# Type Alias: Serializer
 
 > **Serializer** = (`ctx`, `handle`, `rootScope?`) => `any`
 
@@ -14,7 +14,7 @@ Defined in: [types/Serializer.ts:3](https://github.com/sebastianwessel/quickjs/b
 
 ### ctx
 
-`QuickJSContext` | `QuickJSAsyncContext`
+`QuickJSContext` \| `QuickJSAsyncContext`
 
 ### handle
 

@@ -1,4 +1,16 @@
 {
-	"entry": ["src/index.{js,ts}"],
-	"project": ["**/*.{js,ts}", "!example/**", "!docs/**", "!**/*.test.{js,ts}", "!*.json", "!loadtest.ts", "!vendor/**"]
+	"entry": [
+		"src/index.{js,ts}",
+		"loadtest.ts",
+		"vendor/testrunner/testRunner.ts",
+		"website/.vitepress/config.ts",
+		"website/.vitepress/theme/index.ts"
+	],
+	"project": ["**/*.{js,ts,vue}", "!docs/**", "!**/*.test.{js,ts}", "!*.json"],
+	"ignore": [
+		"example/custom-module/custom-module.js",
+		"website/public/cookieconsent-init2.js",
+		"website/public/cookieconsent2.js"
+	],
+	"ignoreExportsUsedInFile": true
 }

@@ -1,4 +1,4 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.0.1**](../README.md)
 
 ***
 
@@ -14,7 +14,7 @@ Defined in: [types/RuntimeOptions.ts:4](https://github.com/sebastianwessel/quick
 
 ### allowFetch?
 
-> `optional` **allowFetch**: `boolean`
+> `optional` **allowFetch?**: `boolean`
 
 Defined in: [types/RuntimeOptions.ts:29](https://github.com/sebastianwessel/quickjs/blob/main/src/types/RuntimeOptions.ts#L29)
 
@@ -25,7 +25,7 @@ When enabled, the global fetch will be available
 
 ### allowFs?
 
-> `optional` **allowFs**: `boolean`
+> `optional` **allowFs?**: `boolean`
 
 Defined in: [types/RuntimeOptions.ts:24](https://github.com/sebastianwessel/quickjs/blob/main/src/types/RuntimeOptions.ts#L24)
 
@@ -36,16 +36,16 @@ If enabled, the package node:fs becomes available
 
 ### console?
 
-> `optional` **console**: `object`
+> `optional` **console?**: `object`
 
 Defined in: [types/RuntimeOptions.ts:44](https://github.com/sebastianwessel/quickjs/blob/main/src/types/RuntimeOptions.ts#L44)
 
 Per default, the console log inside of QuickJS is passed to the host console log.
 Here, you can customize the handling and provide your own logging methods.
 
-#### assert()?
+#### assert?
 
-> `optional` **assert**: (`condition?`, ...`data`) => `void`
+> `optional` **assert?**: (`condition?`, ...`data`) => `void`
 
 ##### Parameters
 
@@ -53,7 +53,7 @@ Here, you can customize the handling and provide your own logging methods.
 
 `boolean`
 
-###### data?
+###### data
 
 ...`unknown`[]
 
@@ -61,17 +61,17 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### clear()?
+#### clear?
 
-> `optional` **clear**: () => `void`
+> `optional` **clear?**: () => `void`
 
 ##### Returns
 
 `void`
 
-#### count()?
+#### count?
 
-> `optional` **count**: (`label?`) => `void`
+> `optional` **count?**: (`label?`) => `void`
 
 ##### Parameters
 
@@ -83,9 +83,9 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### countReset()?
+#### countReset?
 
-> `optional` **countReset**: (`label?`) => `void`
+> `optional` **countReset?**: (`label?`) => `void`
 
 ##### Parameters
 
@@ -97,9 +97,9 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### debug()?
+#### debug?
 
-> `optional` **debug**: (`message?`, ...`optionalParams`) => `void`
+> `optional` **debug?**: (`message?`, ...`optionalParams`) => `void`
 
 ##### Parameters
 
@@ -107,7 +107,7 @@ Here, you can customize the handling and provide your own logging methods.
 
 `unknown`
 
-###### optionalParams?
+###### optionalParams
 
 ...`unknown`[]
 
@@ -115,9 +115,9 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### dir()?
+#### dir?
 
-> `optional` **dir**: (`item?`, `options?`) => `void`
+> `optional` **dir?**: (`item?`, `options?`) => `void`
 
 ##### Parameters
 
@@ -133,9 +133,9 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### dirxml()?
+#### dirxml?
 
-> `optional` **dirxml**: (...`data`) => `void`
+> `optional` **dirxml?**: (...`data`) => `void`
 
 ##### Parameters
 
@@ -147,9 +147,9 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### error()?
+#### error?
 
-> `optional` **error**: (`message?`, ...`optionalParams`) => `void`
+> `optional` **error?**: (`message?`, ...`optionalParams`) => `void`
 
 ##### Parameters
 
@@ -157,7 +157,7 @@ Here, you can customize the handling and provide your own logging methods.
 
 `unknown`
 
-###### optionalParams?
+###### optionalParams
 
 ...`unknown`[]
 
@@ -165,9 +165,9 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### group()?
+#### group?
 
-> `optional` **group**: (...`label`) => `void`
+> `optional` **group?**: (...`label`) => `void`
 
 ##### Parameters
 
@@ -179,9 +179,9 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### groupCollapsed()?
+#### groupCollapsed?
 
-> `optional` **groupCollapsed**: (...`label`) => `void`
+> `optional` **groupCollapsed?**: (...`label`) => `void`
 
 ##### Parameters
 
@@ -193,17 +193,17 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### groupEnd()?
+#### groupEnd?
 
-> `optional` **groupEnd**: () => `void`
+> `optional` **groupEnd?**: () => `void`
 
 ##### Returns
 
 `void`
 
-#### info()?
+#### info?
 
-> `optional` **info**: (`message?`, ...`optionalParams`) => `void`
+> `optional` **info?**: (`message?`, ...`optionalParams`) => `void`
 
 ##### Parameters
 
@@ -211,7 +211,7 @@ Here, you can customize the handling and provide your own logging methods.
 
 `unknown`
 
-###### optionalParams?
+###### optionalParams
 
 ...`unknown`[]
 
@@ -219,9 +219,9 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### log()?
+#### log?
 
-> `optional` **log**: (`message?`, ...`optionalParams`) => `void`
+> `optional` **log?**: (`message?`, ...`optionalParams`) => `void`
 
 ##### Parameters
 
@@ -229,7 +229,7 @@ Here, you can customize the handling and provide your own logging methods.
 
 `unknown`
 
-###### optionalParams?
+###### optionalParams
 
 ...`unknown`[]
 
@@ -237,9 +237,9 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### table()?
+#### table?
 
-> `optional` **table**: (`tabularData?`, `properties?`) => `void`
+> `optional` **table?**: (`tabularData?`, `properties?`) => `void`
 
 ##### Parameters
 
@@ -255,23 +255,9 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### time()?
+#### time?
 
-> `optional` **time**: (`label?`) => `void`
-
-##### Parameters
-
-###### label?
-
-`string`
-
-##### Returns
-
-`void`
-
-#### timeEnd()?
-
-> `optional` **timeEnd**: (`label?`) => `void`
+> `optional` **time?**: (`label?`) => `void`
 
 ##### Parameters
 
@@ -283,9 +269,9 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### timeLog()?
+#### timeEnd?
 
-> `optional` **timeLog**: (`label?`, ...`data`) => `void`
+> `optional` **timeEnd?**: (`label?`) => `void`
 
 ##### Parameters
 
@@ -293,7 +279,21 @@ Here, you can customize the handling and provide your own logging methods.
 
 `string`
 
-###### data?
+##### Returns
+
+`void`
+
+#### timeLog?
+
+> `optional` **timeLog?**: (`label?`, ...`data`) => `void`
+
+##### Parameters
+
+###### label?
+
+`string`
+
+###### data
 
 ...`unknown`[]
 
@@ -301,9 +301,9 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### trace()?
+#### trace?
 
-> `optional` **trace**: (`message?`, ...`optionalParams`) => `void`
+> `optional` **trace?**: (`message?`, ...`optionalParams`) => `void`
 
 ##### Parameters
 
@@ -311,7 +311,7 @@ Here, you can customize the handling and provide your own logging methods.
 
 `unknown`
 
-###### optionalParams?
+###### optionalParams
 
 ...`unknown`[]
 
@@ -319,9 +319,9 @@ Here, you can customize the handling and provide your own logging methods.
 
 `void`
 
-#### warn()?
+#### warn?
 
-> `optional` **warn**: (`message?`, ...`optionalParams`) => `void`
+> `optional` **warn?**: (`message?`, ...`optionalParams`) => `void`
 
 ##### Parameters
 
@@ -329,7 +329,7 @@ Here, you can customize the handling and provide your own logging methods.
 
 `unknown`
 
-###### optionalParams?
+###### optionalParams
 
 ...`unknown`[]
 
@@ -341,7 +341,7 @@ Here, you can customize the handling and provide your own logging methods.
 
 ### dangerousSync?
 
-> `optional` **dangerousSync**: `Record`\<`string`, `unknown`\>
+> `optional` **dangerousSync?**: `Record`\<`string`, `unknown`\>
 
 Defined in: [types/RuntimeOptions.ts:88](https://github.com/sebastianwessel/quickjs/blob/main/src/types/RuntimeOptions.ts#L88)
 
@@ -352,7 +352,7 @@ This means, the values on the host, can be set by the guest system
 
 ### enableTestUtils?
 
-> `optional` **enableTestUtils**: `boolean`
+> `optional` **enableTestUtils?**: `boolean`
 
 Defined in: [types/RuntimeOptions.ts:39](https://github.com/sebastianwessel/quickjs/blob/main/src/types/RuntimeOptions.ts#L39)
 
@@ -364,7 +364,7 @@ They are registered global
 
 ### env?
 
-> `optional` **env**: `Record`\<`string`, `unknown`\>
+> `optional` **env?**: `Record`\<`string`, `unknown`\>
 
 Defined in: [types/RuntimeOptions.ts:83](https://github.com/sebastianwessel/quickjs/blob/main/src/types/RuntimeOptions.ts#L83)
 
@@ -390,18 +390,18 @@ console.log(env.My_ENV) // outputs: my var
 
 ### executionTimeout?
 
-> `optional` **executionTimeout**: `number`
+> `optional` **executionTimeout?**: `number`
 
 Defined in: [types/RuntimeOptions.ts:9](https://github.com/sebastianwessel/quickjs/blob/main/src/types/RuntimeOptions.ts#L9)
 
-The maximum time in seconds a script can run.
+The maximum time in milliseconds a script can run.
 Unset or set to 0 for unlimited execution time.
 
 ***
 
 ### fetchAdapter?
 
-> `optional` **fetchAdapter**: *typeof* `fetch`
+> `optional` **fetchAdapter?**: *typeof* `fetch`
 
 Defined in: [types/RuntimeOptions.ts:33](https://github.com/sebastianwessel/quickjs/blob/main/src/types/RuntimeOptions.ts#L33)
 
@@ -411,35 +411,29 @@ The custom fetch adapter provided as host function in the QuickJS runtime
 
 ### mountFs?
 
-> `optional` **mountFs**: `NestedDirectoryJSON` \| `IFs`
+> `optional` **mountFs?**: `NestedDirectoryJSON` \| `IFs`
 
 Defined in: [types/RuntimeOptions.ts:14](https://github.com/sebastianwessel/quickjs/blob/main/src/types/RuntimeOptions.ts#L14)
 
-Mount a virtual file system
-
-#### Link
-
-https://github.com/streamich/memfs
+Mount a virtual file system.
+See https://github.com/streamich/memfs
 
 ***
 
 ### nodeModules?
 
-> `optional` **nodeModules**: `NestedDirectoryJSON`
+> `optional` **nodeModules?**: `NestedDirectoryJSON`
 
 Defined in: [types/RuntimeOptions.ts:19](https://github.com/sebastianwessel/quickjs/blob/main/src/types/RuntimeOptions.ts#L19)
 
-Mount custom node_modules in a virtual file system
-
-#### Link
-
-https://github.com/streamich/memfs
+Mount custom node_modules in a virtual file system.
+See https://github.com/streamich/memfs
 
 ***
 
 ### transformCompilerOptions?
 
-> `optional` **transformCompilerOptions**: `TS.CompilerOptions`
+> `optional` **transformCompilerOptions?**: `TS.CompilerOptions`
 
 Defined in: [types/RuntimeOptions.ts:97](https://github.com/sebastianwessel/quickjs/blob/main/src/types/RuntimeOptions.ts#L97)
 
@@ -449,7 +443,7 @@ The Typescript compiler options for transpiling files from typescript to JavaScr
 
 ### transformTypescript?
 
-> `optional` **transformTypescript**: `boolean`
+> `optional` **transformTypescript?**: `boolean`
 
 Defined in: [types/RuntimeOptions.ts:93](https://github.com/sebastianwessel/quickjs/blob/main/src/types/RuntimeOptions.ts#L93)
 

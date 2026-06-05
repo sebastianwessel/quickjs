@@ -1,4 +1,4 @@
-**@sebastianwessel/quickjs v2.3.1**
+**@sebastianwessel/quickjs v3.0.1**
 
 ***
 
@@ -29,7 +29,7 @@ import variant from "@jitl/quickjs-ng-wasmfile-release-sync";
 import { type SandboxOptions, loadQuickJs } from "@sebastianwessel/quickjs";
 
 // General setup like loading and init of the QuickJS wasm
-// It is a ressource intensive job and should be done only once if possible
+// It is a resource-intensive job and should be done only once if possible
 const { runSandboxed } = await loadQuickJs(variant);
 
 const options: SandboxOptions = {

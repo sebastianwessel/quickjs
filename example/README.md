@@ -21,7 +21,6 @@ bun run example:basic
 ```
 
 from the root of this repository.
-
 ## Server Example
 
 The server example demonstrates how you can use [@sebastianwessel/quickjs](https://github.com/sebastianwessel/quickjs) inside a web server. In this example, we run a web server that spawns workers on request using the [poolifier-web-worker](https://github.com/poolifier/poolifier-web-worker) package. Each worker runs its own QuickJS sandbox and executes the given code.
@@ -36,10 +35,18 @@ from the root of this repository. Once the server has started, open your browser
 
 ## Run-Tests Example
 
-In the *run-tests* example, the usage of the included test runner is shown. You can test it out by running:
+In the *run-tests* example, the usage of the included test runner is shown.
+
+Before running the tests, build the test runner library:
 
 ```sh
-bun run example:test
+bun run build:vendor
+```
+
+You can test it out by running:
+
+```sh
+bun run example:tests
 ```
 
 from the root of this repository.

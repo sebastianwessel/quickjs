@@ -1,4 +1,4 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.0.1**](../README.md)
 
 ***
 
@@ -16,9 +16,9 @@ Serialize data from guest to host
 
 ### ctx
 
-The sandbox context
+`QuickJSContext` \| `QuickJSAsyncContext`
 
-`QuickJSContext` | `QuickJSAsyncContext`
+The sandbox context
 
 ### handle
 

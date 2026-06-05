@@ -94,7 +94,7 @@ onMounted(async () => {
 
 	// Load QuickJS
 	const { loadQuickJs } = await import('https://esm.sh/@sebastianwessel/quickjs@latest')
-	const variant = await import('https://esm.sh/@jitl/quickjs-wasmfile-release-sync')
+	const variant = await import('https://esm.sh/@jitl/quickjs-ng-wasmfile-release-sync')
 	const { runSandboxed } = await loadQuickJs(variant)
 
 	const fetchAdapter = async (url, param) => {

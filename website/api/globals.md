@@ -1,8 +1,8 @@
-[**@sebastianwessel/quickjs v2.3.1**](README.md)
+[**@sebastianwessel/quickjs v3.0.1**](README.md)
 
 ***
 
-# @sebastianwessel/quickjs v2.3.1
+# @sebastianwessel/quickjs v3.0.1
 
 ## Type Aliases
 
@@ -31,18 +31,15 @@
 
 - [modulePathNormalizer](variables/modulePathNormalizer.md)
 - [modulePathNormalizerAsync](variables/modulePathNormalizerAsync.md)
-- [serializer](variables/serializer.md)
 
 ## Functions
 
-- [addSerializer](functions/addSerializer.md)
 - [createVirtualFileSystem](functions/createVirtualFileSystem.md)
 - [expose](functions/expose.md)
 - [getAsyncModuleLoader](functions/getAsyncModuleLoader.md)
 - [getDefaultFetchAdapter](functions/getDefaultFetchAdapter.md)
 - [getHandle](functions/getHandle.md)
 - [getModuleLoader](functions/getModuleLoader.md)
-- [getSerializer](functions/getSerializer.md)
 - [getTypescriptSupport](functions/getTypescriptSupport.md)
 - [handleToNative](functions/handleToNative.md)
 - [loadAsyncQuickJs](functions/loadAsyncQuickJs.md)

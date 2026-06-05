@@ -1,4 +1,4 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.0.1**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **GetFetchAdapterOptions** = `object`
 
-Defined in: [adapter/fetch.ts:12](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L12)
+Defined in: [adapter/fetch.ts:15](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L15)
 
 Options for creating the default fetch adapter
 
@@ -16,9 +16,9 @@ Options for creating the default fetch adapter
 
 ### allowedCorsOrigins?
 
-> `optional` **allowedCorsOrigins**: `string`[]
+> `optional` **allowedCorsOrigins?**: `string`[]
 
-Defined in: [adapter/fetch.ts:44](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L44)
+Defined in: [adapter/fetch.ts:47](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L47)
 
 List of allowed CORS origins
 
@@ -32,9 +32,9 @@ List of allowed CORS origins
 
 ### allowedHosts?
 
-> `optional` **allowedHosts**: `string`[]
+> `optional` **allowedHosts?**: `string`[]
 
-Defined in: [adapter/fetch.ts:20](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L20)
+Defined in: [adapter/fetch.ts:23](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L23)
 
 List of allowed hosts. If set, only these hosts are allowed to call
 
@@ -42,9 +42,9 @@ List of allowed hosts. If set, only these hosts are allowed to call
 
 ### allowedProtocols?
 
-> `optional` **allowedProtocols**: `string`[]
+> `optional` **allowedProtocols?**: `string`[]
 
-Defined in: [adapter/fetch.ts:24](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L24)
+Defined in: [adapter/fetch.ts:27](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L27)
 
 List of allowed protocols. If set, only these protocols are allowed to call
 
@@ -52,9 +52,9 @@ List of allowed protocols. If set, only these protocols are allowed to call
 
 ### corsCheck?
 
-> `optional` **corsCheck**: `boolean`
+> `optional` **corsCheck?**: `boolean`
 
-Defined in: [adapter/fetch.ts:39](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L39)
+Defined in: [adapter/fetch.ts:42](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L42)
 
 Flag to enable CORS policy check
 
@@ -68,9 +68,9 @@ false
 
 ### disallowedHosts?
 
-> `optional` **disallowedHosts**: `string`[]
+> `optional` **disallowedHosts?**: `string`[]
 
-Defined in: [adapter/fetch.ts:29](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L29)
+Defined in: [adapter/fetch.ts:32](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L32)
 
 List of disallowed hosts. If set, these hosts are not allowed to call
 
@@ -84,9 +84,9 @@ List of disallowed hosts. If set, these hosts are not allowed to call
 
 ### fs?
 
-> `optional` **fs**: `IFs`
+> `optional` **fs?**: `IFs`
 
-Defined in: [adapter/fetch.ts:16](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L16)
+Defined in: [adapter/fetch.ts:19](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L19)
 
 The virtual file system of the sandbox (excludes node_modules)
 
@@ -94,9 +94,9 @@ The virtual file system of the sandbox (excludes node_modules)
 
 ### rateLimitDuration?
 
-> `optional` **rateLimitDuration**: `number`
+> `optional` **rateLimitDuration?**: `number`
 
-Defined in: [adapter/fetch.ts:54](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L54)
+Defined in: [adapter/fetch.ts:57](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L57)
 
 Duration in seconds for the rate limit
 
@@ -110,9 +110,9 @@ Duration in seconds for the rate limit
 
 ### rateLimitPoints?
 
-> `optional` **rateLimitPoints**: `number`
+> `optional` **rateLimitPoints?**: `number`
 
-Defined in: [adapter/fetch.ts:49](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L49)
+Defined in: [adapter/fetch.ts:52](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L52)
 
 Number of requests allowed in the specified duration
 
@@ -126,9 +126,9 @@ Number of requests allowed in the specified duration
 
 ### timeout?
 
-> `optional` **timeout**: `number`
+> `optional` **timeout?**: `number`
 
-Defined in: [adapter/fetch.ts:34](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L34)
+Defined in: [adapter/fetch.ts:37](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L37)
 
 Timeout for fetch requests in milliseconds
 

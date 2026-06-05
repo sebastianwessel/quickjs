@@ -5,6 +5,7 @@ import { getAsyncModuleLoader } from './sandbox/asyncVersion/getAsyncModuleLoade
 import { modulePathNormalizerAsync } from './sandbox/asyncVersion/modulePathNormalizerAsync.js'
 import { prepareAsyncNodeCompatibility } from './sandbox/asyncVersion/prepareAsyncNodeCompatibility.js'
 import { prepareAsyncSandbox } from './sandbox/asyncVersion/prepareAsyncSandbox.js'
+import { rejectAndFlushPendingHostPromises } from './sandbox/expose/pendingHostPromises.js'
 import { setupFileSystem } from './sandbox/setupFileSystem.js'
 import type { LoadAsyncQuickJsOptions } from './types/LoadQuickJsOptions.js'
 
@@ -86,6 +87,9 @@ export const loadAsyncQuickJs = async (variant: LoadAsyncQuickJsOptions) => {
 
 			return result
 		} finally {
+			if (ctx) {
+				await rejectAndFlushPendingHostPromises(ctx)
+			}
 			scope.dispose()
 		}
 	}

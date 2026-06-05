@@ -1,4 +1,4 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.0.1**](../README.md)
 
 ***
 
@@ -14,7 +14,7 @@ Defined in: [getTypescriptSupport.ts:9](https://github.com/sebastianwessel/quick
 
 ### fileExtensions?
 
-> `optional` **fileExtensions**: `string`[]
+> `optional` **fileExtensions?**: `string`[]
 
 Defined in: [getTypescriptSupport.ts:10](https://github.com/sebastianwessel/quickjs/blob/main/src/getTypescriptSupport.ts#L10)
 
@@ -22,6 +22,6 @@ Defined in: [getTypescriptSupport.ts:10](https://github.com/sebastianwessel/quic
 
 ### startPath?
 
-> `optional` **startPath**: `string`
+> `optional` **startPath?**: `string`
 
 Defined in: [getTypescriptSupport.ts:11](https://github.com/sebastianwessel/quickjs/blob/main/src/getTypescriptSupport.ts#L11)

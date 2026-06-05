@@ -55,6 +55,7 @@ export default await fn('Hello World')</textarea
             </div>
             <button
                 id="runButton"
+                type="button"
                 class="bg-blue-500 text-white font-semibold text-lg p-4 hover:bg-blue-700"
             >
                 Run Code
@@ -93,9 +94,9 @@ export default await fn('Hello World')</textarea
             }
 
             // =========== QuickJS =====================
-            import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@3.0.0";
+            import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@latest";
             import "https://esm.sh/typescript";
-            import variant from "https://esm.sh/@jitl/quickjs-wasmfile-release-sync";
+            import variant from "https://esm.sh/@jitl/quickjs-ng-wasmfile-release-sync";
 
             const { runSandboxed } = await loadQuickJs(variant);
 

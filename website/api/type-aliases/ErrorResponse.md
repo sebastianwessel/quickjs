@@ -1,4 +1,4 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.0.1**](../README.md)
 
 ***
 
@@ -28,13 +28,13 @@ Defined in: [types/ErrorResponse.ts:3](https://github.com/sebastianwessel/quickj
 
 #### stack?
 
-> `optional` **stack**: `string`
+> `optional` **stack?**: `string`
 
 ***
 
 ### isSyntaxError?
 
-> `optional` **isSyntaxError**: `boolean`
+> `optional` **isSyntaxError?**: `boolean`
 
 Defined in: [types/ErrorResponse.ts:8](https://github.com/sebastianwessel/quickjs/blob/main/src/types/ErrorResponse.ts#L8)
 

@@ -1,4 +1,4 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.0.1**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **loadAsyncQuickJs**(`variant`): `Promise`\<\{ `module`: `QuickJSAsyncWASMModule`; `runSandboxed`: \<`T`\>(`sandboxedFunction`, `sandboxOptions`) => `Promise`\<`T`\>; \}\>
 
-Defined in: [loadAsyncQuickJs.ts:19](https://github.com/sebastianwessel/quickjs/blob/main/src/loadAsyncQuickJs.ts#L19)
+Defined in: [loadAsyncQuickJs.ts:20](https://github.com/sebastianwessel/quickjs/blob/main/src/loadAsyncQuickJs.ts#L20)
 
 Loads the QuickJS async module and returns a sandbox execution function.
 
