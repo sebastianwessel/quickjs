@@ -3,6 +3,7 @@
 ### 🐛 Bug Fixes
 
 - Harden runtime cleanup and refresh deps
+- Align examples and timeout behavior
 
 ### 💼 Other
 

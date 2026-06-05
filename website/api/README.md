@@ -1,4 +1,4 @@
-**@sebastianwessel/quickjs v3.0.1**
+**@sebastianwessel/quickjs v3.1.0**
 
 ***
 
