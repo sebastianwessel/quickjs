@@ -33,6 +33,12 @@ bun run example:server
 
 from the root of this repository. Once the server has started, open your browser and go to [http://localhost:3000/](http://localhost:3000/). You will see a simple OpenAPI (Swagger) UI.
 
+If port 3000 is already in use, choose another port:
+
+```sh
+PORT=3910 bun run example:server
+```
+
 ## Run-Tests Example
 
 In the *run-tests* example, the usage of the included test runner is shown.

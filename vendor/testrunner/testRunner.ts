@@ -238,33 +238,35 @@ async function runSuite(suite: Suite, timeout: number): Promise<SuiteResult> {
 		}
 	}
 
-	for (const suite of suiteResult.suites) {
-		const { failed, passed } = suite.tests.reduce(
-			(total, k) => {
-				let failed = total.failed
-				let passed = total.passed
-				if (k.passed) {
-					passed++
-				} else {
-					failed++
-				}
-
-				return { failed, passed }
-			},
-			{ failed: 0, passed: 0 },
-		)
-
-		suiteResult.totalSuites++
-
-		suiteResult.totalTests = suiteResult.totalTests + passed + failed
-		suiteResult.passedTests = suiteResult.passedTests + passed
-		suiteResult.failedTests = suiteResult.failedTests + failed
-
-		if (!suite.passed) {
+	for (const test of suiteResult.tests) {
+		suiteResult.totalTests++
+		if (test.passed) {
+			suiteResult.passedTests++
+		} else {
+			suiteResult.failedTests++
 			suiteResult.passed = false
+		}
+	}
+
+	const hookGroups = [suiteResult.beforeAll, suiteResult.beforeEach, suiteResult.afterEach, suiteResult.afterAll]
+
+	if (hookGroups.some(results => results.some(result => !result.passed))) {
+		suiteResult.passed = false
+	}
+
+	for (const subSuite of suiteResult.suites) {
+		suiteResult.totalSuites += 1 + subSuite.totalSuites
+		suiteResult.totalTests += subSuite.totalTests
+		suiteResult.passedTests += subSuite.passedTests
+		suiteResult.failedTests += subSuite.failedTests
+		suiteResult.passedSuites += subSuite.passedSuites
+		suiteResult.failedSuites += subSuite.failedSuites
+
+		if (subSuite.passed) {
 			suiteResult.passedSuites++
 		} else {
 			suiteResult.failedSuites++
+			suiteResult.passed = false
 		}
 	}
 

@@ -6,7 +6,7 @@ import type { SandboxEvalCode } from '../../types/SandboxEvalCode.js'
 import { rejectAndFlushPendingHostPromises } from '../expose/pendingHostPromises.js'
 import { getMaxIntervalAmount } from '../getMaxIntervalAmount.js'
 import { getMaxTimeoutAmount } from '../getMaxTimeoutAmount.js'
-import { handleEvalError } from '../handleEvalError.js'
+import { handleEvalError, normalizeInterruptedExecution } from '../handleEvalError.js'
 import { handleToNative } from '../handleToNative/handleToNative.js'
 import { provideTimingFunctions } from '../provide/provideTimingFunctions.js'
 
@@ -67,7 +67,7 @@ export const createAsyncEvalCodeFunction = (input: CodeFunctionAsyncInput, scope
 
 			return { ok: true, data: result } as OkResponse
 		} catch (err) {
-			return handleEvalError(err)
+			return handleEvalError(normalizeInterruptedExecution(err, timeoutMs))
 		} finally {
 			if (timedOut && nativePromise) {
 				// Reject unresolved host-injected promises to avoid leaving QuickJS promises

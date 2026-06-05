@@ -30,5 +30,3 @@ export default await new Promise((resolve) => setTimeout(() => resolve('ok'), t)
 const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
 
 console.log(result)
-
-await new Promise(() => {})

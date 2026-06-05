@@ -37,10 +37,6 @@ export const loadAsyncQuickJs = async (variant: LoadAsyncQuickJsOptions) => {
 		try {
 			ctx = scope.manage(module.newContext())
 
-			if (sandboxOptions.executionTimeout) {
-				ctx.runtime.setInterruptHandler(shouldInterruptAfterDeadline(Date.now() + sandboxOptions.executionTimeout))
-			}
-
 			if (sandboxOptions.maxStackSize) {
 				ctx.runtime.setMaxStackSize(sandboxOptions.maxStackSize)
 			}
@@ -74,6 +70,10 @@ export const loadAsyncQuickJs = async (variant: LoadAsyncQuickJsOptions) => {
 			// Prepare the Sandbox
 			// Expose Data and Functions to Client
 			prepareAsyncSandbox(ctx, scope, sandboxOptions, fs)
+
+			if (sandboxOptions.executionTimeout) {
+				ctx.runtime.setInterruptHandler(shouldInterruptAfterDeadline(Date.now() + sandboxOptions.executionTimeout))
+			}
 
 			// Run the given Function
 			const result = await executeAsyncSandboxFunction({

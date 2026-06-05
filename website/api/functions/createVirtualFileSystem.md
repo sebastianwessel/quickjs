@@ -8,7 +8,7 @@
 
 > **createVirtualFileSystem**(`runtimeOptions?`): `object`
 
-Defined in: [createVirtualFileSystem.ts:48](https://github.com/sebastianwessel/quickjs/blob/main/src/createVirtualFileSystem.ts#L48)
+Defined in: [createVirtualFileSystem.ts:49](https://github.com/sebastianwessel/quickjs/blob/main/src/createVirtualFileSystem.ts#L49)
 
 Create the virtual file system for the sandbox
 Creates a node_modules folder with packages and ensures the src folder

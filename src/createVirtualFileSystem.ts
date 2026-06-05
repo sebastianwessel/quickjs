@@ -9,6 +9,7 @@ import eventModule from './modules/events.js'
 import fsModule from './modules/fs.js'
 import fsPromisesModule from './modules/fs_promises.js'
 import moduleModule from './modules/module.js'
+import compatibilityEventTarget from './modules/nodeCompatibility/eventTarget.js'
 import compatibilityHeaders from './modules/nodeCompatibility/headers.js'
 import compatibilityRequest from './modules/nodeCompatibility/request.js'
 import compatibilityResponse from './modules/nodeCompatibility/response.js'
@@ -59,6 +60,7 @@ export const createVirtualFileSystem = (runtimeOptions: RuntimeOptions = {}) => 
 			node_modules: {
 				...runtimeOptions?.nodeModules,
 				'@node_compatibility': {
+					'event-target': compatibilityEventTarget,
 					headers: compatibilityHeaders,
 					request: compatibilityRequest,
 					response: compatibilityResponse,

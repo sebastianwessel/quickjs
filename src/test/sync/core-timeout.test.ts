@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from 'bun:test'
 import variant from '@jitl/quickjs-ng-wasmfile-release-sync'
 import { loadQuickJs } from '../../loadQuickJs.js'
+import type { ErrorResponse } from '../../types/ErrorResponse.js'
 
 describe('sync - core - timeout', () => {
 	let runtime: Awaited<ReturnType<typeof loadQuickJs>>
@@ -21,6 +22,9 @@ describe('sync - core - timeout', () => {
     export default 'ok'
     `
 
-		await expect(runCode(code, { executionTimeout: 1 })).rejects.toThrow('interrupted')
+		const result = await runCode(code, { executionTimeout: 1 })
+
+		expect(result.ok).toBeFalse()
+		expect((result as ErrorResponse).error.name).toBe('ExecutionTimeout')
 	})
 })

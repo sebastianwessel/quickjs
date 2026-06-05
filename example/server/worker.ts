@@ -3,6 +3,8 @@ import { ThreadWorker } from 'poolifier-web-worker'
 import { loadQuickJs, type SandboxOptions } from '../../src/index.js'
 import type { InputData, ResponseData } from './types.js'
 
+const EXECUTION_TIMEOUT_MS = 5_000
+
 class MyThreadWorker extends ThreadWorker<InputData, ResponseData> {
 	runtime?: Awaited<ReturnType<typeof loadQuickJs>>
 
@@ -25,7 +27,7 @@ class MyThreadWorker extends ThreadWorker<InputData, ResponseData> {
 		}
 
 		const options: SandboxOptions = {
-			executionTimeout: 10,
+			executionTimeout: EXECUTION_TIMEOUT_MS,
 			allowFs: true,
 			allowFetch: true,
 			enableTestUtils: true,

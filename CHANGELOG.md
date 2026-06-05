@@ -1,5 +1,9 @@
 ## [unreleased]
 
+### 🐛 Bug Fixes
+
+- Harden runtime cleanup and refresh deps
+
 ### 💼 Other
 
 - Run tests serially per file to avoid bun runner timeouts
