@@ -8,6 +8,7 @@ export const prepareNodeCompatibility = (vm: QuickJSContext, sandboxOptions: San
       import 'node:buffer';
       import 'node:util';
       import 'node:url';
+      import '@node_compatibility/event-target';
       import '@node_compatibility/headers';
       import '@node_compatibility/request';
       import '@node_compatibility/response';

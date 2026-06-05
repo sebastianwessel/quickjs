@@ -6,6 +6,7 @@ const DEFAULT_TIMEOUT = 5000 // 5 seconds
 const DEFAULT_RATE_LIMIT_POINTS = 10 // Number of requests
 const DEFAULT_RATE_LIMIT_DURATION = 1 // Per second
 
+/** @internal */
 const HEADERS_MARKER = '__quickjsHeadersObject__'
 
 /**

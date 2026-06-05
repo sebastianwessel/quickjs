@@ -1,4 +1,4 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.1.0**](../README.md)
 
 ***
 

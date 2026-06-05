@@ -2,7 +2,7 @@ import variant from '@jitl/quickjs-ng-wasmfile-release-sync'
 import { loadQuickJs, type SandboxOptions } from '../../src/index.js'
 
 // General setup like loading and init of the QuickJS wasm
-// It is a ressource intensive job and should be done only once if possible
+// It is a resource intensive job and should be done only once if possible
 const { runSandboxed } = await loadQuickJs(variant)
 
 const options: SandboxOptions = {
@@ -30,5 +30,3 @@ export default await new Promise((resolve) => setTimeout(() => resolve('ok'), t)
 const result = await runSandboxed(async ({ evalCode }) => evalCode(code), options)
 
 console.log(result)
-
-await new Promise(() => {})

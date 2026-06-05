@@ -30,8 +30,13 @@ export const handleToNative = (ctx: QuickJSContext | QuickJSAsyncContext, handle
 	}
 
 	if (ty === 'symbol') {
-		const desc = ctx.getString(ctx.getProp(handle, 'description'))
-		return Symbol(desc)
+		const descHandle = ctx.getProp(handle, 'description')
+		try {
+			const desc = ctx.getString(descHandle)
+			return Symbol(desc)
+		} finally {
+			descHandle.dispose()
+		}
 	}
 
 	const asPromiseState: JSPromiseState & { notAPromise?: boolean } = ctx.getPromiseState(handle)
@@ -67,19 +72,20 @@ export const handleToNative = (ctx: QuickJSContext | QuickJSAsyncContext, handle
 					] as const
 				).reduce<PropertyDescriptor>((desc, [key, unmarshable]) => {
 					const h = ctx.getProp(value, key)
-					const t = ctx.typeof(h)
+					try {
+						const t = ctx.typeof(h)
 
-					if (t === 'undefined') return desc
-					if (!unmarshable && t === 'boolean') {
-						desc[key] = ctx.dump(h)
+						if (t === 'undefined') return desc
+						if (!unmarshable && t === 'boolean') {
+							desc[key] = ctx.dump(h)
+							return desc
+						}
+
+						desc[key] = handleToNative(ctx, h, rootScope)
 						return desc
+					} finally {
+						h.dispose()
 					}
-
-					desc[key] = handleToNative(ctx, h, rootScope)
-
-					h.dispose()
-
-					return desc
 				}, {})
 
 				Object.defineProperty(obj, keyName, desc)

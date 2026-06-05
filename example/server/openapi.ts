@@ -24,8 +24,7 @@ export default await fn()
       `,
 				},
 			},
-			description: `The javascript code to execute. QuickJS supports ES2023 with async await pattern and top-level await. The javascript has access to the fetch function and to the path module node:path. The result must be exported with __export default__.
-      Async functions must be exported with __export default await asyncFunction()__ 
+			description: `The JavaScript code to execute. QuickJS supports ES2023, async functions, and top-level await. The sandbox has access to fetch, the virtual file system, test helpers, and bundled Node compatibility modules such as node:path. Export the result with __export default value__. Async functions can be exported with __export default await asyncFunction()__.
       
       `,
 		},
@@ -68,7 +67,7 @@ export default await fn()
 					},
 				},
 			},
-			description: 'Returns how many FAQ pairs are inserted',
+			description: 'The submitted code is not valid JavaScript',
 		},
 		408: {
 			content: {
@@ -85,7 +84,7 @@ export default await fn()
 							name: 'ExecutionTimeout',
 							message: 'The script execution has exceeded the maximum allowed time limit.',
 						},
-						isSyntaxError: true,
+						isSyntaxError: false,
 					},
 				},
 			},

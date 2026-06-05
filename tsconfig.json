@@ -4,8 +4,10 @@
 		"target": "ES2022",
 		"module": "es2022",
 		"moduleResolution": "node",
+		"ignoreDeprecations": "6.0",
 		"moduleDetection": "force",
 		"allowJs": true,
+		"types": ["bun"],
 
 		"allowImportingTsExtensions": false,
 		"verbatimModuleSyntax": false,

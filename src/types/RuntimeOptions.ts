@@ -3,18 +3,18 @@ import type { default as TS } from 'typescript'
 
 export type RuntimeOptions = {
 	/**
-	 * The maximum time in seconds a script can run.
+	 * The maximum time in milliseconds a script can run.
 	 * Unset or set to 0 for unlimited execution time.
 	 */
 	executionTimeout?: number
 	/**
-	 * Mount a virtual file system
-	 * @link https://github.com/streamich/memfs
+	 * Mount a virtual file system.
+	 * See https://github.com/streamich/memfs
 	 */
 	mountFs?: NestedDirectoryJSON | IFs
 	/**
-	 * Mount custom node_modules in a virtual file system
-	 * @link https://github.com/streamich/memfs
+	 * Mount custom node_modules in a virtual file system.
+	 * See https://github.com/streamich/memfs
 	 */
 	nodeModules?: NestedDirectoryJSON
 	/**

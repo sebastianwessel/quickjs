@@ -24,13 +24,13 @@ export type SandboxBaseOptions = {
 	 */
 	memoryLimit?: number
 	/**
-	 * Mount a virtual file system
-	 * @link https://github.com/streamich/memfs
+	 * Mount a virtual file system.
+	 * See https://github.com/streamich/memfs
 	 */
 	mountFs?: NestedDirectoryJSON | IFs
 	/**
-	 * Mount custom node_modules in a virtual file system
-	 * @link https://github.com/streamich/memfs
+	 * Mount custom node_modules in a virtual file system.
+	 * See https://github.com/streamich/memfs
 	 */
 	nodeModules?: NestedDirectoryJSON
 	/**

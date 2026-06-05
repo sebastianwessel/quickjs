@@ -1,4 +1,4 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.1.0**](../README.md)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [types/CodeFunctionInput.ts:6](https://github.com/sebastianwessel/qu
 
 ***
 
-### transpileFile()
+### transpileFile
 
 > **transpileFile**: (`input`) => `string`
 

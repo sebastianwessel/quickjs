@@ -1,10 +1,10 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.1.0**](../README.md)
 
 ***
 
 [@sebastianwessel/quickjs](../globals.md) / SandboxFunction
 
-# Type Alias: SandboxFunction()\<T\>
+# Type Alias: SandboxFunction\<T\>
 
 > **SandboxFunction**\<`T`\> = (`sandbox`) => `Promise`\<`T`\>
 

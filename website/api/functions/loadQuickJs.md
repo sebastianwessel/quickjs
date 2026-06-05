@@ -1,4 +1,4 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.1.0**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **loadQuickJs**(`variant`): `Promise`\<\{ `module`: `QuickJSWASMModule`; `runSandboxed`: \<`T`\>(`sandboxedFunction`, `sandboxOptions`) => `Promise`\<`T`\>; \}\>
 
-Defined in: [loadQuickJs.ts:18](https://github.com/sebastianwessel/quickjs/blob/main/src/loadQuickJs.ts#L18)
+Defined in: [loadQuickJs.ts:19](https://github.com/sebastianwessel/quickjs/blob/main/src/loadQuickJs.ts#L19)
 
 Loads the QuickJS module and returns a sandbox execution function.
 

@@ -4,8 +4,10 @@
 		"target": "ES2022",
 		"module": "es2022",
 		"moduleResolution": "node",
+		"ignoreDeprecations": "6.0",
 		"moduleDetection": "force",
 		"allowJs": true,
+		"types": ["bun"],
 
 		"allowImportingTsExtensions": false,
 		"verbatimModuleSyntax": false,
@@ -27,5 +29,14 @@
 		"isolatedModules": true,
 		"declaration": true
 	},
-	"exclude": ["./dist/**", "./example", "./vendor", "loadtest.ts", "**/node_modules"]
+	"exclude": [
+		"./dist/**",
+		"./example",
+		"./src/test/**",
+		"./src/test-regression/**",
+		"./vendor",
+		"loadtest.ts",
+		"**/*.test.ts",
+		"**/node_modules"
+	]
 }

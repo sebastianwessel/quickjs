@@ -1,10 +1,10 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.1.0**](../README.md)
 
 ***
 
 [@sebastianwessel/quickjs](../globals.md) / SandboxValidateCode
 
-# Type Alias: SandboxValidateCode()
+# Type Alias: SandboxValidateCode
 
 > **SandboxValidateCode** = (`code`, `filename?`, `options?`) => `Promise`\<[`OkResponseCheck`](OkResponseCheck.md) \| [`ErrorResponse`](ErrorResponse.md)\>
 

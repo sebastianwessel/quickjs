@@ -134,7 +134,7 @@ import {
   type SandboxAsyncOptions,
   loadAsyncQuickJs,
 } from "@sebastianwessel/quickjs";
-import variant from "@jitl/quickjs-wasmfile-release-asyncify";
+import variant from "@jitl/quickjs-ng-wasmfile-release-asyncify";
 
 const { runSandboxed } = await loadAsyncQuickJs(variant);
 

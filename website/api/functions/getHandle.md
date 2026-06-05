@@ -1,4 +1,4 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.1.0**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **getHandle**(`scope`, `ctx`, `name`, `input`): `QuickJSHandle`
 
-Defined in: [sandbox/expose/expose.ts:6](https://github.com/sebastianwessel/quickjs/blob/main/src/sandbox/expose/expose.ts#L6)
+Defined in: [sandbox/expose/expose.ts:8](https://github.com/sebastianwessel/quickjs/blob/main/src/sandbox/expose/expose.ts#L8)
 
 ## Parameters
 
@@ -18,7 +18,7 @@ Defined in: [sandbox/expose/expose.ts:6](https://github.com/sebastianwessel/quic
 
 ### ctx
 
-`QuickJSContext` | `QuickJSAsyncContext`
+`QuickJSContext` \| `QuickJSAsyncContext`
 
 ### name
 

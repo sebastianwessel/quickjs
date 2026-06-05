@@ -5,6 +5,7 @@ import { getAsyncModuleLoader } from './sandbox/asyncVersion/getAsyncModuleLoade
 import { modulePathNormalizerAsync } from './sandbox/asyncVersion/modulePathNormalizerAsync.js'
 import { prepareAsyncNodeCompatibility } from './sandbox/asyncVersion/prepareAsyncNodeCompatibility.js'
 import { prepareAsyncSandbox } from './sandbox/asyncVersion/prepareAsyncSandbox.js'
+import { rejectAndFlushPendingHostPromises } from './sandbox/expose/pendingHostPromises.js'
 import { setupFileSystem } from './sandbox/setupFileSystem.js'
 import type { LoadAsyncQuickJsOptions } from './types/LoadQuickJsOptions.js'
 
@@ -35,10 +36,6 @@ export const loadAsyncQuickJs = async (variant: LoadAsyncQuickJsOptions) => {
 		let ctx: ReturnType<typeof module.newContext> | undefined
 		try {
 			ctx = scope.manage(module.newContext())
-
-			if (sandboxOptions.executionTimeout) {
-				ctx.runtime.setInterruptHandler(shouldInterruptAfterDeadline(Date.now() + sandboxOptions.executionTimeout))
-			}
 
 			if (sandboxOptions.maxStackSize) {
 				ctx.runtime.setMaxStackSize(sandboxOptions.maxStackSize)
@@ -74,6 +71,10 @@ export const loadAsyncQuickJs = async (variant: LoadAsyncQuickJsOptions) => {
 			// Expose Data and Functions to Client
 			prepareAsyncSandbox(ctx, scope, sandboxOptions, fs)
 
+			if (sandboxOptions.executionTimeout) {
+				ctx.runtime.setInterruptHandler(shouldInterruptAfterDeadline(Date.now() + sandboxOptions.executionTimeout))
+			}
+
 			// Run the given Function
 			const result = await executeAsyncSandboxFunction({
 				ctx,
@@ -86,6 +87,9 @@ export const loadAsyncQuickJs = async (variant: LoadAsyncQuickJsOptions) => {
 
 			return result
 		} finally {
+			if (ctx) {
+				await rejectAndFlushPendingHostPromises(ctx)
+			}
 			scope.dispose()
 		}
 	}

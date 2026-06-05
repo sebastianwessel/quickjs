@@ -1,4 +1,4 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.1.0**](../README.md)
 
 ***
 
@@ -6,15 +6,15 @@
 
 # Function: getDefaultFetchAdapter()
 
-> **getDefaultFetchAdapter**(`adapterOptions`): *typeof* `fetch`
+> **getDefaultFetchAdapter**(`adapterOptions?`): *typeof* `fetch`
 
-Defined in: [adapter/fetch.ts:96](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L96)
+Defined in: [adapter/fetch.ts:109](https://github.com/sebastianwessel/quickjs/blob/main/src/adapter/fetch.ts#L109)
 
 Create a default fetch adapter
 
 ## Parameters
 
-### adapterOptions
+### adapterOptions?
 
 [`GetFetchAdapterOptions`](../type-aliases/GetFetchAdapterOptions.md) = `{}`
 

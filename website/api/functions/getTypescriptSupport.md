@@ -1,4 +1,4 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.1.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Function: getTypescriptSupport()
 
-> **getTypescriptSupport**(`enabled`, `typescriptImportFile?`, `options?`): `Promise`\<\{ `transpileFile`: (`value`, `_compilerOptions?`, `_fileName?`, `_diagnostics?`, `_moduleName?`) => `string`; `transpileNestedDirectoryJSON`: (`mountFsJson`, `_option?`) => `NestedDirectoryJSON`; `transpileVirtualFs`: (`fs`, `_options?`) => `IFs`; \}\>
+> **getTypescriptSupport**(`enabled?`, `typescriptImportFile?`, `options?`): `Promise`\<\{ `transpileFile`: (`value`, `_compilerOptions?`, `_fileName?`, `_diagnostics?`, `_moduleName?`) => `string`; `transpileNestedDirectoryJSON`: (`mountFsJson`, `_option?`) => `NestedDirectoryJSON`; `transpileVirtualFs`: (`fs`, `_options?`) => `IFs`; \}\>
 
 Defined in: [getTypescriptSupport.ts:18](https://github.com/sebastianwessel/quickjs/blob/main/src/getTypescriptSupport.ts#L18)
 
@@ -15,7 +15,7 @@ Requires the optional dependency 'typescript'.
 
 ## Parameters
 
-### enabled
+### enabled?
 
 `boolean` = `false`
 

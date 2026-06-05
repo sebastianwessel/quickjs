@@ -1,4 +1,4 @@
-[**@sebastianwessel/quickjs v2.3.1**](../README.md)
+[**@sebastianwessel/quickjs v3.1.0**](../README.md)
 
 ***
 
@@ -8,13 +8,13 @@
 
 > **expose**(`ctx`, `_parentScope`, `input`, `parent?`): `void`
 
-Defined in: [sandbox/expose/expose.ts:173](https://github.com/sebastianwessel/quickjs/blob/main/src/sandbox/expose/expose.ts#L173)
+Defined in: [sandbox/expose/expose.ts:194](https://github.com/sebastianwessel/quickjs/blob/main/src/sandbox/expose/expose.ts#L194)
 
 ## Parameters
 
 ### ctx
 
-`QuickJSContext` | `QuickJSAsyncContext`
+`QuickJSContext` \| `QuickJSAsyncContext`
 
 ### \_parentScope
 

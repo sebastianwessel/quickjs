@@ -21,7 +21,6 @@ bun run example:basic
 ```
 
 from the root of this repository.
-
 ## Server Example
 
 The server example demonstrates how you can use [@sebastianwessel/quickjs](https://github.com/sebastianwessel/quickjs) inside a web server. In this example, we run a web server that spawns workers on request using the [poolifier-web-worker](https://github.com/poolifier/poolifier-web-worker) package. Each worker runs its own QuickJS sandbox and executes the given code.
@@ -34,12 +33,26 @@ bun run example:server
 
 from the root of this repository. Once the server has started, open your browser and go to [http://localhost:3000/](http://localhost:3000/). You will see a simple OpenAPI (Swagger) UI.
 
-## Run-Tests Example
-
-In the *run-tests* example, the usage of the included test runner is shown. You can test it out by running:
+If port 3000 is already in use, choose another port:
 
 ```sh
-bun run example:test
+PORT=3910 bun run example:server
+```
+
+## Run-Tests Example
+
+In the *run-tests* example, the usage of the included test runner is shown.
+
+Before running the tests, build the test runner library:
+
+```sh
+bun run build:vendor
+```
+
+You can test it out by running:
+
+```sh
+bun run example:tests
 ```
 
 from the root of this repository.
