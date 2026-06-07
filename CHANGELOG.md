@@ -21,6 +21,7 @@
 - Align release workflow with npm and jsr trusted publishing docs
 - Upgrade npm for trusted publisher releases
 - Create github release and tag after publish
+- Bump package version to 3.1.0
 ## [3.0.0] - 2025-07-26
 
 ### 📚 Documentation
