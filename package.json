@@ -49,7 +49,7 @@
 		"build": "bun run build:vendor && tshy && bun run build:copy",
 		"build:vendor": "bun vendor.ts",
 		"build:copy": "cp -R ./src/modules/build/ ./dist/esm/modules/build && cp -R ./src/modules/build/ ./dist/commonjs/modules/build",
-		"test": "tsc --noEmit && bun test",
+		"test": "bun run build:vendor && tsc --noEmit && bun test",
 		"test:dev": "bun test --watch",
 		"lint": "bunx @biomejs/biome check",
 		"lint:fix": "bunx @biomejs/biome check --write",

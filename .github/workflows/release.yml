@@ -67,6 +67,9 @@ jobs:
       - name: Lint
         run: bun run lint
 
+      - name: Build test utilities
+        run: bun run build:vendor
+
       - name: Typecheck
         run: bunx tsc --noEmit
 
